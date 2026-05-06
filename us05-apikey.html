@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - Quản lý API Key</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li class="active"><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Quản lý API Key</h1>
+                    <p style="color: var(--text-dim)">Quản trị mã truy cập và phạm vi dữ liệu bản đồ</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-create-key')">
+                    <i class="fas fa-plus"></i> Tạo Key mới
+                </button>
+            </header>
+
+            <div class="card">
+                <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--warning); padding: 16px; border-radius: 4px; margin-bottom: 24px;">
+                    <p style="color: var(--warning); font-size: 0.9rem;">
+                        <i class="fas fa-shield-alt"></i> Bảo mật: Mã Secret Keys sẽ không hiển thị ở trang danh sách. Bạn phải vào chi tiết và xác thực mật khẩu để xem hoặc sao chép.
+                    </p>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên Key</th>
+                            <th>Dự án liên kết</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Key_Produ_Live</strong></td>
+                            <td>Giao thông C08</td>
+                            <td><span class="badge badge-active">Hoạt động</span></td>
+                            <td>20/04/2024</td>
+                            <td>
+                                <button class="btn btn-outline btn-sm" onclick="openModal('modal-view-key')"><i class="fas fa-eye"></i> Xem Key</button>
+                                <button class="btn btn-outline btn-sm" onclick="openModal('modal-rotate-key')"><i class="fas fa-sync"></i> Refresh</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mobile_App_Test</strong></td>
+                            <td>PCCC Vĩnh Phúc</td>
+                            <td><span class="badge badge-active">Hoạt động</span></td>
+                            <td>18/04/2024</td>
+                            <td>
+                                <button class="btn btn-outline btn-sm"><i class="fas fa-eye"></i> Xem Key</button>
+                                <button class="btn btn-outline btn-sm"><i class="fas fa-sync"></i> Refresh</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Table Pagination -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    <div style="color: var(--text-dim); font-size: 0.9rem;">
+                        Hiển thị <strong>1 - 10</strong> trong tổng số <strong>124</strong> API Keys
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-outline btn-sm"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-primary btn-sm">1</button>
+                        <button class="btn btn-outline btn-sm">2</button>
+                        <button class="btn btn-outline btn-sm">3</button>
+                        <button class="btn btn-outline btn-sm">...</button>
+                        <button class="btn btn-outline btn-sm">13</button>
+                        <button class="btn btn-outline btn-sm"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: View Key (Reveal Logic) -->
+    <div id="modal-view-key" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Chi tiết API Key</h3>
+                <span onclick="closeModal('modal-view-key')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tên định danh Key</label>
+                    <input type="text" class="form-control" value="Key_Produ_Live" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Dự án liên kết</label>
+                    <input type="text" class="form-control" value="Giao thông C08" readonly style="background: rgba(255,255,255,0.05); color: var(--primary);">
+                </div>
+                <div class="form-group">
+                    <label>Mã Secret Key</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="password" id="key-input" class="form-control" value="gtel_live_8fb2001928374655" readonly>
+                        <button class="btn btn-outline" id="btn-reveal" onclick="openModal('modal-verify-password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline" onclick="copyKeyLogic()">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 6px;">Mã Key đang bị che giấu để bảo mật.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-view-key'); resetKeySecurity();">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Verify Password -->
+    <div id="modal-verify-password" class="modal-overlay" style="z-index: 1100;">
+        <div class="modal" style="max-width: 400px; border-color: var(--primary);">
+            <div class="modal-header">
+                <h3>Xác thực danh tính</h3>
+                <span onclick="closeModal('modal-verify-password')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.9rem; margin-bottom: 15px;">Vui lòng nhập mật khẩu quản trị để thực hiện thao tác này.</p>
+                <input type="password" id="verify-pass" class="form-control" placeholder="Nhập mật khẩu...">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-verify-password')">Hủy</button>
+                <button class="btn btn-primary" onclick="confirmSecurityAction()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create Key -->
+    <div id="modal-create-key" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Khởi tạo API Key mới</h3>
+                <span onclick="closeModal('modal-create-key')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Liên kết Dự án</label>
+                    <select class="form-control">
+                        <option>Chọn dự án...</option>
+                        <option selected>Giao thông C08</option>
+                        <option>PCCC Vĩnh Phúc</option>
+                        <option>Thử nghiệm nội bộ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tên định danh Key</label>
+                    <input type="text" class="form-control" placeholder="Ví dụ: App_Client_Android">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-create-key')">Hủy</button>
+                <button class="btn btn-primary" onclick="closeModal('modal-create-key'); openModal('modal-create-success')">Xác nhận Tạo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create Success (New Feature) -->
+    <div id="modal-create-success" class="modal-overlay">
+        <div class="modal" style="border-top: 5px solid var(--success);">
+            <div class="modal-header">
+                <h3 style="color: var(--success)"><i class="fas fa-check-circle"></i> Khởi tạo thành công!</h3>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px;">API Key mới của bạn đã sẵn sàng. Hãy sao chép và lưu trữ ngay bây giờ.</p>
+                <div class="form-group" style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 8px; border: 1px dashed var(--success);">
+                    <label style="color: var(--success); font-size: 0.75rem;">MÃ SECRET KEY (HIỂN THỊ DUY NHẤT LẦN NÀY)</label>
+                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                        <input type="text" id="new-key-value" class="form-control" value="gtel_prod_8fb2001928374655" readonly style="color: var(--success); font-weight: bold; font-family: monospace;">
+                        <button class="btn btn-primary" onclick="copyNewKey()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 15px;">
+                    <i class="fas fa-exclamation-triangle" style="color: var(--warning)"></i> Lưu ý: Sau khi đóng modal này, mã Key sẽ được ẩn đi để bảo mật.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" style="width: 100%" onclick="closeModal('modal-create-success'); showToast('Dự án đã sẵn sàng sử dụng Key mới', 'success')">Tôi đã lưu mã Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Rotate Key Confirmation -->
+    <div id="modal-rotate-key" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="color: var(--danger)">Cảnh báo: Làm mới mã Key</h3>
+            </div>
+            <div class="modal-body">
+                <p>Bạn đang yêu cầu thay đổi mã Secret cho <strong>Key_Produ_Live</strong>.</p>
+                <ul style="margin: 15px 0 15px 20px; color: var(--danger); font-size: 0.9rem;">
+                    <li>Mã cũ sẽ bị vô hiệu hóa lập tức.</li>
+                    <li>Mọi ứng dụng đang dùng mã này sẽ bị lỗi truy cập.</li>
+                </ul>
+                <p style="font-size: 0.9rem;">Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-rotate-key')">Hủy</button>
+                <button class="btn btn-danger" onclick="showToast('Đã xoay mã Key thành công'); closeModal('modal-rotate-key')">Xác nhận làm mới</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-info-circle" style="color: var(--warning)"></i>
+        <span class="toast-msg">Thông báo</span>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        let isKeyUnlocked = false;
+
+        function confirmSecurityAction() {
+            const pass = document.getElementById('verify-pass').value;
+            if (pass.length > 0) {
+                isKeyUnlocked = true;
+                closeModal('modal-verify-password');
+                revealKeyAction();
+            } else {
+                showToast('Vui lòng nhập mật khẩu', 'warning');
+            }
+        }
+
+        function revealKeyAction() {
+            const keyInput = document.getElementById('key-input');
+            keyInput.type = 'text';
+            document.getElementById('btn-reveal').innerHTML = '<i class="fas fa-eye-slash"></i>';
+            showToast('Mã Key đã được hiển thị', 'success');
+        }
+
+        function copyKeyLogic() {
+            if (isKeyUnlocked) {
+                const key = document.getElementById('key-input').value;
+                navigator.clipboard.writeText(key);
+                showToast('Đã sao chép mã Key vào bộ nhớ tạm', 'success');
+            } else {
+                openModal('modal-verify-password');
+            }
+        }
+
+        function copyNewKey() {
+            const key = document.getElementById('new-key-value').value;
+            navigator.clipboard.writeText(key);
+            showToast('Đã sao chép mã Key mới!', 'success');
+        }
+
+        function resetKeySecurity() {
+            isKeyUnlocked = false;
+            document.getElementById('key-input').type = 'password';
+            document.getElementById('btn-reveal').innerHTML = '<i class="fas fa-eye"></i>';
+            document.getElementById('verify-pass').value = '';
+        }
+    </script>
+</body>
+</html>

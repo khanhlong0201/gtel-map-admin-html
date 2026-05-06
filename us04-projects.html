@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - Quản lý Dự án</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Placeholder -->
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li class="active"><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Quản lý Dự án</h1>
+                    <p style="color: var(--text-dim)">Điều phối tài nguyên và hạ tầng cho ứng dụng bản đồ</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-create-project')">
+                    <i class="fas fa-plus"></i> Tạo dự án mới
+                </button>
+            </header>
+
+            <div class="card">
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <input type="text" class="form-control" style="max-width: 300px" placeholder="Tìm kiếm dự án (Mã, Tên)...">
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã Dự án</th>
+                            <th>Tên hiển thị</th>
+                            <th>API Keys</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>PRJ-GT-C08</strong></td>
+                            <td>Giao thông C08</td>
+                            <td><span class="badge badge-unassigned">12 Keys</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm" onclick="openModal('modal-view-project')"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-outline btn-sm" onclick="openEditModal('PRJ-GT-C08', 'Giao thông C08')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="openModal('modal-delete-project')"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>PRJ-VP-PCCC</strong></td>
+                            <td>PCCC Vĩnh Phúc</td>
+                            <td><span class="badge badge-unassigned">05 Keys</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-outline btn-sm" onclick="openEditModal('PRJ-VP-PCCC', 'PCCC Vĩnh Phúc')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Table Pagination -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    <div style="color: var(--text-dim); font-size: 0.9rem;">
+                        Hiển thị <strong>1 - 10</strong> trong tổng số <strong>48</strong> dự án
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-outline btn-sm"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-primary btn-sm">1</button>
+                        <button class="btn btn-outline btn-sm">2</button>
+                        <button class="btn btn-outline btn-sm">3</button>
+                        <button class="btn btn-outline btn-sm">...</button>
+                        <button class="btn btn-outline btn-sm">5</button>
+                        <button class="btn btn-outline btn-sm"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Create Project -->
+    <div id="modal-create-project" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Khởi tạo Dự án mới</h3>
+                <span onclick="closeModal('modal-create-project')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Mã định danh dự án (Project ID)</label>
+                    <input type="text" class="form-control" placeholder="Ví dụ: PRJ-MAP-LIVE">
+                </div>
+                <div class="form-group">
+                    <label>Tên hiển thị</label>
+                    <input type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Mô tả mục đích</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-create-project')">Hủy</button>
+                <button class="btn btn-primary" onclick="showToast('Đã tạo dự án thành công'); closeModal('modal-create-project')">Lưu dự án</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: View Project -->
+    <div id="modal-view-project" class="modal-overlay">
+        <div class="modal" style="max-width: 600px">
+            <div class="modal-header">
+                <h3>Chi tiết Dự án: Giao thông C08</h3>
+                <span onclick="closeModal('modal-view-project')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Mã ID:</strong> PRJ-GT-C08</p>
+                <p style="margin-bottom: 20px;"><strong>Mô tả:</strong> Hệ thống giám sát hải hành Cảnh sát biển.</p>
+                
+                <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase;">DANH SÁCH API KEYS ĐANG LIÊN KẾT (12)</h4>
+                
+                <div style="display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem;">Key_Produ_Live</div>
+                    <div style="padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem;">Key_Backup_Dev</div>
+                    <div style="padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem;">Key_Internal_R&D</div>
+                    <div style="padding: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem;">Key_Partner_X</div>
+                    <div style="padding: 10px; font-size: 0.85rem;">Key_Legacy_Sync</div>
+                </div>
+
+                <!-- Mini Pagination -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px;">
+                    <span style="font-size: 0.75rem; color: var(--text-dim);">Trang 1 / 3</span>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-outline" style="padding: 2px 8px; font-size: 0.7rem; height: auto;"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-outline" style="padding: 2px 8px; font-size: 0.7rem; height: auto;"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-view-project')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Project -->
+    <div id="modal-edit-project" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Cập nhật thông tin Dự án</h3>
+                <span onclick="closeModal('modal-edit-project')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Mã định danh dự án (Không thể sửa)</label>
+                    <input type="text" id="edit-project-id" class="form-control" disabled style="background: rgba(255,255,255,0.05); color: var(--text-dim)">
+                </div>
+                <div class="form-group">
+                    <label>Tên hiển thị</label>
+                    <input type="text" id="edit-project-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Mô tả mục đích</label>
+                    <textarea class="form-control" rows="3">Ứng dụng tích hợp bản đồ và GPS giám sát tàu tuần tra.</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-edit-project')">Hủy</button>
+                <button class="btn btn-primary" onclick="showToast('Đã cập nhật dự án thành công'); closeModal('modal-edit-project')">Cập nhật thay đổi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Delete Safe Guard -->
+    <div id="modal-delete-project" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="color: var(--danger)">Cảnh báo: Không thể xóa</h3>
+            </div>
+            <div class="modal-body">
+                <p>Dự án này đang còn <strong>12 API Keys</strong> hoạt động.</p>
+                <p style="margin-top: 10px; font-size: 0.9rem; color: var(--text-dim)">
+                   Bạn không được phép xóa dự án khi vẫn còn tài nguyên liên kết. Vui lòng gỡ bỏ hoặc xóa toàn bộ Keys thuộc dự án này trước khi thực hiện xóa.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-delete-project')">Đã rõ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle" style="color: var(--success)"></i>
+        <span class="toast-msg">Thông báo thành công</span>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function openEditModal(id, name) {
+            document.getElementById('edit-project-id').value = id;
+            document.getElementById('edit-project-name').value = name;
+            openModal('modal-edit-project');
+        }
+    </script>
+</body>
+</html>

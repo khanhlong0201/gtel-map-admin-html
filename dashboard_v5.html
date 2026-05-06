@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps - Admin Dashboard v5</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .db-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+        .stat-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px; }
+        .db-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; }
+        .db-card-title { font-size: 0.9rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        
+        /* Service Status */
+        .service-status-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .dot-online { background: var(--success); box-shadow: 0 0 8px var(--success); }
+
+        /* Feed */
+        .feed-item { padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; display: flex; gap: 12px; align-items: flex-start; }
+        .feed-time { color: var(--text-dim); font-size: 0.75rem; white-space: nowrap; padding-top: 2px; }
+
+        /* Chart */
+        .main-chart { height: 250px; display: flex; align-items: flex-end; gap: 8px; padding-bottom: 30px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .chart-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 40px; }
+        .chart-bar { width: 100%; background: var(--primary); border-radius: 4px 4px 0 0; min-height: 5px; transition: height 0.3s; position: relative; }
+        .chart-bar:hover { filter: brightness(1.3); cursor: pointer; }
+        .bar-label { font-size: 0.65rem; color: var(--text-dim); }
+
+        /* Alerts */
+        .alert-item-simple { padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; margin-bottom: 10px; font-size: 0.85rem; border-left: 3px solid var(--primary); }
+        .alert-danger { border-left-color: var(--danger); }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li class="active"><a href="dashboard_v5.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users_v2.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac_v2.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics_v2.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit_v2.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Bảng điều hành Tổng thể (v5)</h1>
+                    <p style="color: var(--text-dim)">Báo cáo sản lượng và vận hành theo thời gian thực</p>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div id="custom-date-range" style="display: none; align-items: center; gap: 8px; color: var(--text-dim); font-size: 0.8rem; background: rgba(255,255,255,0.03); padding: 0 10px; border-radius: 6px; border: 1px solid var(--border); height: 38px;">
+                        <span>Từ:</span> <input type="date" class="form-control" style="border:none; background:transparent; width: 120px; padding: 5px 0;">
+                        <span style="opacity: 0.3">|</span>
+                        <span>Đến:</span> <input type="date" class="form-control" style="border:none; background:transparent; width: 120px; padding: 5px 0;">
+                    </div>
+                    <select id="main-time-filter" class="form-control" style="width: 200px" onchange="handleTimeChange(this)">
+                        <option value="today">Hôm nay</option>
+                        <option value="7days" selected>7 ngày gần nhất</option>
+                        <option value="30days">30 ngày gần nhất</option>
+                        <option value="60days">60 ngày gần nhất</option>
+                        <option value="this-week">Tuần này</option>
+                        <option value="this-month">Tháng này</option>
+                        <option value="custom">Khoảng ngày...</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="refreshDashboard()"><i class="fas fa-filter"></i> Lọc dữ liệu</button>
+                </div>
+            </header>
+
+            <div class="stat-cards">
+                <div class="db-card">
+                    <p style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px;">Số lượng request (Theo bộ lọc)</p>
+                    <h3 id="stat-req-total" style="font-size: 2.2rem; margin: 10px 0;">24,502,402</h3>
+                    <div style="font-size: 0.85rem; color: var(--success)">
+                        <i class="fas fa-caret-up"></i> 12.5% <span style="color: var(--text-dim); font-size: 0.75rem;">so với kỳ trước</span>
+                    </div>
+                </div>
+                <div class="db-card">
+                    <p style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px;">Dự án đang hoạt động</p>
+                    <h3 id="stat-proj-total" style="font-size: 2.2rem; margin: 10px 0;">42</h3>
+                    <div id="stat-proj-diff" style="font-size: 0.85rem; color: var(--success)">
+                        <i class="fas fa-plus"></i> 2 <span style="color: var(--text-dim); font-size: 0.75rem;">dự án mới trong kỳ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="db-card" style="margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <span class="db-card-title" style="margin-bottom: 0"><i class="fas fa-chart-bar"></i> Biểu đồ lưu lượng truy cập chi tiết</span>
+                    <span style="font-size: 0.75rem; color: var(--text-dim)"><i class="fas fa-info-circle"></i> Đơn vị: Requests / Ngày</span>
+                </div>
+                <div class="main-chart" id="main-chart-container">
+                    <!-- Bars generated by JS -->
+                </div>
+            </div>
+
+            <div class="db-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="db-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                        <span class="db-card-title" style="margin-bottom: 0"><i class="fas fa-history"></i> Hoạt động quản trị gần đây</span>
+                        <a href="us09-audit_v2.html" class="btn btn-outline" style="font-size: 0.7rem; padding: 4px 8px;">Xem tất cả nhật ký <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="feed-list">
+                        <div class="feed-item">
+                            <span class="feed-time">11:20 AM</span>
+                            <span><strong>Admin01</strong> đã thay đổi quyền cho nhóm <em>Kỹ thuật viên</em>.</span>
+                        </div>
+                        <div class="feed-item">
+                            <span class="feed-time">10:45 AM</span>
+                            <span><strong>SuperAdmin</strong> cập nhật cấu hình hệ thống Gateway v2.</span>
+                        </div>
+                        <div class="feed-item">
+                            <span class="feed-time">09:12 AM</span>
+                            <span><strong>Admin02</strong> phê duyệt 03 người dùng mới từ đơn vị <em>C08</em>.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="db-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span class="db-card-title" style="margin-bottom: 0"><i class="fas fa-shield-alt"></i> Cảnh báo Vận hành & An ninh</span>
+                        <span class="badge badge-danger" style="font-size: 0.65rem;">Mới nhất</span>
+                    </div>
+                    <div class="alert-list">
+                        <!-- Nghiêm trọng: Theo US-09 (Login failure) -->
+                        <div class="alert-item-simple alert-danger">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong>Tài khoản bị khóa: v.anh_c08</strong>
+                                <span class="badge-danger" style="font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">Nghiêm trọng</span>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
+                                <i class="fas fa-user-lock"></i> Đăng nhập sai quá 05 lần liên tiếp. Tài khoản đã bị đình chỉ tự động.
+                            </p>
+                        </div>
+
+                        <!-- Cảnh báo: Theo US-06 v2 (Error Rate) -->
+                        <div class="alert-item-simple" style="border-left-color: var(--warning);">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong>Dự án: Mobile SDK App</strong>
+                                <span style="color: var(--warning); font-size: 0.75rem; font-weight: bold;">Cảnh báo</span>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
+                                <i class="fas fa-exclamation-circle"></i> Tỷ lệ lỗi 5xx vượt ngưỡng 5% trong 01 giờ qua (Hiện tại: 7.2%).
+                            </p>
+                        </div>
+
+                        <!-- Cảnh báo: Theo US-02/09 (Sensitive Access) -->
+                        <div class="alert-item-simple" style="border-left-color: var(--warning);">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong>Truy cập nhạy cảm: Secret Key</strong>
+                                <span style="color: var(--warning); font-size: 0.75rem; font-weight: bold;">Cảnh báo</span>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
+                                <strong>Admin_02</strong> vừa thực hiện xem chuỗi khóa bí mật (Secret Key) của dự án <em>Giao thông C08</em>.
+                            </p>
+                        </div>
+
+                        <!-- Cảnh báo: Theo US-09 (Security Config) -->
+                        <div class="alert-item-simple" style="border-left-color: var(--warning);">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong>Thay đổi cấu hình bảo mật</strong>
+                                <span style="color: var(--warning); font-size: 0.75rem; font-weight: bold;">Cảnh báo</span>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
+                                Chính sách 2FA bắt buộc đã bị tắt bởi tài khoản <strong>SuperAdmin</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function handleTimeChange(select) {
+            const range = document.getElementById('custom-date-range');
+            range.style.display = (select.value === 'custom') ? 'flex' : 'none';
+        }
+
+        function refreshDashboard() {
+            const filter = document.getElementById('main-time-filter').value;
+            const reqTotal = document.getElementById('stat-req-total');
+            const projDiff = document.getElementById('stat-proj-diff');
+            
+            // Simulate data change
+            if (filter === '7days') {
+                reqTotal.innerText = "5,120,800";
+                projDiff.innerHTML = '<i class="fas fa-plus"></i> 1 <span style="color: var(--text-dim); font-size: 0.75rem;">dự án mới trong kỳ</span>';
+                generateChart(7);
+            } else {
+                reqTotal.innerText = "24,502,402";
+                projDiff.innerHTML = '<i class="fas fa-plus"></i> 2 <span style="color: var(--text-dim); font-size: 0.75rem;">dự án mới trong kỳ</span>';
+                generateChart(15);
+            }
+        }
+
+        function generateChart(days) {
+            const container = document.getElementById('main-chart-container');
+            container.innerHTML = '';
+            for (let i = 0; i < days; i++) {
+                const group = document.createElement('div');
+                group.className = 'chart-bar-group';
+                
+                const val = Math.floor(Math.random() * 500000) + 100000;
+                const h = (val / 700000) * 100;
+                
+                const day = i + 1;
+                const dateLabel = (day < 10 ? '0' + day : day) + "/05";
+
+                group.innerHTML = `
+                    <div class="chart-bar" style="height: ${h}%" title="Ngày ${dateLabel}: ${val.toLocaleString()} requests"></div>
+                    <span class="bar-label">${dateLabel}</span>
+                `;
+                container.appendChild(group);
+            }
+        }
+
+        // Init
+        generateChart(15);
+    </script>
+</body>
+</html>

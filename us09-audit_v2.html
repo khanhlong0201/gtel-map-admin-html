@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - Nhật ký Truy vết v2</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .severity-low { color: var(--success); background: rgba(34, 197, 94, 0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; }
+        .severity-medium { color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; }
+        .severity-high { color: var(--danger); background: rgba(239, 68, 68, 0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+
+        /* Key-Value Diff Table */
+        .audit-diff-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--bg-sidebar); border-radius: 8px; overflow: hidden; }
+        .audit-diff-table th { text-align: left; background: rgba(255,255,255,0.05); padding: 12px; font-size: 0.8rem; color: var(--text-dim); }
+        .audit-diff-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.85rem; vertical-align: top; }
+        .val-old { color: #f87171; background: rgba(248, 113, 113, 0.1); padding: 2px 4px; border-radius: 3px; text-decoration: line-through; }
+        .val-new { color: #4ade80; background: rgba(74, 222, 128, 0.1); padding: 2px 4px; border-radius: 3px; font-weight: bold; }
+        
+        .audit-meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; }
+        .meta-item { display: flex; flex-direction: column; gap: 4px; }
+        .meta-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
+        .meta-value { font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
+
+        .action-desc { font-weight: 500; color: var(--text-main); }
+        .action-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
+
+        /* Icon Module circle */
+        .module-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        .bg-iam { background: rgba(56, 189, 248, 0.1); color: var(--primary); }
+        .bg-config { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+        .bg-api { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .bg-user { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+
+        /* Tabs inside Modal */
+        .tabs { display: flex; gap: 10px; border-bottom: 1px solid var(--border); }
+        .tab-item { padding: 10px 20px; cursor: pointer; color: var(--text-dim); position: relative; font-size: 0.85rem; }
+        .tab-item.active { color: var(--primary); font-weight: bold; }
+        .tab-item.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li class="active"><a href="us09-audit.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Nhật ký Truy vết v2 (Audit Logs)</h1>
+                    <p style="color: var(--text-dim)">Minh bạch hóa mọi thay đổi trên hệ thống - "Ai đã làm gì, vào lúc nào?"</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="showToast('Đã xuất báo cáo Audit (.csv)')">
+                        <i class="fas fa-file-export"></i> Xuất dữ liệu
+                    </button>
+                </div>
+            </header>
+
+            <div class="card">
+                <div style="display: flex; gap: 0.75rem; margin-bottom: 2rem; align-items: center; flex-wrap: wrap;">
+                    <div style="position: relative; flex: 1; min-width: 250px;">
+                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 12px; color: var(--text-dim)"></i>
+                        <input type="text" class="form-control" placeholder="Tìm tên quản trị viên, hành động..." style="padding-left: 35px;">
+                    </div>
+                    
+                    <select id="filter-module" class="form-control" style="max-width: 160px">
+                        <option value="all">Tất cả phân hệ</option>
+                        <option value="config">Cấu hình hệ thống</option>
+                        <option value="iam">Quản trị quyền</option>
+                        <option value="user">Người dùng</option>
+                        <option value="api">API Keys</option>
+                    </select>
+
+                    <select id="filter-severity" class="form-control" style="max-width: 140px">
+                        <option value="all">Mọi mức độ</option>
+                        <option value="high">Quan trọng</option>
+                        <option value="medium">Cảnh báo</option>
+                        <option value="low">Bình thường</option>
+                    </select>
+
+                    <div style="display: flex; align-items: center; gap: 8px; color: var(--text-dim); font-size: 0.8rem; background: rgba(255,255,255,0.03); padding: 0 10px; border-radius: 6px; border: 1px solid var(--border);">
+                        <span>Từ:</span> <input type="date" class="form-control" style="border:none; background:transparent; width: 120px; padding: 5px 0;">
+                        <span style="opacity: 0.3">|</span>
+                        <span>Đến:</span> <input type="date" class="form-control" style="border:none; background:transparent; width: 120px; padding: 5px 0;">
+                    </div>
+
+                    <select id="filter-period" class="form-control" style="max-width: 160px">
+                        <option>7 ngày gần nhất</option>
+                        <option>30 ngày gần nhất</option>
+                        <option>6 tháng gần nhất</option>
+                        <option>Tùy chọn khác...</option>
+                    </select>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" style="padding: 8px 16px;"><i class="fas fa-filter"></i> Lọc dữ liệu</button>
+                        <button class="btn btn-outline" style="padding: 8px 12px;" title="Xóa bộ lọc"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Quản trị viên</th>
+                            <th>Hành động thực hiện</th>
+                            <th>Mức độ</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10:45:22<br><small style="color:var(--text-dim)">Hôm nay</small></td>
+                            <td style="display: flex; align-items: center; gap: 10px">
+                                <div class="avatar-init" style="background:var(--primary)" data-name="A"></div>
+                                <div>
+                                    <div style="font-weight:500">admin@gtel.vn</div>
+                                    <div style="font-size:0.7rem; color:var(--text-dim)">IP: 14.226.x.x</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px">
+                                    <div class="module-icon bg-config"><i class="fas fa-cog"></i></div>
+                                    <div>
+                                        <div class="action-desc">Thay đổi chính sách bảo mật 2FA</div>
+                                        <div class="action-sub">Phân hệ: Cấu hình hệ thống</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="severity-high">Quan trọng</span></td>
+                            <td><button class="btn btn-outline btn-sm" onclick="viewAuditV2('2fa')"><i class="fas fa-eye"></i> Xem thay đổi</button></td>
+                        </tr>
+                        <tr>
+                            <td>10:30:10<br><small style="color:var(--text-dim)">Hôm nay</small></td>
+                            <td style="display: flex; align-items: center; gap: 10px">
+                                <div class="avatar-init" style="background:#22c55e" data-name="N"></div>
+                                <div>
+                                    <div style="font-weight:500">nguyen.van.a</div>
+                                    <div style="font-size:0.7rem; color:var(--text-dim)">IP: 118.70.x.x</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px">
+                                    <div class="module-icon bg-user"><i class="fas fa-user-edit"></i></div>
+                                    <div>
+                                        <div class="action-desc">Cập nhật hồ sơ: Trần Thị B</div>
+                                        <div class="action-sub">Phân hệ: Quản lý người dùng</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="severity-low">Bình thường</span></td>
+                            <td><button class="btn btn-outline btn-sm" onclick="viewAuditV2('user-edit')"><i class="fas fa-eye"></i> Xem thay đổi</button></td>
+                        </tr>
+                        <tr>
+                            <td>09:15:45<br><small style="color:var(--text-dim)">Hôm nay</small></td>
+                            <td style="display: flex; align-items: center; gap: 10px">
+                                <div class="avatar-init" style="background:var(--primary)" data-name="A"></div>
+                                <div>
+                                    <div style="font-weight:500">admin@gtel.vn</div>
+                                    <div style="font-size:0.7rem; color:var(--text-dim)">IP: 14.226.x.x</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px">
+                                    <div class="module-icon bg-iam"><i class="fas fa-shield-alt"></i></div>
+                                    <div>
+                                        <div class="action-desc">Sửa Ma trận quyền: Nhóm Admin</div>
+                                        <div class="action-sub">Phân hệ: IAM Center</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="severity-medium">Cần lưu ý</span></td>
+                            <td><button class="btn btn-outline btn-sm" onclick="viewAuditV2('rbac')"><i class="fas fa-eye"></i> Xem thay đổi</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 0.85rem;">
+                    <span>Hiển thị 2 / 25,400 bản ghi</span>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-outline btn-sm" disabled>Trang trước</button>
+                        <button class="btn btn-outline btn-sm">Trang sau</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-audit-v2" class="modal-overlay">
+                <div class="modal" style="width: 850px; max-height: 90vh;">
+                    <div class="modal-header">
+                        <h3>Chi tiết lịch sử thay đổi (Audit Detail)</h3>
+                        <span class="close" onclick="closeModal('modal-audit-v2')">&times;</span>
+                    </div>
+                    <div class="modal-body" id="audit-v2-body">
+                        <!-- Dynamic Content -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" onclick="closeModal('modal-audit-v2')">Đóng cửa sổ</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function viewAuditV2(type) {
+            const body = document.getElementById('audit-v2-body');
+            let metaHtml = `
+                <div class="audit-meta-grid">
+                    <div class="meta-item"><div class="meta-label">Mã yêu cầu (Request ID)</div><div class="meta-value">REQ-10293-847</div></div>
+                    <div class="meta-item"><div class="meta-label">Địa chỉ IP</div><div class="meta-value">14.226.152.xx</div></div>
+                    <div class="meta-item"><div class="meta-label">Trình duyệt</div><div class="meta-value">Chrome 124.0 (Windows)</div></div>
+                </div>
+                <div class="tabs" style="margin-bottom: 20px;">
+                    <div class="tab-item active" id="tab-user-view" onclick="toggleAuditMode('user')"><i class="fas fa-table"></i> Chế độ Người dùng</div>
+                    <div class="tab-item" id="tab-code-view" onclick="toggleAuditMode('code')"><i class="fas fa-code"></i> Chế độ Code (JSON)</div>
+                </div>
+            `;
+
+            let tableHtml = "";
+            let codeHtml = "";
+
+            if (type === '2fa') {
+                tableHtml = `
+                    <div id="audit-content-user">
+                        <div style="font-weight:bold; margin-bottom:10px;"><i class="fas fa-exchange-alt"></i> So sánh dữ liệu:</div>
+                        <table class="audit-diff-table">
+                            <thead>
+                                <tr><th width="30%">Trường dữ liệu</th><th width="35%">Giá trị cũ</th><th width="35%">Giá trị mới</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Chính sách 2FA</td><td><span class="val-old">Tùy chọn (Optional)</span></td><td><span class="val-new">Bắt buộc (Required)</span></td></tr>
+                                <tr><td>Thời gian Timeout</td><td><span class="val-old">120 phút</span></td><td><span class="val-new">60 phút</span></td></tr>
+                                <tr><td>Lý do cập nhật</td><td>---</td><td>"Tăng cường bảo mật hệ thống"</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                codeHtml = `
+                    <div id="audit-content-code" style="display:none;">
+                        <div style="background: #0f172a; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; line-height: 1.6; border: 1px solid var(--border);">
+                            <div style="color: #64748b; margin-bottom: 10px;">// Raw JSON Diff</div>
+                            <div>{</div>
+                            <div style="padding-left: 20px;"><span style="color: #94a3b8;">"auth":</span> {</div>
+                            <div style="padding-left: 40px; color: #f87171;">- "twoFactorPolicy": "optional",</div>
+                            <div style="padding-left: 40px; color: #4ade80;">+ "twoFactorPolicy": "required",</div>
+                            <div style="padding-left: 40px; color: #f87171;">- "sessionTimeout": 120,</div>
+                            <div style="padding-left: 40px; color: #4ade80;">+ "sessionTimeout": 60</div>
+                            <div style="padding-left: 20px;">}</div>
+                            <div>}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'user-edit') {
+                tableHtml = `
+                    <div id="audit-content-user">
+                        <div style="font-weight:bold; margin-bottom:10px;"><i class="fas fa-exchange-alt"></i> So sánh dữ liệu:</div>
+                        <table class="audit-diff-table">
+                            <thead>
+                                <tr><th width="30%">Trường dữ liệu</th><th width="35%">Giá trị cũ</th><th width="35%">Giá trị mới</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Họ và tên</td><td><span class="val-old">Trần Thị B</span></td><td><span class="val-new">Trần Thị B (Dự án)</span></td></tr>
+                                <tr><td>Vai trò (Role)</td><td><span class="val-old">Map Viewer</span></td><td><span class="val-new">Editor</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                codeHtml = `
+                    <div id="audit-content-code" style="display:none;">
+                        <div style="background: #0f172a; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
+                            <div style="color: #64748b; margin-bottom: 10px;">// Payload Update</div>
+                            <div>{</div>
+                            <div style="padding-left: 20px; color: #f87171;">- "full_name": "Trần Thị B",</div>
+                            <div style="padding-left: 20px; color: #4ade80;">+ "full_name": "Trần Thị B (Dự án)",</div>
+                            <div style="padding-left: 20px; color: #f87171;">- "role": "viewer",</div>
+                            <div style="padding-left: 20px; color: #4ade80;">+ "role": "editor"</div>
+                            <div>}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'rbac') {
+                tableHtml = `
+                    <div id="audit-content-user">
+                        <div style="background: rgba(56, 189, 248, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+                            <strong>Đối tượng thay đổi:</strong> Nhóm người dùng [Admin]
+                        </div>
+                        <div style="font-weight:bold; margin-bottom:10px;"><i class="fas fa-exchange-alt"></i> Thay đổi đặc quyền:</div>
+                        <table class="audit-diff-table">
+                            <thead>
+                                <tr><th width="30%">Hành động</th><th width="70%">Chi tiết thay đổi</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span style="color: #4ade80;"><i class="fas fa-plus-circle"></i> Cấp mới</span></td>
+                                    <td>
+                                        <span class="val-new">project:delete</span> (Toàn quyền xóa dự án)<br>
+                                        <span class="val-new">sys:audit_export</span> (Xuất nhật ký hệ thống)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span style="color: #f87171;"><i class="fas fa-minus-circle"></i> Thu hồi</span></td>
+                                    <td>
+                                        <span class="val-old">user:password_reset</span> (Quyền reset mật khẩu nhân sự)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                codeHtml = `
+                    <div id="audit-content-code" style="display:none;">
+                        <div style="background: #0f172a; padding: 20px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; line-height: 1.6;">
+                            <div style="color: #64748b; margin-bottom: 10px;">// IAM Matrix Permissions Diff</div>
+                            <div>{</div>
+                            <div style="padding-left: 20px;">"role": "admin",</div>
+                            <div style="padding-left: 20px;">"permissions_diff": {</div>
+                            <div style="padding-left: 40px; color: #4ade80;">+ "added": ["project:delete", "sys:audit_export"],</div>
+                            <div style="padding-left: 40px; color: #f87171;">- "removed": ["user:password_reset"]</div>
+                            <div style="padding-left: 20px;">}</div>
+                            <div>}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            body.innerHTML = metaHtml + tableHtml + codeHtml;
+            openModal('modal-audit-v2');
+        }
+
+        function toggleAuditMode(mode) {
+            const userView = document.getElementById('audit-content-user');
+            const codeView = document.getElementById('audit-content-code');
+            const tabUser = document.getElementById('tab-user-view');
+            const tabCode = document.getElementById('tab-code-view');
+
+            if (mode === 'user') {
+                userView.style.display = 'block';
+                codeView.style.display = 'none';
+                tabUser.classList.add('active');
+                tabCode.classList.remove('active');
+            } else {
+                userView.style.display = 'none';
+                codeView.style.display = 'block';
+                tabUser.classList.remove('active');
+                tabCode.classList.add('active');
+            }
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        document.querySelectorAll('.avatar-init').forEach(av => {
+            const name = av.getAttribute('data-name');
+            av.textContent = name.charAt(0).toUpperCase();
+            av.style.width = '32px'; av.style.height = '32px';
+            av.style.borderRadius = '50%'; av.style.color = 'black';
+            av.style.display = 'flex'; av.style.alignItems = 'center'; av.style.justifyContent = 'center';
+            av.style.fontSize = '0.8rem'; av.style.fontWeight = 'bold';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - Audit Logs</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .severity-low {
+            color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .severity-medium {
+            color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .severity-high {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .diff-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: var(--bg-sidebar);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        .diff-box {
+            overflow: hidden;
+        }
+
+        .diff-label {
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .diff-content {
+            color: var(--text-main);
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .val-old {
+            color: #f87171;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .val-new {
+            color: #4ade80;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li class="active"><a href="us09-audit.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Nhật ký Hệ thống (Audit Traceability)</h1>
+                    <p style="color: var(--text-dim)">Truy vết toàn bộ hành động quản trị và thay đổi cấu hình</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline"><i class="fas fa-filter"></i> Bộ lọc nâng cao</button>
+                    <button class="btn btn-primary" onclick="showToast('Đã xuất báo cáo Audit (.xlsx)')">
+                        <i class="fas fa-download"></i> Xuất Report
+                    </button>
+                </div>
+            </header>
+
+            <div class="card">
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center;">
+                    <div style="position: relative; flex: 1;">
+                        <i class="fas fa-search"
+                            style="position: absolute; left: 12px; top: 12px; color: var(--text-dim)"></i>
+                        <input type="text" class="form-control" placeholder="Tìm tên admin, hành động..."
+                            style="padding-left: 35px;">
+                    </div>
+                    <select id="filter-module" class="form-control" style="max-width: 150px" onchange="filterAudit()">
+                        <option value="all">Mọi phân hệ</option>
+                        <option value="iam">IAM Center</option>
+                        <option value="config">Cấu hình</option>
+                        <option value="api">API Keys</option>
+                        <option value="project">Dự án</option>
+                    </select>
+                    <select class="form-control" style="max-width: 150px">
+                        <option>7 ngày qua</option>
+                        <option>30 ngày qua</option>
+                        <option>Tùy chọn...</option>
+                    </select>
+                </div>
+
+                <table id="audit-table">
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Admin thực hiện</th>
+                            <th>Phân hệ</th>
+                            <th>Hành động tiêu biểu</th>
+                            <th>Cấp độ</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-module="config">
+                            <td>Vừa xong</td>
+                            <td style="display: flex; align-items: center; gap: 8px">
+                                <div class="avatar-init" style="background:#3b82f6" data-name="A"></div> admin@gtel.vn
+                            </td>
+                            <td><span class="badge">Cấu hình</span></td>
+                            <td>Thay đổi <strong>system.auth.twoFactorPolicy</strong></td>
+                            <td><span class="severity-medium">Cảnh báo</span></td>
+                            <td><button class="btn btn-outline btn-sm" onclick="viewAuditDetail('config-2fa')">Xem
+                                    Diff</button></td>
+                        </tr>
+                        <tr data-module="iam">
+                            <td>5 phút trước</td>
+                            <td style="display: flex; align-items: center; gap: 8px">
+                                <div class="avatar-init" style="background:#f59e0b" data-name="H"></div> h.manh_cuong
+                            </td>
+                            <td><span class="badge">IAM</span></td>
+                            <td>Cập nhật Permission matrix: <strong>Nhóm Kỹ thuật</strong></td>
+                            <td><span class="severity-low">Thông thường</span></td>
+                            <td><button class="btn btn-outline btn-sm" onclick="viewAuditDetail('iam-rbac')">Chi
+                                    tiết</button></td>
+                        </tr>
+                        <tr data-module="api">
+                            <td>12 phút trước</td>
+                            <td style="display: flex; align-items: center; gap: 8px">
+                                <div class="avatar-init" style="background:#ef4444" data-name="S"></div> super_root
+                            </td>
+                            <td><span class="badge">API Keys</span></td>
+                            <td>Hủy kích hoạt Key: <strong>Web_Public_API</strong></td>
+                            <td><span class="severity-high">Nghiệm trọng</span></td>
+                            <td><button class="btn btn-outline btn-sm" onclick="viewAuditDetail('api-del')">Lý
+                                    do</button></td>
+                        </tr>
+                        <tr data-module="config">
+                            <td>1 giờ trước</td>
+                            <td style="display: flex; align-items: center; gap: 8px">
+                                <div class="avatar-init" style="background:#3b82f6" data-name="A"></div> admin@gtel.vn
+                            </td>
+                            <td><span class="badge">Cấu hình</span></td>
+                            <td>Thay đổi <strong>system.map.defaultBasemap</strong></td>
+                            <td><span class="severity-low">Thông thường</span></td>
+                            <td><button class="btn btn-outline btn-sm" onclick="viewAuditDetail('config-map')">Xem
+                                    Diff</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div
+                    style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--text-dim); font-size: 0.85rem;">
+                    <span>Hiển thị 4 / 2,450 bản ghi nhật ký</span>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-outline btn-sm" disabled>Trang trước</button>
+                        <button class="btn btn-outline btn-sm">Trang sau</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: AUDIT DETAIL / DIFF -->
+            <div id="modal-audit-detail" class="modal-overlay">
+                <div class="modal" style="width: 700px;">
+                    <div class="modal-header">
+                        <h3>Chi tiết thay đổi dữ liệu</h3>
+                        <span onclick="closeModal('modal-audit-detail')" style="cursor:pointer">&times;</span>
+                    </div>
+                    <div class="modal-body" id="audit-detail-body">
+                        <!-- Dynamic Content -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" onclick="closeModal('modal-audit-detail')">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function filterAudit() {
+            const module = document.getElementById('filter-module').value;
+            document.querySelectorAll('#audit-table tbody tr').forEach(tr => {
+                if (module === 'all' || tr.getAttribute('data-module') === module) {
+                    tr.style.display = '';
+                } else {
+                    tr.style.display = 'none';
+                }
+            });
+        }
+
+        function viewAuditDetail(type) {
+            const body = document.getElementById('audit-detail-body');
+            let content = "";
+
+            if (type === 'config-2fa') {
+                content = `
+                    <div style="margin-bottom:15px">Hành động: <strong>Cập nhật cấu hình 2FA Policy</strong></div>
+                    <div class="diff-container">
+                        <div class="diff-box">
+                            <div class="diff-label">Trước thay đổi</div>
+                            <div class="diff-content"><span class="val-old">"twoFactorPolicy": "optional"</span></div>
+                        </div>
+                        <div class="diff-box">
+                            <div class="diff-label">Sau thay đổi</div>
+                            <div class="diff-content"><span class="val-new">"twoFactorPolicy": "required"</span></div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'config-map') {
+                content = `
+                    <div style="margin-bottom:15px">Hành động: <strong>Thay đổi Default Basemap</strong></div>
+                    <div class="diff-container">
+                        <div class="diff-box">
+                            <div class="diff-label">Trước thay đổi</div>
+                            <div class="diff-content"><span class="val-old">"defaultBasemap": "gtelmaps-streets-v1"</span></div>
+                        </div>
+                        <div class="diff-box">
+                            <div class="diff-label">Sau thay đổi</div>
+                            <div class="diff-content"><span class="val-new">"defaultBasemap": "gtelmaps-satellite-streets-v1"</span></div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                content = `<p>Đang tải chi tiết metadata hành động từ server...</p>`;
+            }
+
+            body.innerHTML = content;
+            openModal('modal-audit-detail');
+        }
+    </script>
+</body>
+
+</html>
+
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps - Admin Dashboard v4</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .db-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+        .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+        .db-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .db-card-title { font-size: 0.9rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin-bottom: 15px; }
+        
+        /* Service Status Styles */
+        .service-grid { display: flex; flex-direction: column; gap: 12px; }
+        .service-status-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .dot-online { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .dot-offline { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+
+        /* Quota Styles */
+        .quota-item { margin-bottom: 15px; }
+        .quota-labels { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; }
+        .quota-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .quota-fill { height: 100%; background: var(--primary); }
+
+        /* Activity Feed */
+        .feed-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; display: flex; gap: 12px; }
+        .feed-time { color: var(--text-dim); font-size: 0.75rem; white-space: nowrap; }
+
+        /* Chart */
+        .main-chart { height: 220px; display: flex; align-items: flex-end; gap: 4px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .chart-bar { flex: 1; background: var(--primary); border-radius: 2px 2px 0 0; min-height: 5px; position: relative; transition: height 0.5s; }
+        .chart-bar:hover { filter: brightness(1.3); cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li class="active"><a href="dashboard_v4.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users_v2.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac_v2.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics_v2.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit_v2.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Bảng điều hành Tổng thể (v4)</h1>
+                    <p style="color: var(--text-dim)">Giám sát sản lượng API, trạng thái dịch vụ và tài nguyên dự án</p>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div id="custom-date-range" style="display: none; align-items: center; gap: 8px; color: var(--text-dim); font-size: 0.8rem; background: rgba(255,255,255,0.03); padding: 0 10px; border-radius: 6px; border: 1px solid var(--border); height: 38px;">
+                        <span>Từ:</span> <input type="date" class="form-control" style="border:none; background:transparent; width: 120px; padding: 5px 0;">
+                        <span style="opacity: 0.3">|</span>
+                        <span>Đến:</span> <input type="date" class="form-control" style="border:none; background:transparent; width: 120px; padding: 5px 0;">
+                    </div>
+                    <select class="form-control" style="width: 180px" onchange="toggleCustomDate(this)">
+                        <option value="today">Hôm nay</option>
+                        <option value="7days">7 ngày trước</option>
+                        <option value="30days" selected>30 ngày gần đây</option>
+                        <option value="custom">Khoảng ngày...</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="refreshDashboard()"><i class="fas fa-filter"></i> Lọc</button>
+                </div>
+            </header>
+
+            <div class="stat-cards">
+                <div class="db-card">
+                    <p style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Số lượng request (24h)</p>
+                    <h3 style="font-size: 1.8rem; margin: 5px 0;">1,250,402</h3>
+                    <small style="color: var(--success)"><i class="fas fa-caret-up"></i> 8.2%</small>
+                </div>
+                <div class="db-card">
+                    <p style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Dự án đang hoạt động</p>
+                    <h3 style="font-size: 1.8rem; margin: 5px 0;">42</h3>
+                    <small style="color: var(--text-dim)">+2 dự án mới tháng này</small>
+                </div>
+                <div class="db-card">
+                    <p style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Tổng API Keys Active</p>
+                    <h3 style="font-size: 1.8rem; margin: 5px 0;">158</h3>
+                    <p style="font-size: 0.7rem; color: var(--text-dim)">Hạn dùng trung bình: 180 ngày</p>
+                </div>
+                <div class="db-card">
+                    <p style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Tỷ lệ lỗi hệ thống</p>
+                    <h3 style="font-size: 1.8rem; margin: 5px 0; color: var(--danger);">0.04%</h3>
+                    <small style="color: var(--success)">Dưới ngưỡng cảnh báo (0.1%)</small>
+                </div>
+            </div>
+
+            <div class="db-grid">
+                <div class="db-card">
+                    <span class="db-card-title"><i class="fas fa-chart-line"></i> Biểu đồ lưu lượng request chi tiết</span>
+                    <div class="main-chart" id="pulse-chart">
+                        <!-- Generated by JS -->
+                    </div>
+                    <div style="margin-top: 15px; font-size: 0.75rem; color: var(--text-dim); display: flex; justify-content: center; gap: 20px;">
+                        <span><i class="fas fa-circle" style="color: var(--primary); font-size: 0.5rem;"></i> Request thành công</span>
+                        <span><i class="fas fa-info-circle"></i> Hover vào cột để xem con số thực tế</span>
+                    </div>
+                </div>
+
+                <div class="db-card">
+                    <span class="db-card-title"><i class="fas fa-server"></i> Trạng thái dịch vụ API lõi</span>
+                    <div class="service-grid">
+                        <div class="service-status-item">
+                            <span><i class="fas fa-layer-group"></i> Vector Tiles API</span>
+                            <span><span class="status-dot dot-online"></span> Đang hoạt động</span>
+                        </div>
+                        <div class="service-status-item">
+                            <span><i class="fas fa-search-location"></i> Geocoding Service</span>
+                            <span><span class="status-dot dot-online"></span> Đang hoạt động</span>
+                        </div>
+                        <div class="service-status-item">
+                            <span><i class="fas fa-directions"></i> Routing API</span>
+                            <span><span class="status-dot dot-online"></span> Đang hoạt động</span>
+                        </div>
+                        <div class="service-status-item">
+                            <span><i class="fas fa-map"></i> Static Maps Service</span>
+                            <span><span class="status-dot dot-online"></span> Đang hoạt động</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="db-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="db-card">
+                    <span class="db-card-title"><i class="fas fa-history"></i> Hoạt động quản trị gần đây</span>
+                    <div class="feed-list">
+                        <div class="feed-item">
+                            <span class="feed-time">11:20 AM</span>
+                            <span><strong>Admin01</strong> đã thay đổi quyền cho nhóm <em>Kỹ thuật viên</em>.</span>
+                        </div>
+                        <div class="feed-item">
+                            <span class="feed-time">10:45 AM</span>
+                            <span><strong>SuperAdmin</strong> cập nhật cấu hình hệ thống Gateway v2.</span>
+                        </div>
+                        <div class="feed-item">
+                            <span class="feed-time">09:12 AM</span>
+                            <span><strong>Admin02</strong> phê duyệt 03 người dùng mới từ đơn vị <em>C08</em>.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="db-card">
+                    <span class="db-card-title"><i class="fas fa-exclamation-circle"></i> Cảnh báo vận hành & Tài nguyên</span>
+                    <div class="quota-list">
+                        <div class="quota-item">
+                            <div class="quota-labels">
+                                <span>Giao thông C08 (Quota)</span>
+                                <span><strong>850,200</strong> / 1,000,000 req</span>
+                            </div>
+                            <div class="quota-bar"><div class="quota-fill" style="width: 85%; background: var(--warning);"></div></div>
+                        </div>
+                        <div class="quota-item">
+                            <div class="quota-labels">
+                                <span>Mobile SDK (Quota)</span>
+                                <span><strong>420,000</strong> / 500,000 req</span>
+                            </div>
+                            <div class="quota-bar"><div class="quota-fill" style="width: 84%; background: var(--warning);"></div></div>
+                        </div>
+                        <div class="quota-item">
+                            <div class="quota-labels" style="color: var(--danger)">
+                                <span>Key PCCC_Alert (Sắp hết hạn)</span>
+                                <span>Còn 2 ngày</span>
+                            </div>
+                            <div class="quota-bar"><div class="quota-fill" style="width: 95%; background: var(--danger);"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function toggleCustomDate(select) {
+            const range = document.getElementById('custom-date-range');
+            range.style.display = (select.value === 'custom') ? 'flex' : 'none';
+        }
+
+        function refreshDashboard() {
+            generateBars();
+            alert('Dữ liệu đã được cập nhật!');
+        }
+
+        function generateBars() {
+            const chart = document.getElementById('pulse-chart');
+            chart.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const val = Math.floor(Math.random() * 100000) + 20000;
+                const h = (val / 150000) * 100;
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = h + '%';
+                bar.setAttribute('title', `Số lượng request: ${val.toLocaleString()}`);
+                chart.appendChild(bar);
+            }
+        }
+
+        generateBars();
+    </script>
+</body>
+</html>

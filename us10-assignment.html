@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - Phân quyền người dùng</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .role-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .role-card:hover { border-color: var(--primary); background: rgba(56, 189, 248, 0.05); }
+        .role-card.selected { border-color: var(--primary); background: rgba(56, 189, 248, 0.1); }
+        .role-card input { margin-top: 4px; }
+        .role-info h4 { margin-bottom: 4px; font-size: 1rem; }
+        .role-info p { font-size: 0.85rem; color: var(--text-dim); }
+        
+        .permission-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        .permission-pill.inherited {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(56, 189, 248, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="active"><a href="us07-users.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title" id="page-title">Sửa đổi đặc quyền</h1>
+                    <p style="color: var(--text-dim)" id="page-desc">Phân quyền nghiệp vụ cho nhân sự cấp cao</p>
+                </div>
+                <button class="btn btn-outline" onclick="location.href='us07-users.html'">
+                    <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                </button>
+            </header>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <!-- Left: Identity Info & Role Selection -->
+                <div>
+                    <div class="card" style="margin-bottom: 24px;" id="identity-card">
+                        <h3 style="margin-bottom: 15px; font-size: 1.1rem">Thông tin định danh</h3>
+                        <div style="display: flex; gap: 16px; align-items: center;" id="user-info-normal">
+                            <div class="avatar-init" data-name="Nguyễn" style="width: 48px; height: 48px; font-size: 1.2rem"></div>
+                            <div>
+                                <h4 style="font-size: 1.1rem">Nguyễn Văn A</h4>
+                                <p style="color: var(--text-dim)">van.a@mapview.com • <span class="badge" style="background:var(--border)">Map Viewer User</span></p>
+                            </div>
+                        </div>
+                        <div style="display: none; flex-direction: column; gap: 16px;" id="user-info-bulk">
+                            <div style="display: flex; gap: 16px; align-items: center;">
+                                <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: black; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1.1rem">CHẾ ĐỘ CẬP NHẬT HÀNG LOẠT</h4>
+                                    <p style="color: var(--text-dim)">Đang chọn <strong id="bulk-display-count" style="color:var(--primary)">0</strong> người dùng từ bộ lọc.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Danh sách xem cụ thể hàng ngàn người -->
+                            <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <p style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Danh sách chi tiết đối tượng gán quyền:</p>
+                                    <div style="position: relative;">
+                                        <i class="fas fa-search" style="position: absolute; left: 10px; top: 8px; font-size: 0.7rem; color: var(--text-dim);"></i>
+                                        <input type="text" class="form-control" placeholder="Tìm trong danh sách chọn..." style="height: 24px; font-size: 0.7rem; padding-left: 25px; width: 180px; background: rgba(0,0,0,0.2);">
+                                    </div>
+                                </div>
+                                
+                                <div style="max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-right: 10px;" id="bulk-user-scroll-list">
+                                    <!-- Header cho danh sách nhỏ -->
+                                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 1fr; gap: 10px; padding: 8px; border-bottom: 1px solid var(--border); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; font-weight: bold;">
+                                        <span>Người dùng</span>
+                                        <span>Email</span>
+                                        <span>Nguồn</span>
+                                    </div>
+
+                                    <!-- Simulated entries -->
+                                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 1fr; gap: 10px; align-items: center; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 4px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <div class="avatar-init" data-name="A" style="width: 24px; height: 24px; font-size: 0.6rem;"></div>
+                                            <span style="font-size: 0.8rem; font-weight: 500;">Nguyễn Văn A</span>
+                                        </div>
+                                        <span style="font-size: 0.75rem; color: var(--text-dim);">admin@gtel.vn</span>
+                                        <span class="badge" style="background:#334155; font-size: 0.6rem; padding: 2px 6px;">Hệ thống</span>
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 1fr; gap: 10px; align-items: center; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 4px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <div class="avatar-init" data-name="B" style="width: 24px; height: 24px; font-size: 0.6rem;"></div>
+                                            <span style="font-size: 0.8rem; font-weight: 500;">Trần Thị B</span>
+                                        </div>
+                                        <span style="font-size: 0.75rem; color: var(--text-dim);">thi.b@mapview.com</span>
+                                        <span class="badge" style="background:#0ea5e9; font-size: 0.6rem; padding: 2px 6px;">Map Viewer</span>
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 1fr; gap: 10px; align-items: center; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 4px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <div class="avatar-init" data-name="C" style="width: 24px; height: 24px; font-size: 0.6rem;"></div>
+                                            <span style="font-size: 0.8rem; font-weight: 500;">Lê Văn C</span>
+                                        </div>
+                                        <span style="font-size: 0.75rem; color: var(--text-dim);">van.c@mapview.com</span>
+                                        <span class="badge" style="background:#0ea5e9; font-size: 0.6rem; padding: 2px 6px;">Map Viewer</span>
+                                    </div>
+                                </div>
+
+                                <!-- Mini Pagination -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid var(--border);">
+                                    <span style="font-size: 0.7rem; color: var(--text-dim);">Trang 1 / <span id="bulk-total-pages">100</span></span>
+                                    <div style="display: flex; gap: 5px;">
+                                        <button class="btn btn-outline" style="padding: 2px 8px; font-size: 0.7rem; height: auto;"><i class="fas fa-chevron-left"></i></button>
+                                        <button class="btn btn-outline" style="padding: 2px 8px; font-size: 0.7rem; height: auto;"><i class="fas fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 15px; font-size: 1.1rem">Chọn Nhóm vai trò (User Groups)</h3>
+                        
+                        <div class="role-card" onclick="toggleRole(this, 'admin')">
+                            <input type="checkbox" id="check-admin">
+                            <div class="role-info">
+                                <h4>Admin Quản trị</h4>
+                                <p>Toàn quyền thao tác trên Dự án, API Key và Thống kê lưu lượng.</p>
+                            </div>
+                        </div>
+
+                        <div class="role-card" onclick="toggleRole(this, 'res_man')">
+                            <input type="checkbox" id="check-res">
+                            <div class="role-info">
+                                <h4>Resource Manager</h4>
+                                <p>Quản lý tài nguyên, bản đồ nền và cấu hình hệ thống chuyên sâu.</p>
+                            </div>
+                        </div>
+
+                        <div class="role-card" onclick="toggleRole(this, 'auditor')">
+                            <input type="checkbox" id="check-auditor">
+                            <div class="role-info">
+                                <h4>Auditor</h4>
+                                <p>Chế độ chỉ xem cho mục đích kiểm soát và tra cứu nhật ký hành động.</p>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="handleUpdate()">
+                            Cập cập đặc quyền
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Expected Permissions (Live Preview) -->
+                <div>
+                    <div class="card" style="min-height: 100%;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="font-size: 1.1rem">Xem trước quyền hạn (Live Preview)</h3>
+                            <span class="badge badge-active" id="perm-count">0 quyền</span>
+                        </div>
+                        <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 20px;">
+                            Kết quả cuối cùng (Union) sau khi gộp các nhóm vai trò đã chọn:
+                        </p>
+
+                        <div id="preview-content">
+                            <div style="text-align: center; padding: 40px 0; color: var(--text-dim);">
+                                <i class="fas fa-shield-alt" style="font-size: 3rem; opacity: 0.2; margin-bottom: 15px;"></i>
+                                <p>Vui lòng chọn ít nhất một nhóm <br>để xem trước quyền hạn.</p>
+                            </div>
+                        </div>
+
+                        <div id="inherited-warning" style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--warning); padding: 12px; border-radius: 8px; margin-top: 40px; display: none;">
+                            <p style="color: var(--warning); font-size: 0.85rem;">
+                                <i class="fas fa-exclamation-triangle"></i> Quyền được đánh dấu xanh là quyền được kế thừa từ Nhóm vai trò. Bạn không thể thu hồi lẻ các quyền này.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Progress Overlay for Bulk Mode -->
+    <div id="progress-overlay" class="modal-overlay" style="background: rgba(2,6,23,0.95); z-index: 2000; display: none;">
+        <div style="width: 400px; text-align: center;">
+            <h3 id="progress-text" style="margin-bottom: 20px; color: white;">Đang xử lý: 0%</h3>
+            <div style="background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden;">
+                <div id="progress-bar-fill" style="background: var(--primary); width: 0%; height: 100%; transition: width 0.2s;"></div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: var(--text-dim)">Hệ thống đang thực thi đồng bộ đặc quyền cho <span id="bulk-run-count">...</span> người dùng. Vui lòng không đóng trình duyệt.</p>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle" style="color: var(--success)"></i>
+        <span class="toast-msg">Thông báo</span>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Check mode on load
+        const urlParams = new URLSearchParams(window.location.search);
+        const isBulk = urlParams.get('mode') === 'bulk';
+        const bulkCount = localStorage.getItem('bulkCount') || 0;
+
+        if (isBulk) {
+            document.getElementById('page-title').textContent = "Cập nhật đặc quyền hàng loạt";
+            document.getElementById('page-desc').textContent = "Áp dụng cấu hình vai trò cho nhóm người dùng đã chọn";
+            document.getElementById('user-info-normal').style.display = 'none';
+            document.getElementById('user-info-bulk').style.display = 'flex';
+            
+            const count = parseInt(bulkCount);
+            document.getElementById('bulk-display-count').textContent = count.toLocaleString();
+            document.getElementById('bulk-run-count').textContent = count.toLocaleString();
+            
+            // Tính số trang (giả sử 10 user/trang)
+            const pts = Math.ceil(count / 10);
+            document.getElementById('bulk-total-pages').textContent = pts.toLocaleString();
+        }
+
+        const rolePermissions = {
+            admin: {
+                title: "Quản trị viên",
+                perms: {
+                    "Dự án": ["project:view", "project:create", "project:edit", "project:archive"],
+                    "API Keys": ["apikey:view", "apikey:create", "apikey:rotate", "apikey:delete", "apikey:reveal_secret"],
+                    "Hệ thống": ["system:config_view", "system:config_edit", "audit:view"]
+                }
+            },
+            res_man: {
+                title: "Quản lý tài nguyên",
+                perms: {
+                    "Dự án": ["project:view", "project:create", "project:edit"],
+                    "API Keys": ["apikey:view", "apikey:create"]
+                }
+            },
+            auditor: {
+                title: "Kiểm toán viên",
+                perms: {
+                    "Tra cứu": ["audit:view", "project:view", "apikey:view", "system:config_view"]
+                }
+            }
+        };
+
+        let activeRoles = new Set();
+
+        function toggleRole(element, roleKey) {
+            const checkbox = element.querySelector('input');
+            if (event.target !== checkbox) {
+                checkbox.checked = !checkbox.checked;
+            }
+            
+            if (checkbox.checked) {
+                element.classList.add('selected');
+                activeRoles.add(roleKey);
+            } else {
+                element.classList.remove('selected');
+                activeRoles.delete(roleKey);
+            }
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const previewContainer = document.getElementById('preview-content');
+            const countLabel = document.getElementById('perm-count');
+            const warning = document.getElementById('inherited-warning');
+            
+            if (activeRoles.size === 0) {
+                previewContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px 0; color: var(--text-dim);">
+                        <i class="fas fa-shield-alt" style="font-size: 3rem; opacity: 0.2; margin-bottom: 15px;"></i>
+                        <p>Vui lòng chọn ít nhất một nhóm <br>để xem trước quyền hạn.</p>
+                    </div>`;
+                countLabel.textContent = "0 quyền";
+                warning.style.display = 'none';
+                return;
+            }
+
+            let merged = {};
+            let totalCount = 0;
+            activeRoles.forEach(roleKey => {
+                const group = rolePermissions[roleKey].perms;
+                for (let category in group) {
+                    if (!merged[category]) merged[category] = new Set();
+                    group[category].forEach(p => {
+                        if (!merged[category].has(p)) {
+                            merged[category].add(p);
+                            totalCount++;
+                        }
+                    });
+                }
+            });
+
+            let html = '';
+            for (let category in merged) {
+                html += `
+                    <div style="margin-bottom: 24px;">
+                        <h4 style="font-size: 0.9rem; color: var(--primary); margin-bottom: 12px; text-transform: uppercase;">${category}</h4>
+                        <div style="display: flex; flex-wrap: wrap;">
+                            ${Array.from(merged[category]).map(p => `<div class="permission-pill inherited">${p}</div>`).join('')}
+                        </div>
+                    </div>`;
+            }
+            
+            previewContainer.innerHTML = html;
+            countLabel.textContent = `${totalCount} quyền`;
+            warning.style.display = 'block';
+        }
+
+        function handleUpdate() {
+            if (activeRoles.size === 0) {
+                showToast('Vui lòng chọn ít nhất 1 nhóm vai trò', 'warning');
+                return;
+            }
+
+            if (isBulk) {
+                document.getElementById('progress-overlay').style.display = 'flex';
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.floor(Math.random() * 15) + 5;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            document.getElementById('progress-overlay').style.display = 'none';
+                            showToast(`Đã gán đặc quyền thành công cho ${bulkCount} người dùng!`);
+                            setTimeout(() => location.href = 'us07-users.html', 1500);
+                        }, 500);
+                    }
+                    document.getElementById('progress-bar-fill').style.width = progress + '%';
+                    document.getElementById('progress-text').textContent = `Đang xử lý: ${progress}%`;
+                }, 300);
+            } else {
+                showToast('Đã cập nhật đặc quyền cho người dùng thành công');
+                setTimeout(() => location.href = 'us07-users.html', 1500);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - Quản trị Người dùng</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="active"><a href="us07-users.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Quản trị Người dùng</h1>
+                    <p style="color: var(--text-dim)">Hồ sơ nhân sự và phân đoạn thị trường người dùng</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('modal-add-user')">
+                    <i class="fas fa-user-plus"></i> Thêm người dùng
+                </button>
+            </header>
+
+            <div class="card">
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <div style="flex-grow: 1; max-width: 300px; position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 12px; color: var(--text-dim)"></i>
+                        <input type="text" class="form-control" style="padding-left: 35px;" placeholder="Tìm kiếm Email, Họ tên...">
+                    </div>
+                    
+                    <select class="form-control" style="max-width: 180px">
+                        <option>Nguồn: Tất cả</option>
+                        <option>Hệ thống (System)</option>
+                        <option>Tự đăng ký (Map Viewer)</option>
+                    </select>
+
+                    <select class="form-control" style="max-width: 180px">
+                        <option>Nhóm quyền: Tất cả</option>
+                        <option>Super Admin</option>
+                        <option>Admin</option>
+                        <option>Resource Manager</option>
+                        <option>Developer</option>
+                        <option>Auditor</option>
+                        <option>Chưa phân quyền</option>
+                    </select>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="40"><input type="checkbox" id="master-check"></th>
+                            <th>Người dùng</th>
+                            <th>Email</th>
+                            <th>Nguồn</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                        <!-- Banner chọn tất cả (Ẩn mặc định) -->
+                        <tr id="select-all-banner" style="display: none; background: rgba(56, 189, 248, 0.1); border: none;">
+                            <td colspan="7" style="text-align: center; padding: 10px; font-size: 0.85rem;">
+                                Bạn đã chọn <strong>3</strong> người dùng trên trang này. 
+                                <a href="javascript:void(0)" onclick="selectAllInfinite()" style="color: var(--primary); font-weight: bold; margin-left: 10px; text-decoration: underline;">Chọn toàn bộ 10,240 người dùng theo bộ lọc này</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="item-check" data-id="1"></td>
+                            <td style="display: flex; align-items: center; gap: 12px">
+                                <div class="avatar-init" data-name="Admin"></div>
+                                <span>Quản trị viên 1</span>
+                            </td>
+                            <td>admin@gtel.vn</td>
+                            <td><span class="badge" style="background:#334155">Hệ thống</span></td>
+                            <td><span class="badge badge-active">Super Admin</span></td>
+                            <td><span class="badge badge-active">Hoạt động</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm" onclick="location.href='us10-assignment.html'"><i class="fas fa-key"></i></button>
+                                <button class="btn btn-outline btn-sm"><i class="fas fa-lock"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="item-check" data-id="2"></td>
+                            <td style="display: flex; align-items: center; gap: 12px">
+                                <div class="avatar-init" data-name="Nguyễn"></div>
+                                <span>Nguyễn Văn A</span>
+                            </td>
+                            <td>van.a@mapview.com</td>
+                            <td><span class="badge" style="background:#0ea5e9">Map Viewer</span></td>
+                            <td><span class="badge badge-unassigned">Chưa gán</span></td>
+                            <td><span class="badge badge-active">Hoạt động</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm" onclick="location.href='us10-assignment.html'"><i class="fas fa-key"></i></button>
+                                <button class="btn btn-outline btn-sm"><i class="fas fa-lock"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="item-check" data-id="3"></td>
+                            <td style="display: flex; align-items: center; gap: 12px">
+                                <div class="avatar-init" data-name="Trần"></div>
+                                <span>Trần Thị B</span>
+                            </td>
+                            <td>thi.b@mapview.com</td>
+                            <td><span class="badge" style="background:#0ea5e9">Map Viewer</span></td>
+                            <td><span class="badge badge-unassigned">Chưa gán</span></td>
+                            <td><span class="badge badge-active">Hoạt động</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm" onclick="location.href='us10-assignment.html'"><i class="fas fa-key"></i></button>
+                                <button class="btn btn-outline btn-sm"><i class="fas fa-lock"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <div style="color: var(--text-dim); font-size: 0.85rem;">
+                        Hiển thị 1 - 10 trong tổng số 1,240 người dùng
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline btn-sm" disabled><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-primary btn-sm">1</button>
+                        <button class="btn btn-outline btn-sm">2</button>
+                        <button class="btn btn-outline btn-sm">3</button>
+                        <button class="btn btn-outline btn-sm">...</button>
+                        <button class="btn btn-outline btn-sm">124</button>
+                        <button class="btn btn-outline btn-sm"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bulk Action Bar -->
+    <div id="bulk-bar" class="bulk-bar">
+        <div style="font-weight: bold; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 15px;">
+            Đã chọn <span id="selected-count" style="color: var(--primary)">0</span> nhân sự
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size: 0.85rem; color: var(--text-dim);">Hành động hàng loạt:</span>
+            <select id="bulk-action-type">
+                <option value="assign">Gán các nhóm quyền...</option>
+                <option value="lock">Khóa tài khoản</option>
+                <option value="delete">Xóa hồ sơ (Xóa vĩnh viễn)</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="openBulkConfirm()">Thực thi</button>
+        </div>
+        <button onclick="selectedUsers.clear(); toggleBulkBar(); $$('.item-check').forEach(c=>c.checked=false); $('#master-check').checked=false;" style="background:none; border:none; cursor:pointer; color: rgba(255,255,255,0.3); padding-left: 10px;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Modal: Bulk Action Confirmation -->
+    <div id="modal-bulk-confirm" class="modal-overlay">
+        <div class="modal" style="border-color: var(--warning); max-width: 550px;">
+            <div class="modal-header">
+                <h3>Thao tác hàng loạt: <span id="bulk-title-action">Gán quyền</span></h3>
+                <span onclick="closeModal('modal-bulk-confirm')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(245, 158, 11, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem;">
+                    <i class="fas fa-users"></i> Đang chọn: <strong id="confirm-count" style="color: var(--primary);">0</strong> người dùng.
+                </div>
+
+                <!-- Role Selection Section (Only visible if action is 'assign') -->
+                <div id="bulk-role-selector">
+                    <p style="font-weight: bold; margin-bottom: 12px; font-size: 0.9rem;">Chọn các Nhóm quyền muốn gán:</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                        <label style="display: flex; gap: 8px; align-items: center; background: var(--bg-sidebar); padding: 10px; border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" value="Super Admin"> Super Admin
+                        </label>
+                        <label style="display: flex; gap: 8px; align-items: center; background: var(--bg-sidebar); padding: 10px; border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" value="Admin"> Admin
+                        </label>
+                        <label style="display: flex; gap: 8px; align-items: center; background: var(--bg-sidebar); padding: 10px; border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" value="Resource Manager"> Resource Manager
+                        </label>
+                        <label style="display: flex; gap: 8px; align-items: center; background: var(--bg-sidebar); padding: 10px; border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" value="Developer"> Developer
+                        </label>
+                        <label style="display: flex; gap: 8px; align-items: center; background: var(--bg-sidebar); padding: 10px; border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" value="Auditor"> Auditor
+                        </label>
+                    </div>
+                </div>
+
+                <div id="bulk-lock-warning" style="display: none; color: var(--danger); margin-bottom: 20px;">
+                    <i class="fas fa-exclamation-triangle"></i> Bạn đang yêu cầu khóa tài khoản của các nhân sự đã chọn. Họ sẽ không thể đăng nhập cho đến khi được mở khóa.
+                </div>
+
+                <p style="font-size: 0.8rem; color: var(--text-dim);">
+                    * Lưu ý: Thao tác này sẽ được xử lý ngầm (Background Job). Kết quả sẽ được thông báo sau khi hoàn tất.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-bulk-confirm')">Hủy bỏ</button>
+                <button class="btn btn-primary" style="background: var(--warning); color: black;" onclick="confirmAndRunBulk()">Xác nhận Thực thi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Overlay -->
+    <div id="progress-overlay" class="modal-overlay" style="background: rgba(2,6,23,0.95); z-index: 2000;">
+        <div style="width: 400px; text-align: center;">
+            <h3 id="progress-text" style="margin-bottom: 20px;">Đang xử lý: 0%</h3>
+            <div style="background: var(--border); height: 8px; border-radius: 4px; overflow: hidden;">
+                <div id="progress-bar-fill" style="background: var(--primary); width: 0%; height: 100%; transition: width 0.2s;"></div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: var(--text-dim)">Hệ thống đang thực thi đồng bộ, vui lòng không đóng trình duyệt.</p>
+        </div>
+    </div>
+
+    <!-- Modal: Add User -->
+    <div id="modal-add-user" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Tạo người dùng mới</h3>
+                <span onclick="closeModal('modal-add-user')" style="cursor:pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" class="form-control" placeholder="Ví dụ: Nguyễn Văn A">
+                </div>
+                <div class="form-group">
+                    <label>Email định danh</label>
+                    <input type="email" class="form-control" placeholder="example@gtel.vn">
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu khởi tạo</label>
+                    <input type="password" class="form-control" placeholder="********">
+                </div>
+                <p style="font-size: 0.8rem; color: var(--warning)">
+                    * Lưu ý: Hồ sơ mới sẽ ở trạng thái "Chưa gán quyền". Bạn cần phân quyền ở bước sau.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-add-user')">Hủy</button>
+                <button class="btn btn-primary" onclick="showToast('Đã tạo hồ sơ người dùng'); closeModal('modal-add-user')">Xác nhận tạo</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle" style="color: var(--success)"></i>
+        <span class="toast-msg">Thông báo</span>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Override selection logic to show/hide banner
+        const originalToggleBulkBar = window.toggleBulkBar;
+        document.getElementById('master-check').addEventListener('change', function(e) {
+            const banner = document.getElementById('select-all-banner');
+            banner.style.display = e.target.checked ? 'table-row' : 'none';
+        });
+
+        function selectAllInfinite() {
+            localStorage.setItem('bulkCount', 10240);
+            selectedUsers.clear();
+            // Simulate adding 10240 IDs (just for the count display)
+            for(let i=0; i<10240; i++) selectedUsers.add(i);
+            
+            document.getElementById('selected-count').textContent = "10,240";
+            showToast('Đã chọn toàn bộ 10,240 người dùng trong danh sách lọc');
+            
+            // Highlight banner area
+            document.getElementById('select-all-banner').innerHTML = `
+                <td colspan="7" style="text-align: center; padding: 10px; font-size: 0.85rem; color: var(--primary);">
+                    <i class="fas fa-check-circle"></i> Toàn bộ 10,240 người dùng đã được chọn. 
+                    <a href="javascript:void(0)" onclick="location.reload()" style="color: var(--text-dim); margin-left: 10px; text-decoration: underline;">Hủy chọn</a>
+                </td>
+            `;
+        }
+
+        function openBulkConfirm() {
+            const count = selectedUsers.size;
+            if (count === 0) {
+                showToast('Vui lòng chọn ít nhất một người dùng', 'warning');
+                return;
+            }
+            
+            const actionType = document.getElementById('bulk-action-type').value;
+            
+            if (actionType === 'assign') {
+                localStorage.setItem('bulkCount', count);
+                location.href = 'us10-assignment.html?mode=bulk';
+                return;
+            }
+
+            // Giao diện cho Khóa/Xóa vẫn dùng Modal nhanh
+            const actionText = document.getElementById('bulk-action-type').options[document.getElementById('bulk-action-type').selectedIndex].text;
+            const roleSelector = document.getElementById('bulk-role-selector');
+            const lockWarning = document.getElementById('bulk-lock-warning');
+            const titleAction = document.getElementById('bulk-title-action');
+
+            document.getElementById('confirm-count').textContent = count.toLocaleString();
+            titleAction.textContent = actionText;
+
+            roleSelector.style.display = 'none';
+            lockWarning.style.display = 'block';
+            lockWarning.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Bạn đang yêu cầu <strong>${actionText}</strong> cho ${count} người dùng. Hành động này sẽ ảnh hưởng đến khả năng truy cập của họ ngay lập tức.`;
+            
+            openModal('modal-bulk-confirm');
+        }
+
+        function confirmAndRunBulk() {
+            const actionText = document.getElementById('bulk-action-type').options[document.getElementById('bulk-action-type').selectedIndex].text;
+            closeModal('modal-bulk-confirm');
+            runBulkProcess(actionText);
+        }
+    </script>
+</body>
+</html>

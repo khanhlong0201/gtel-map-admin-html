@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | GTEL Admin Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+        /* Header Section */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { font-size: 24px; font-weight: 700; color: var(--text-main); }
+        .header p { color: var(--text-muted); font-size: 14px; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer;
+            transition: all 0.2s; border: none; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        /* Stats Row */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
+        .stat-card .label { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; display: block; }
+        .stat-card .value { font-size: 20px; font-weight: 700; }
+
+        /* Filter Section */
+        .filter-bar { 
+            background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border);
+            display: flex; gap: 15px; margin-bottom: 20px; align-items: center;
+        }
+        .search-input { 
+            flex: 1; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); 
+            font-size: 14px; outline: none; transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--primary); }
+        select { padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; background: white; outline: none; }
+
+        /* Table Section */
+        .table-container { background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: #f1f5f9; padding: 15px 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+        td { padding: 15px 20px; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8fafc; }
+
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--primary); font-size: 14px; }
+        .user-details .name { font-weight: 600; display: block; }
+        .user-details .email { font-size: 12px; color: var(--text-muted); }
+
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-active { background: #dcfce7; color: #15803d; }
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-locked { background: #fee2e2; color: #991b1b; }
+
+        .actions { display: flex; gap: 8px; }
+        .btn-icon { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; transition: 0.2s; }
+        .btn-icon:hover { background: #f1f5f9; border-color: var(--text-muted); }
+
+        /* Modal Simulation */
+        #invite-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100; }
+        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 450px; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .modal-header { margin-bottom: 20px; }
+        .modal-header h2 { font-size: 18px; font-weight: 700; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); outline: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Quản trị Người dùng</h1>
+                <p>Quản lý vòng đời tài khoản và phân quyền quản trị viên hệ thống.</p>
+            </div>
+            <button class="btn btn-primary" onclick="showModal()">+ Mời người dùng mới</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="label">Tổng số Admin</span>
+                <span class="value">42</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Đang hoạt động</span>
+                <span class="value" style="color: var(--success)">38</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Chờ xác nhận</span>
+                <span class="value" style="color: var(--warning)">4</span>
+            </div>
+            <div class="stat-card">
+                <span class="label">Bị khóa</span>
+                <span class="value" style="color: var(--danger)">0</span>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <input type="text" class="search-input" placeholder="Tìm theo tên hoặc email...">
+            <select>
+                <option>Tất cả Nhóm quyền</option>
+                <option>Super Admin</option>
+                <option>Project Manager</option>
+                <option>Auditor</option>
+            </select>
+            <select>
+                <option>Trạng thái: Tất cả</option>
+                <option>Active</option>
+                <option>Pending</option>
+                <option>Locked</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Người dùng</th>
+                        <th>Nhóm quyền</th>
+                        <th>Ngày tham gia</th>
+                        <th>Trạng thái</th>
+                        <th>Tương tác cuối</th>
+                        <th style="text-align: right;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="avatar">KL</div>
+                                <div class="user-details">
+                                    <span class="name">Khánh Long</span>
+                                    <span class="email">long.tk@gtel.vn</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span style="font-weight: 500">Super Admin</span></td>
+                        <td>01/01/2026</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td>Vừa xong (10.2.1.45)</td>
+                        <td align="right">
+                            <div class="actions">
+                                <button class="btn-icon" title="Chỉnh sửa">⚙️</button>
+                                <button class="btn-icon" title="Khóa tài khoản">🔒</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="avatar" style="color: #ef4444;">MC</div>
+                                <div class="user-details">
+                                    <span class="name">Mạnh Cường</span>
+                                    <span class="email">cuong.hm@gtel.vn</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span style="font-weight: 500">Project Manager</span></td>
+                        <td>15/02/2026</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td>2 giờ trước</td>
+                        <td align="right">
+                            <div class="actions">
+                                <button class="btn-icon">⚙️</button>
+                                <button class="btn-icon">🔒</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="avatar" style="color: #f59e0b;">PL</div>
+                                <div class="user-details">
+                                    <span class="name">Phương Lam</span>
+                                    <span class="email">lam.p@gtel.vn</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span style="font-weight: 500">Auditor</span></td>
+                        <td>02/05/2026</td>
+                        <td><span class="badge badge-pending">Pending</span></td>
+                        <td>Chưa có</td>
+                        <td align="right">
+                            <div class="actions">
+                                <button class="btn-icon">⚙️</button>
+                                <button class="btn-icon">📧</button>
+                                <button class="btn-icon">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Invite Modal Simulation -->
+    <div id="invite-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Mời người dùng mới</h2>
+            </div>
+            <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text" placeholder="Nhập tên người dùng">
+            </div>
+            <div class="form-group">
+                <label>Email định danh</label>
+                <input type="email" placeholder="email@gtel.vn">
+            </div>
+            <div class="form-group">
+                <label>Nhóm quyền cấp phát</label>
+                <select>
+                    <option>Chọn nhóm quyền...</option>
+                    <option>Project Manager</option>
+                    <option>Auditor</option>
+                    <option>Editor</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" style="flex: 1" onclick="hideModal()">Gửi lời mời</button>
+                <button class="btn" style="flex: 1; border: 1px solid var(--border)" onclick="hideModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showModal() { document.getElementById('invite-modal').style.display = 'flex'; }
+        function hideModal() { document.getElementById('invite-modal').style.display = 'none'; }
+    </script>
+</body>
+</html>

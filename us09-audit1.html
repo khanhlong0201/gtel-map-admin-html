@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTEL Maps - Lịch sử Biến động (US-09)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="shared.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        .audit-table-wrapper {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .severity-badge {
+            font-size: 9px;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sev-thong-thuong {
+            background: rgba(88, 166, 255, 0.1);
+            color: #58a6ff;
+        }
+
+        .sev-canh-bao {
+            background: rgba(234, 179, 8, 0.1);
+            color: #eab308;
+        }
+
+        .sev-nghiem-trong {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .side-drawer {
+            position: fixed;
+            right: -600px;
+            top: 0;
+            width: 600px;
+            height: 100vh;
+            background: #0d1117;
+            z-index: 1000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .side-drawer.open {
+            right: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(8px);
+        }
+
+        .drawer-overlay.open {
+            display: block;
+        }
+
+        .diff-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .diff-table th {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #7d8590;
+            padding: 0 12px;
+            text-align: left;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .diff-table td {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .diff-table td:first-child {
+            border-left: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 12px 0 0 12px;
+            font-weight: 700;
+            color: #58a6ff;
+        }
+
+        .diff-table td:last-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .btn-view-mode {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: 0.2s;
+        }
+
+        .btn-view-mode.active {
+            background: #58a6ff;
+            color: #0d1117;
+        }
+
+        .btn-view-mode:not(.active) {
+            color: #7d8590;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
+            padding: 12px 16px 12px 44px;
+            color: white;
+            font-size: 13px;
+            width: 350px;
+        }
+    </style>
+</head>
+
+<body class="bg-[#06090f]">
+    <div id="gtel-sidebar"></div>
+
+    <main class="main-content">
+        <header class="flex justify-between items-end mb-10">
+            <div>
+                <nav class="text-[10px] uppercase font-black tracking-widest text-[#58a6ff] mb-2">Hệ thống & An ninh
+                </nav>
+                <h1 class="text-4xl font-black text-white tracking-tight italic">Lịch sử Biến động</h1>
+                <p class="text-gray-500 text-sm italic mt-1">Theo dõi và rà soát mọi thay đổi dữ liệu nhân sự, cấu hình
+                    và dự án (Góc nhìn PO).</p>
+            </div>
+            <div class="flex gap-4">
+                <button
+                    class="bg-white/5 border border-white/10 text-gray-400 px-6 py-3 rounded-2xl font-black text-xs hover:bg-white/10 uppercase tracking-widest">Tải
+                    xuống báo cáo biến động</button>
+            </div>
+        </header>
+
+        <!-- Filter Bar -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="relative">
+                <svg class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" width="18" height="18"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="log-search" oninput="renderLogs()"
+                    placeholder="Tìm theo người thực hiện, đối tượng hoặc hành động..." class="search-field">
+            </div>
+
+            <div class="flex gap-4 items-center">
+                <!-- Module Filter -->
+                <span class="text-[10px] font-black text-gray-600 uppercase tracking-widest pl-2">Phân hệ:</span>
+                <select id="module-filter" onchange="renderLogs()"
+                    class="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-[11px] font-bold focus:outline-none focus:border-blue-500 min-w-[150px]">
+                    <option value="all">Tất cả phân hệ</option>
+                    <option value="Người dùng">Người dùng (IAM)</option>
+                    <option value="Dự án">Dự án</option>
+                    <option value="API Keys">API Keys</option>
+                    <option value="Cấu hình">Cấu hình hệ thống</option>
+                </select>
+
+                <span
+                    class="text-[10px] font-black text-gray-600 uppercase tracking-widest pl-2 border-l border-white/10">Mức độ:</span>
+                <select id="severity-filter" onchange="renderLogs()"
+                    class="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-[11px] font-bold focus:outline-none focus:border-blue-500 min-w-[150px]">
+                    <option value="all">Tất cả mức độ</option>
+                    <option value="Thông thường">Thông thường</option>
+                    <option value="Cảnh báo">Cảnh báo</option>
+                    <option value="Nghiêm trọng">Nghiêm trọng</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Audit Table -->
+        <div class="audit-table-wrapper">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-white/2 border-b border-white/5">
+                        <th class="p-6 text-[10px] font-black text-gray-500 uppercase tracking-widest">Thời gian</th>
+                        <th class="p-6 text-[10px] font-black text-gray-500 uppercase tracking-widest">Mức độ</th>
+                        <th class="p-6 text-[10px] font-black text-gray-500 uppercase tracking-widest">Phân hệ</th>
+                        <th class="p-6 text-[10px] font-black text-gray-500 uppercase tracking-widest">Người thực hiện
+                        </th>
+                        <th class="p-6 text-[10px] font-black text-gray-500 uppercase tracking-widest">Nội dung thay đổi
+                        </th>
+                        <th class="p-6 text-[10px] font-black text-gray-500 uppercase tracking-widest">Đối tượng bị tác
+                            động</th>
+                        <th class="p-6 text-[10px] font-black text-gray-500 uppercase tracking-widest text-right">Chi
+                            tiết</th>
+                    </tr>
+                </thead>
+                <tbody id="audit-tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-between items-center mt-6 p-4 bg-white/2 border border-white/5 rounded-2xl">
+            <div class="flex items-center gap-3">
+                <span class="text-[11px] font-bold text-gray-500">Giới hạn hiển thị</span>
+                <select
+                    class="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white text-[11px] font-bold focus:outline-none cursor-pointer">
+                    <option>10</option>
+                    <option selected>20</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+                <span class="text-[11px] font-bold text-gray-500">dòng / trang</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button
+                    class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                    disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg></button>
+                <button
+                    class="w-8 h-8 rounded-lg bg-[#58a6ff] flex items-center justify-center text-[#0d1117] font-black text-[11px]">1</button>
+                <button
+                    class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 font-bold text-[11px] hover:bg-white/10">2</button>
+                <button
+                    class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 font-bold text-[11px] hover:bg-white/10">3</button>
+                <span class="text-gray-600 text-xs px-1">...</span>
+                <button
+                    class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 font-bold text-[11px] hover:bg-white/10">15</button>
+                <button
+                    class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 transition-colors"><svg
+                        width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg></button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Side Drawer Detail -->
+    <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+    <div id="side-drawer" class="side-drawer">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-black text-white italic uppercase tracking-tighter">Chi tiết biến động</h2>
+            <div class="flex bg-white/5 p-1 rounded-lg">
+                <button id="btn-view-table" onclick="setViewMode('table')" class="btn-view-mode active">Bảng</button>
+                <button id="btn-view-json" onclick="setViewMode('json')" class="btn-view-mode">JSON</button>
+            </div>
+        </div>
+
+        <div id="drawer-content" class="space-y-8">
+            <div class="p-6 bg-[#58a6ff]/5 rounded-2xl border border-[#58a6ff]/10">
+                <h3 id="det-action" class="text-lg font-black text-white mb-1"></h3>
+                <p id="det-actor-info" class="text-gray-400 text-xs italic"></p>
+            </div>
+
+            <!-- Human Readable View -->
+            <div id="view-table" class="space-y-6">
+                <table class="diff-table">
+                    <thead>
+                        <tr>
+                            <th>Trường dữ liệu</th>
+                            <th>Giá trị cũ</th>
+                            <th>Giá trị mới</th>
+                        </tr>
+                    </thead>
+                    <tbody id="det-diff-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- JSON View (Hidden) -->
+            <div id="view-json" class="hidden">
+                <pre id="json-box"
+                    class="bg-[#06090f] p-6 rounded-2xl border border-white/5 text-[#79c0ff] font-mono text-[11px] leading-relaxed"></pre>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 bg-white/2 rounded-2xl border border-white/5">
+                    <p class="text-[9px] font-black text-gray-500 uppercase mb-1">IP Truy cập</p>
+                    <p id="det-ip" class="text-xs font-bold text-white"></p>
+                </div>
+                <div class="p-4 bg-white/2 rounded-2xl border border-white/5">
+                    <p class="text-[9px] font-black text-gray-500 uppercase mb-1">Mã tham chiếu</p>
+                    <p id="det-id" class="text-[10px] font-mono text-gray-500"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // MOCK DATA ENGINE (DB Giả lập cho Demo)
+        const engine = {
+            db: {
+                audit_logs: [
+                    {
+                        id: 'AUD-9921',
+                        timestamp: '2026-04-23 15:45:02',
+                        severity: 'Cảnh báo',
+                        actor: 'admin@gtel.vn',
+                        action: 'Thay đổi cấu hình hệ thống',
+                        target: 'system.auth.twoFactorPolicy',
+                        ip: '10.0.8.44',
+                        details: {
+                            before: { twoFactorPolicy: 'optional' },
+                            after: { twoFactorPolicy: 'required' }
+                        }
+                    },
+                    {
+                        id: 'AUD-9918',
+                        timestamp: '2026-04-23 15:20:11',
+                        severity: 'Thông thường',
+                        actor: 'h.manh_cuong@gtel.vn',
+                        action: 'Cập nhật phân quyền nhóm',
+                        target: 'Nhóm Kỹ thuật (Technical_Team)',
+                        ip: '10.0.8.12',
+                        details: {
+                            before: { role: 'Manager', status: 'active' },
+                            after: { role: 'Admin', status: 'active' }
+                        }
+                    },
+                    {
+                        id: 'AUD-9915',
+                        timestamp: '2026-04-23 14:55:30',
+                        severity: 'Nghiêm trọng',
+                        actor: 'super_root',
+                        action: 'Hủy kích hoạt API Key',
+                        target: 'Key_Production_Maps_Internal',
+                        ip: '192.168.1.102',
+                        details: {
+                            before: { status: 'active', key_id: '******ABC' },
+                            after: { status: 'disabled', reason: 'Nghi ngờ rò rỉ Secret Key' }
+                        }
+                    },
+                    {
+                        id: 'AUD-9910',
+                        timestamp: '2026-04-23 14:10:05',
+                        severity: 'Thông thường',
+                        actor: 'admin@gtel.vn',
+                        action: 'Thay đổi Basemap mặc định',
+                        target: 'system.map.defaultBasemap',
+                        ip: '10.0.8.44',
+                        details: {
+                            before: { defaultBasemap: 'gtelmaps-streets-v1' },
+                            after: { defaultBasemap: 'gtelmaps-satellite-streets-v1' }
+                        }
+                    },
+                    {
+                        id: 'AUD-9905',
+                        timestamp: '2026-04-23 11:30:12',
+                        severity: 'Thông thường',
+                        actor: 't.anh_manager',
+                        action: 'Tạo dự án mới',
+                        target: 'Dự án Tuần tra Giao thông Q1',
+                        ip: '10.0.9.5',
+                        details: {
+                            name: 'Dự án Tuần tra Giao thông Q1',
+                            owner: 'Công ty Công nghệ GTEL',
+                            keys: 0
+                        }
+                    },
+                    {
+                        id: 'AUD-9892',
+                        timestamp: '2026-04-23 09:12:44',
+                        severity: 'Cảnh báo',
+                        actor: 'Security_Guard',
+                        action: 'Phát hiện IP lạ truy cập',
+                        target: 'Unknown_IP_Address',
+                        ip: '45.127.14.2',
+                        details: {
+                            ip: '45.127.14.2',
+                            action: 'Thử đăng nhập vào h.manh_cuong',
+                            status: 'Tự động khóa 30 phút'
+                        }
+                    },
+                    {
+                        id: 'AUD-9880',
+                        timestamp: '2026-04-22 17:45:00',
+                        severity: 'Thông thường',
+                        actor: 'h.manh_cuong@gtel.vn',
+                        action: 'Gia hạn API Key',
+                        target: 'Public_Web_API_Standard',
+                        ip: '10.0.8.12',
+                        details: {
+                            before: { expired_at: '2026-05-01' },
+                            after: { expired_at: '2027-04-22' }
+                        }
+                    }
+                ]
+            }
+        };
+
+        // Dictionary để chuyển đổi key sang nhãn Tiếng Việt (Góc nhìn PO)
+        const MAPPER = {
+            'full_name': 'Họ và tên',
+            'email': 'Email tài khoản',
+            'role': 'Vai trò / Quyền hạn',
+            'status': 'Trạng thái hoạt động',
+            'twoFactorPolicy': 'Chính sách bảo mật 2FA',
+            'defaultLanguage': 'Ngôn ngữ hệ thống',
+            'defaultTheme': 'Chế độ giao diện',
+            'defaultBasemap': 'Bản đồ nền mặc định',
+            'name': 'Tên dự án',
+            'owner': 'Đơn vị sở hữu',
+            'key_id': 'Mã API Key',
+            'reason': 'Lý do hệ thống',
+            'rate_limit': 'Giới hạn API',
+            'expired_at': 'Ngày hết hạn',
+            'keys': 'Số lượng Key',
+            'min_length': 'Độ dài MK tối thiểu',
+            'require_spec': 'Yêu cầu ký tự đặc biệt',
+            'allowed_origins': 'Domain cho phép (White-list)',
+            'updated': 'Số bản ghi',
+            'synced_at': 'Thời gian đồng bộ',
+            'ip': 'IP Cảnh báo'
+        };
+
+        // Dictionary để chuyển đổi Giá trị (Value) Tiếng Anh sang Tiếng Việt
+        const VAL_MAPPER = {
+            'Developer': 'Lập trình viên',
+            'Manager': 'Người quản lý',
+            'Admin': 'Quản trị viên',
+            'disabled': 'Đã tắt (Disabled)',
+            'optional': 'Không bắt buộc (Optional)',
+            true: 'Bật (True)',
+            false: 'Tắt (False)',
+            'gtelmaps-basic-v1': 'Bản đồ Cơ bản v1',
+            'gtelmaps-streets-v1': 'Bản đồ Đường phố v1',
+            'light': 'Chế độ Sáng (Light)',
+            'dark': 'Chế độ Tối (Dark)'
+        };
+
+        function getMenuContext(action, target) {
+            const str = (action + ' ' + target).toLowerCase();
+            if (str.includes('api key') || str.includes('domain')) return 'API Keys';
+            if (str.includes('người dùng') || str.includes('tài khoản') || str.includes('rbac') || str.includes('khách') || str.includes('nhân viên') || str.includes('@')) return 'Người dùng';
+            if (str.includes('dự án')) return 'Dự án';
+            if (str.includes('cấu hình') || str.includes('mật khẩu') || str.includes('bản đồ') || str.includes('giao diện')) return 'Cấu hình';
+            return 'Hệ thống';
+        }
+
+        function getTargetIcon(target) {
+            const t = target.toLowerCase();
+            if (t.includes('@') || t.includes('user') || t.includes('tài khoản') || t.includes('khách') || t.includes('văn'))
+                return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+            if (t.includes('key'))
+                return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.726-7.726L11 8l4-4 4 4-4 4-3.61-3.61z"></path></svg>`;
+            if (t.includes('dự án') || t.includes('tuần tra') || t.includes('giao thông') || t.includes('lab') || t.includes('project'))
+                return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>`;
+            return `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`;
+        }
+
+        function getActionStyle(action) {
+            const a = action.toLowerCase();
+            if (a.includes('xóa') || a.includes('khóa') || a.includes('gỡ')) return `<span class="text-red-400 font-bold">${action}</span>`;
+            if (a.includes('thêm') || a.includes('tạo') || a.includes('cấp') || a.includes('gia hạn')) return `<span class="text-green-400 font-bold">${action}</span>`;
+            if (a.includes('cảnh báo')) return `<span class="text-yellow-400 font-bold">${action}</span>`;
+            return `<span class="text-white font-bold">${action}</span>`;
+        }
+
+        function renderLogs() {
+            const query = document.getElementById('log-search').value.toLowerCase();
+            const moduleFilter = document.getElementById('module-filter').value;
+            const severityFilter = document.getElementById('severity-filter').value;
+            
+            const tbody = document.getElementById('audit-tbody');
+            tbody.innerHTML = '';
+
+            const logs = engine.db.audit_logs.filter(l => {
+                const actorActionStr = (l.actor + ' ' + l.action).toLowerCase();
+                const matchSearch = actorActionStr.includes(query);
+                
+                const currentModule = getMenuContext(l.action, l.target);
+                const matchModule = moduleFilter === 'all' || currentModule === moduleFilter;
+                
+                const matchSeverity = severityFilter === 'all' || l.severity === severityFilter;
+                
+                return matchSearch && matchModule && matchSeverity;
+            });
+
+            logs.forEach(log => {
+                const sevLabel = log.severity === 'Nghiêm trọng' ? 'sev-nghiem-trong' : (log.severity === 'Cảnh báo' ? 'sev-canh-bao' : 'sev-thong-thuong');
+                const menuLabel = getMenuContext(log.action, log.target);
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-white/1 border-b border-white/2 transition-colors cursor-pointer" onclick="openDrawer('${log.id}')">
+                        <td class="p-6 text-gray-500 text-xs font-mono">${log.timestamp}</td>
+                        <td class="p-6"><span class="severity-badge ${sevLabel}">${log.severity}</span></td>
+                        <td class="p-6">
+                            <span class="px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 font-bold text-[10px] uppercase tracking-widest whitespace-nowrap">
+                                ${menuLabel}
+                            </span>
+                        </td>
+                        <td class="p-6">
+                            <span class="text-white font-bold text-sm text-[13px]">${log.actor.split('@')[0]}</span>
+                            <span class="text-gray-600 text-xs">@${log.actor.split('@')[1] || ''}</span>
+                        </td>
+                        <td class="p-6 text-sm">
+                            ${getActionStyle(log.action)}
+                        </td>
+                        <td class="p-6">
+                            <div class="inline-flex items-center gap-2 bg-[#58a6ff]/10 border border-[#58a6ff]/20 px-3 py-1.5 rounded-lg text-[#58a6ff] font-black text-[10px] uppercase tracking-widest">
+                                ${getTargetIcon(log.target)}
+                                <span class="truncate max-w-[200px]">${log.target}</span>
+                            </div>
+                        </td>
+                        <td class="p-6 text-right">
+                            <button class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-white"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openDrawer(id) {
+            currentLog = engine.db.audit_logs.find(l => l.id === id);
+
+            document.getElementById('det-action').innerText = currentLog.action;
+            document.getElementById('det-actor-info').innerText = `${currentLog.actor} thực hiện lúc ${currentLog.timestamp}`;
+            document.getElementById('det-ip').innerText = currentLog.ip;
+            document.getElementById('det-id').innerText = currentLog.id;
+            document.getElementById('json-box').innerText = JSON.stringify(currentLog.details, null, 2);
+
+            const tbody = document.getElementById('det-diff-tbody');
+            tbody.innerHTML = '';
+
+            const details = currentLog.details;
+            const keys = new Set([...Object.keys(details.before || {}), ...Object.keys(details.after || {}), ...Object.keys(details || {})]);
+
+            keys.forEach(key => {
+                if (key === 'before' || key === 'after') return;
+                const fieldName = MAPPER[key] || key;
+
+                let rawOld = (details.before && details.before[key] !== undefined && details.before[key] !== null) ? details.before[key] : ((key in details && details.after === undefined) ? details[key] : '-');
+                let rawNew = (details.after && details.after[key] !== undefined && details.after[key] !== null) ? details.after[key] : '-';
+
+                // Helper format array config (White-list)
+                if (Array.isArray(rawOld)) rawOld = rawOld.join(', ');
+                if (Array.isArray(rawNew)) rawNew = rawNew.join(', ');
+
+                const oldVal = (rawOld in VAL_MAPPER) ? VAL_MAPPER[rawOld] : rawOld;
+                const newVal = (rawNew in VAL_MAPPER) ? VAL_MAPPER[rawNew] : rawNew;
+
+                if (oldVal === newVal && oldVal !== '-') return;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${fieldName}</td>
+                        <td class="text-red-400 opacity-60 line-through">${oldVal}</td>
+                        <td class="text-green-400 font-black">${newVal}</td>
+                    </tr>
+                `;
+            });
+
+            if (tbody.innerHTML === '') {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-gray-500 py-10 italic">Không có biến động dữ liệu chi tiết.</td></tr>`;
+            }
+
+            document.getElementById('side-drawer').classList.add('open');
+            document.getElementById('drawer-overlay').classList.add('open');
+            setViewMode('table');
+        }
+
+        function setViewMode(mode) {
+            document.getElementById('view-table').classList.toggle('hidden', mode !== 'table');
+            document.getElementById('view-json').classList.toggle('hidden', mode !== 'json');
+            document.getElementById('btn-view-table').classList.toggle('active', mode === 'table');
+            document.getElementById('btn-view-json').classList.toggle('active', mode === 'json');
+        }
+
+        function closeDrawer() {
+            document.getElementById('side-drawer').classList.remove('open');
+            document.getElementById('drawer-overlay').classList.remove('open');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderLogs);
+    </script>
+</body>
+
+</html>

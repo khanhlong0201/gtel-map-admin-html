@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - Super Admin Dashboard v2</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; position: relative; overflow: hidden; }
+        .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--primary); opacity: 0.3; }
+        .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .stat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .stat-val { font-size: 1.8rem; font-weight: 700; margin: 5px 0; letter-spacing: -0.5px; }
+        .stat-label { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-trend { font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+
+        .dashboard-main { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+        
+        /* Simulated Chart */
+        .chart-placeholder { height: 200px; background: linear-gradient(180deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%); border-bottom: 2px solid var(--primary); position: relative; margin-top: 20px; display: flex; align-items: flex-end; gap: 4px; padding: 0 10px; }
+        .chart-bar { flex: 1; background: var(--primary); opacity: 0.4; border-radius: 4px 4px 0 0; transition: height 0.3s; }
+        .chart-bar:hover { opacity: 0.8; }
+
+        .activity-item { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-time { font-size: 0.7rem; color: var(--text-dim); min-width: 60px; }
+        .activity-content { font-size: 0.85rem; }
+
+        .alert-item { background: rgba(239, 68, 68, 0.05); border-left: 3px solid var(--danger); padding: 12px; border-radius: 0 4px 4px 0; margin-bottom: 10px; }
+        .alert-title { font-size: 0.85rem; font-weight: 600; color: #f87171; margin-bottom: 4px; }
+        .alert-desc { font-size: 0.75rem; color: var(--text-dim); }
+
+        .user-wait-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+        .user-wait-info { flex: 1; }
+        .user-wait-name { font-size: 0.85rem; font-weight: 500; }
+        .user-wait-email { font-size: 0.7rem; color: var(--text-dim); }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li class="active"><a href="dashboard_v2.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users_v2.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li><a href="us02-rbac_v2.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit_v2.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Trung tâm Điều hành Hệ thống</h1>
+                    <p style="color: var(--text-dim)">Trạng thái: <span style="color:var(--success)"><i class="fas fa-check-circle"></i> Đang hoạt động ổn định</span> | Phiên đăng nhập: <strong>admin@gtel.vn</strong></p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" onclick="location.reload()"><i class="fas fa-sync-alt"></i> Làm mới</button>
+                    <button class="btn btn-primary"><i class="fas fa-shield-alt"></i> Security Scan</button>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Người dùng hệ thống</span>
+                        <div class="stat-icon" style="background: rgba(56, 189, 248, 0.1); color: var(--primary);"><i class="fas fa-users"></i></div>
+                    </div>
+                    <p class="stat-val">1,240</p>
+                    <div class="stat-trend" style="color: var(--warning)">
+                        <i class="fas fa-user-clock"></i> <strong>25</strong> đang chờ cấp quyền
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Dự án bản đồ</span>
+                        <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;"><i class="fas fa-layer-group"></i></div>
+                    </div>
+                    <p class="stat-val">84</p>
+                    <div class="stat-trend" style="color: var(--success)">
+                        <i class="fas fa-arrow-up"></i> 12 dự án mới / tháng
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Lưu lượng API (24h)</span>
+                        <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--success);"><i class="fas fa-bolt"></i></div>
+                    </div>
+                    <p class="stat-val">2.4M</p>
+                    <div class="stat-trend" style="color: var(--success)">
+                        <i class="fas fa-check"></i> 99.9% thành công
+                    </div>
+                </div>
+                <div class="stat-card" style="border-bottom: 3px solid var(--danger);">
+                    <div class="stat-header">
+                        <span class="stat-label">Sức khỏe bảo mật</span>
+                        <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--danger);"><i class="fas fa-shield-virus"></i></div>
+                    </div>
+                    <p class="stat-val">92%</p>
+                    <div class="stat-trend" style="color: var(--danger)">
+                        <i class="fas fa-exclamation-circle"></i> 3 cảnh báo chưa xử lý
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-main">
+                <div class="left-col">
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Lưu lượng truy cập (24 giờ qua)</h3>
+                            <select class="form-control" style="width: auto; height: 32px; font-size: 0.75rem;">
+                                <option>Theo giờ</option>
+                                <option>Theo phân hệ</option>
+                            </select>
+                        </div>
+                        <div class="chart-placeholder" id="api-chart">
+                            <!-- Bars generated by JS -->
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px; color: var(--text-dim); font-size: 0.7rem;">
+                            <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>Hiện tại</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3>Nhật ký hành động quan trọng</h3>
+                            <a href="us09-audit_v2.html" style="color: var(--primary); font-size: 0.85rem;">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">10:45</div>
+                            <div class="activity-content">
+                                <strong>admin@gtel.vn</strong> thay đổi chính sách <span class="badge">Bảo mật 2FA</span> sang <strong>Bắt buộc</strong>.
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">10:12</div>
+                            <div class="activity-content">
+                                <strong>nguyen.van.a</strong> đã khóa tài khoản của <strong>tran.thi.c</strong> (IP: 1.2.3.4).
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">09:30</div>
+                            <div class="activity-content">
+                                Hệ thống tự động thu hồi API Key <strong>"test-key-01"</strong> do hết hạn.
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">08:05</div>
+                            <div class="activity-content">
+                                <strong>super_root</strong> cập nhật Ma trận quyền nhóm <strong>Kỹ thuật</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-col">
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h3 style="margin-bottom: 15px; color: #f87171;"><i class="fas fa-bell"></i> Cảnh báo an ninh</h3>
+                        <div class="alert-item">
+                            <div class="alert-title">Thử đăng nhập sai quá số lần</div>
+                            <div class="alert-desc">IP 118.70.x.x đã thử 5 lần vào tài khoản admin.</div>
+                        </div>
+                        <div class="alert-item">
+                            <div class="alert-title">Quyền truy cập nhạy cảm</div>
+                            <div class="alert-desc">Admin "Huy" vừa truy cập xem Secret Key dự án VIP.</div>
+                        </div>
+                        <div class="alert-item" style="border-left-color: var(--warning); background: rgba(245, 158, 11, 0.05);">
+                            <div class="alert-title" style="color: var(--warning);">Cảnh báo tài nguyên</div>
+                            <div class="alert-desc">Dự án "PCCC Hà Nội" đạt 90% giới hạn API Keys.</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 15px;"><i class="fas fa-user-clock"></i> Chờ gán quyền (25)</h3>
+                        <div class="user-wait-item">
+                            <div class="avatar-init" style="background:#334155; width:32px; height:32px;" data-name="K"></div>
+                            <div class="user-wait-info">
+                                <div class="user-wait-name">Lê Văn Kiên</div>
+                                <div class="user-wait-email">kien.lv@gtel.vn</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="location.href='us07-users_v2.html'">Gán</button>
+                        </div>
+                        <div class="user-wait-item">
+                            <div class="avatar-init" style="background:#334155; width:32px; height:32px;" data-name="M"></div>
+                            <div class="user-wait-info">
+                                <div class="user-wait-name">Hoàng Minh</div>
+                                <div class="user-wait-email">minh.h@mapview.com</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="location.href='us07-users_v2.html'">Gán</button>
+                        </div>
+                        <div class="user-wait-item">
+                            <div class="avatar-init" style="background:#334155; width:32px; height:32px;" data-name="T"></div>
+                            <div class="user-wait-info">
+                                <div class="user-wait-name">Đặng Thu Thảo</div>
+                                <div class="user-wait-email">thao.dt@gmail.com</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm" onclick="location.href='us07-users_v2.html'">Gán</button>
+                        </div>
+                        <button class="btn btn-outline btn-sm" style="width:100%; margin-top:10px;" onclick="location.href='us07-users_v2.html'">Xem tất cả</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Generate simulated chart bars
+        const chart = document.getElementById('api-chart');
+        for (let i = 0; i < 24; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'chart-bar';
+            const h = Math.floor(Math.random() * 80) + 10;
+            bar.style.height = h + '%';
+            chart.appendChild(bar);
+        }
+
+        // Initialize avatars
+        document.querySelectorAll('.avatar-init').forEach(av => {
+            const name = av.getAttribute('data-name');
+            av.textContent = name.charAt(0).toUpperCase();
+            av.style.borderRadius = '50%';
+            av.style.background = 'var(--primary)';
+            av.style.color = 'black';
+            av.style.display = 'flex';
+            av.style.alignItems = 'center';
+            av.style.justifyContent = 'center';
+            av.style.fontSize = '0.8rem';
+            av.style.fontWeight = 'bold';
+        });
+    </script>
+</body>
+</html>

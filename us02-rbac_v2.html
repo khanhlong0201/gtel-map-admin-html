@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GTEL Maps Admin - RBAC Control Center v2</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .tab-item {
+            padding: 12px 24px;
+            cursor: pointer;
+            color: var(--text-dim);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sticky Matrix Table */
+        .matrix-container {
+            overflow: auto;
+            max-height: 600px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .matrix-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 1200px;
+        }
+
+        .matrix-table th {
+            background: var(--bg-sidebar);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 0.75rem;
+            border-right: 1px solid var(--border);
+            padding: 10px;
+        }
+
+        .matrix-table td {
+            border-right: 1px solid var(--border);
+            text-align: center;
+            font-size: 1rem;
+            padding: 10px;
+        }
+
+        .matrix-table td:first-child,
+        .matrix-table th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            background: var(--bg-sidebar);
+            border-right: 2px solid var(--border);
+            text-align: left;
+            width: 220px;
+        }
+
+        .matrix-table th:first-child {
+            z-index: 30;
+        }
+
+        .checker {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+        }
+
+        .checker:hover {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary);
+        }
+
+        .checker.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .checker.inherited {
+            color: rgba(56, 189, 248, 0.3);
+            pointer-events: none;
+        }
+
+        .section-header {
+            background: rgba(56, 189, 248, 0.1) !important;
+            color: var(--primary) !important;
+            font-weight: bold;
+        }
+
+        /* Selection Grid for Modals */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg-main);
+        }
+
+        .selection-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .selection-item:hover {
+            background: var(--bg-card);
+            border-color: var(--border);
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .badge-info {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        /* Effective Permissions List */
+        .effective-list {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .effective-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+        }
+
+        .effective-item span:first-child {
+            color: var(--text-main);
+        }
+
+        .effective-item .source {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><i class="fas fa-map-marked-alt"></i> GTEL MAPS</div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="us07-users.html"><i class="fas fa-users-cog"></i> Người dùng</a></li>
+                <li><a href="us04-projects.html"><i class="fas fa-folder-open"></i> Dự án</a></li>
+                <li><a href="us05-apikey.html"><i class="fas fa-key"></i> API Keys</a></li>
+                <li class="active"><a href="us02-rbac.html"><i class="fas fa-shield-alt"></i> IAM Center</a></li>
+                <li><a href="us06-statistics.html"><i class="fas fa-chart-line"></i> Thống kê</a></li>
+                <li><a href="us08-config.html"><i class="fas fa-cog"></i> Cấu hình</a></li>
+                <li><a href="us09-audit.html"><i class="fas fa-history"></i> Audit Logs</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 class="page-title">Trung tâm Quản trị IAM v2</h1>
+                    <p style="color: var(--text-dim)">Quản lý Ma trận quyền và Phân nhóm Subject/Resource</p>
+                </div>
+            </header>
+
+            <div class="tabs">
+                <div class="tab-item active" onclick="switchTab(event, 'tab-matrix')">Ma trận đặc quyền</div>
+                <div class="tab-item" onclick="switchTab(event, 'tab-roles')">Nhóm người dùng</div>
+                <div class="tab-item" onclick="switchTab(event, 'tab-resources')">Nhóm quyền</div>
+                <div class="tab-item" onclick="switchTab(event, 'tab-permissions')">Danh mục quyền</div>
+                <div class="tab-item" onclick="switchTab(event, 'tab-user-direct')">Quyền người dùng cụ thể</div>
+            </div>
+
+            <!-- TAB 1: MATRIX -->
+            <div id="tab-matrix" class="tab-content active">
+                <div class="card">
+                    <div
+                        style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <p style="font-size: 0.9rem; color: var(--text-dim)">
+                            <i class="fas fa-info-circle"></i> Tích vào cột <strong
+                                style="color: var(--primary)">[*]</strong> để gán quyền nhanh cho toàn bộ nhóm tài
+                            nguyên.
+                        </p>
+                        <button class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Cập nhật Ma trận</button>
+                    </div>
+
+                    <div class="matrix-container">
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>NHÓM NGƯỜI DÙNG</th>
+                                    <th colspan="5" class="section-header">[!] RESOURCE: PROJECT</th>
+                                    <th colspan="4" class="section-header">[!] RESOURCE: API KEY</th>
+                                    <th colspan="3" class="section-header">[!] RESOURCE: CHƯA PHÂN LOẠI</th>
+                                </tr>
+                                <tr>
+                                    <th>(Subject)</th>
+                                    <th>[*]</th>
+                                    <th>View</th>
+                                    <th>Create</th>
+                                    <th>Edit</th>
+                                    <th>Del</th>
+                                    <th>[*]</th>
+                                    <th>View</th>
+                                    <th>Generate</th>
+                                    <th>Delete</th>
+                                    <th>---</th>
+                                    <th>action_1</th>
+                                    <th>action_2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>1. Super Admin</strong></td>
+                                    <td class="checker active">[V]</td>
+                                    <td class="checker inherited">(V)</td>
+                                    <td class="checker inherited">(V)</td>
+                                    <td class="checker inherited">(V)</td>
+                                    <td class="checker inherited">(V)</td>
+                                    <td class="checker active">[V]</td>
+                                    <td class="checker inherited">(V)</td>
+                                    <td class="checker inherited">(V)</td>
+                                    <td class="checker inherited">(V)</td>
+                                    <td style="background: var(--bg-main)">---</td>
+                                    <td class="checker active">[X]</td>
+                                    <td class="checker active">[X]</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>2. Admin</strong></td>
+                                    <td class="checker">[ ]</td>
+                                    <td class="checker active">[X]</td>
+                                    <td class="checker active">[X]</td>
+                                    <td class="checker active">[X]</td>
+                                    <td class="checker">[ ]</td>
+                                    <td class="checker">[ ]</td>
+                                    <td class="checker active">[X]</td>
+                                    <td class="checker active">[X]</td>
+                                    <td class="checker">[ ]</td>
+                                    <td style="background: var(--bg-main)">---</td>
+                                    <td class="checker">[ ]</td>
+                                    <td class="checker">[ ]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: USER GROUPS -->
+            <div id="tab-roles" class="tab-content">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <h3 style="font-size: 1.1rem;">DANH SÁCH NHÓM NGƯỜI DÙNG</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('modal-role-form')"><i
+                                class="fas fa-plus"></i> [ + THÊM NHÓM & GÁN QUYỀN ]</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã nhóm</th>
+                                <th>Tên hiển thị</th>
+                                <th>SL User</th>
+                                <th>Mô tả</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>root</code></td>
+                                <td>Super Admin</td>
+                                <td>02</td>
+                                <td>Toàn quyền quản trị hệ thống cao nhất</td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" onclick="openModal('modal-role-form')">Sửa &
+                                        Gán lại quyền</button>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete()">Xóa</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 3: PERMISSION GROUPS -->
+            <div id="tab-resources" class="tab-content">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <h3 style="font-size: 1.1rem;">DANH SÁCH NHÓM QUYỀN</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('modal-resource-form')"><i
+                                class="fas fa-plus"></i> [ + THÊM NHÓM QUYỀN & GÁN QUYỀN CON ]</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã nhóm quyền</th>
+                                <th>Tên nhóm quyền</th>
+                                <th>SL Quyền con</th>
+                                <th>Mô tả phạm vi</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>project</code></td>
+                                <td>Quản lý dự án</td>
+                                <td>05</td>
+                                <td>Hoạt động Project</td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm"
+                                        onclick="openModal('modal-resource-form')">Sửa & Gán lại quyền con</button>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete()">Xóa</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 4: PERMISSIONS -->
+            <div id="tab-permissions" class="tab-content">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <h3 style="font-size: 1.1rem;">DANH MỤC QUYỀN CƠ SỞ</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('modal-permission-form')"><i
+                                class="fas fa-plus"></i> [ + THÊM QUYỀN ]</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã định danh</th>
+                                <th>Tên hiển thị</th>
+                                <th>Thuộc nhóm</th>
+                                <th>Mô tả</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>proj:view</code></td>
+                                <td>Xem dự án</td>
+                                <td>project</td>
+                                <td>Truy cập list</td>
+                                <td><button class="btn btn-outline btn-sm"
+                                        onclick="openModal('modal-permission-form')">Sửa</button> <button
+                                        class="btn btn-danger btn-sm" onclick="confirmDelete()">Xóa</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 5: USER DIRECT -->
+            <div id="tab-user-direct" class="tab-content">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <h3 style="font-size: 1.1rem;">PHÂN QUYỀN TRỰC TIẾP CHO NGƯỜI DÙNG</h3>
+                        <input type="text" placeholder="Tìm tên hoặc mã NV..."
+                            style="padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã NV</th>
+                                <th>Họ tên</th>
+                                <th>Nhóm người dùng</th>
+                                <th>Quyền</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>NV001</code></td>
+                                <td>Nguyễn Văn A</td>
+                                <td><span class="badge badge-info">Admin</span></td>
+                                <td><span class="badge badge-success">proj:delete</span> <span
+                                        class="badge badge-success">sys:audit</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                        onclick="openModal('modal-user-permissions')"><i class="fas fa-user-shield"></i>
+                                        Chỉnh sửa quyền</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Modal Role Form (User Groups) -->
+    <div id="modal-role-form" class="modal-overlay">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Cập nhật nhóm Người Dùng & Quyền</h3><span class="close"
+                    onclick="closeModal('modal-role-form')">&times;</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div class="form-group"><label>Mã nhóm</label><input type="text" class="form-control"
+                            placeholder="vd: root"></div>
+                    <div class="form-group"><label>Tên hiển thị</label><input type="text" class="form-control"
+                            placeholder="vd: Super Admin"></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;"><label>Mô tả nhóm</label><textarea
+                        class="form-control" rows="2"
+                        placeholder="Nhập mô tả ý nghĩa và trách nhiệm của nhóm..."></textarea></div>
+                <div style="border-top: 1px solid var(--border); padding-top: 15px;">
+                    <label><strong>Gán Nhóm Quyền (Permission Groups):</strong></label>
+                    <div class="selection-grid">
+                        <label class="selection-item"><input type="checkbox"> Quản lý Dự án</label>
+                        <label class="selection-item"><input type="checkbox"> Quản trị API Key</label>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label><strong>Gán Quyền Lẻ (Individual Permissions):</strong></label>
+                    <div class="selection-grid">
+                        <label class="selection-item"><input type="checkbox"> sys:config:view</label>
+                        <label class="selection-item"><input type="checkbox"> audit:view</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline"
+                    onclick="closeModal('modal-role-form')">Hủy</button><button class="btn btn-primary"
+                    onclick="handleSave('Nhóm & Quyền')">Lưu</button></div>
+        </div>
+    </div>
+
+    <!-- Modal Resource Form (Permission Groups) -->
+    <div id="modal-resource-form" class="modal-overlay">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Cập nhật nhóm Quyền & Quyền con</h3><span class="close"
+                    onclick="closeModal('modal-resource-form')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label>Mã nhóm quyền</label><input type="text" class="form-control"
+                        placeholder="vd: project"></div>
+                <div class="form-group"><label>Tên nhóm quyền</label><input type="text" class="form-control"
+                        placeholder="vd: Quản lý dự án"></div>
+                <div class="form-group"><label>Mô tả nhóm quyền</label><textarea class="form-control" rows="2"
+                        placeholder="Nhập mô tả phạm vi của nhóm quyền này..."></textarea></div>
+                <div style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: 15px;">
+                    <label><strong>Thành phần Quyền con (Sub-permissions):</strong></label>
+                    <div class="selection-grid" style="max-height: 300px;">
+                        <label class="selection-item"><input type="checkbox" checked> proj:view</label>
+                        <label class="selection-item"><input type="checkbox" checked> proj:create</label>
+                        <label class="selection-item"><input type="checkbox" checked> proj:edit</label>
+                        <label class="selection-item"><input type="checkbox" checked> proj:delete</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline"
+                    onclick="closeModal('modal-resource-form')">Hủy</button><button class="btn btn-primary"
+                    onclick="handleSave('Nhóm quyền')">Lưu</button></div>
+        </div>
+    </div>
+
+    <!-- Modal Permission Form -->
+    <div id="modal-permission-form" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Cập nhật Quyền</h3><span class="close" onclick="closeModal('modal-permission-form')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label>Mã quyền</label><input type="text" class="form-control"
+                        placeholder="vd: proj:view"></div>
+                <div class="form-group"><label>Tên hiển thị</label><input type="text" class="form-control"
+                        placeholder="vd: Xem dự án"></div>
+                <div class="form-group"><label>Mô tả quyền</label><textarea class="form-control" rows="2"
+                        placeholder="Nhập mô tả chi tiết về tác vụ của quyền này..."></textarea></div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline"
+                    onclick="closeModal('modal-permission-form')">Hủy</button><button class="btn btn-primary"
+                    onclick="handleSave('Quyền')">Lưu</button></div>
+        </div>
+    </div>
+
+    <!-- Modal User Direct Permissions - NOW WITH PREVIEW EFFECTIVE PERMISSIONS -->
+    <div id="modal-user-permissions" class="modal-overlay">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3>Phân quyền chi tiết & Xem trước quyền: Nguyễn Văn A</h3><span class="close"
+                    onclick="closeModal('modal-user-permissions')">&times;</span>
+            </div>
+            <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <!-- Left Column: Configuration -->
+                    <div>
+                        <div
+                            style="background: var(--bg-main); padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary);">
+                            <strong>Nhóm người dùng</strong> <span class="badge badge-info">Admin</span>
+                        </div>
+
+                        <label><strong>Gán thêm Nhóm quyền riêng:</strong></label>
+                        <div class="selection-grid" style="max-height: 150px;">
+                            <label class="selection-item"><input type="checkbox"> Quản lý Nhân sự</label>
+                            <label class="selection-item"><input type="checkbox"> Thống kê nâng cao</label>
+                        </div>
+
+                        <label style="margin-top: 20px; display: block;"><strong>Gán thêm Quyền lẻ (Ghi
+                                đè):</strong></label>
+                        <div class="selection-grid" style="max-height: 150px;">
+                            <label class="selection-item"><input type="checkbox" checked> proj:delete</label>
+                            <label class="selection-item"><input type="checkbox" checked> sys:audit</label>
+                            <label class="selection-item"><input type="checkbox"> db:backup</label>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Effective Preview -->
+                    <div class="effective-container">
+                        <label><strong><i class="fas fa-bolt"></i> TỔNG HỢP QUYỀN THỰC TẾ (EFFECTIVE):</strong></label>
+                        <div class="effective-list">
+                            <div class="effective-item">
+                                <span>proj:view</span>
+                                <span class="source"><i class="fas fa-users"></i> Nhóm: Admin</span>
+                            </div>
+                            <div class="effective-item">
+                                <span>proj:create</span>
+                                <span class="source"><i class="fas fa-users"></i> Nhóm: Admin</span>
+                            </div>
+                            <div class="effective-item">
+                                <span>proj:edit</span>
+                                <span class="source"><i class="fas fa-users"></i> Nhóm: Admin</span>
+                            </div>
+                            <div class="effective-item" style="background: rgba(34, 197, 94, 0.05);">
+                                <span>proj:delete</span>
+                                <span class="source" style="color: #22c55e;"><i class="fas fa-user-check"></i> Gán trực
+                                    tiếp</span>
+                            </div>
+                            <div class="effective-item" style="background: rgba(34, 197, 94, 0.05);">
+                                <span>sys:audit</span>
+                                <span class="source" style="color: #22c55e;"><i class="fas fa-user-check"></i> Gán trực
+                                    tiếp</span>
+                            </div>
+                            <div class="effective-item">
+                                <span>key:view</span>
+                                <span class="source"><i class="fas fa-users"></i> Nhóm: Admin</span>
+                            </div>
+                            <div
+                                style="margin-top: 10px; font-size: 0.75rem; color: var(--text-dim); font-style: italic;">
+                                * Quyền gán trực tiếp sẽ có độ ưu tiên cao nhất.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer"><button class="btn btn-outline"
+                    onclick="closeModal('modal-user-permissions')">Hủy</button><button class="btn btn-primary"
+                    onclick="handleSave('Quyền cá nhân')">Lưu & Áp dụng</button></div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete -->
+    <div id="modal-delete-confirm" class="modal-overlay">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header" style="border:none;">
+                <h3>Xác nhận xóa?</h3><span class="close" onclick="closeModal('modal-delete-confirm')">&times;</span>
+            </div>
+            <div class="modal-body" style="text-align:center;"><i class="fas fa-exclamation-triangle"
+                    style="font-size:3rem; color:#ef4444;"></i>
+                <p>Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer" style="justify-content:center;"><button class="btn btn-outline"
+                    onclick="closeModal('modal-delete-confirm')">Hủy</button><button class="btn btn-danger"
+                    onclick="handleDelete()">Xóa</button></div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        function switchTab(evt, tabId) {
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(ti => ti.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function initMatrix() {
+            const htmlChecked = '<i class="fas fa-check-square" style="color: var(--primary)"></i>';
+            const htmlUnchecked = '<i class="far fa-square" style="opacity: 0.3"></i>';
+            const htmlInherited = '<i class="fas fa-check-circle" style="opacity: 0.4; color: var(--primary)"></i>';
+
+            document.querySelectorAll('.matrix-table tbody tr').forEach(row => {
+                row.querySelectorAll('td.checker').forEach(cell => {
+                    const txt = cell.innerText.trim();
+                    if (txt === '[V]' || txt === '[X]') cell.innerHTML = htmlChecked;
+                    else if (txt === '(V)') cell.innerHTML = htmlInherited;
+                    else cell.innerHTML = htmlUnchecked;
+
+                    cell.onclick = function () {
+                        if (this.classList.contains('inherited')) return;
+                        const isChecked = this.querySelector('.fa-check-square');
+                        const isWildcard = this.cellIndex === 1 || this.cellIndex === 6;
+
+                        if (isChecked) this.innerHTML = htmlUnchecked;
+                        else this.innerHTML = htmlChecked;
+
+                        if (isWildcard) {
+                            const range = (this.cellIndex === 1) ? [2, 3, 4, 5] : [7, 8, 9];
+                            const nowChecked = this.querySelector('.fa-check-square');
+                            range.forEach(idx => {
+                                const child = row.cells[idx];
+                                if (nowChecked) {
+                                    child.innerHTML = htmlInherited;
+                                    child.classList.add('inherited');
+                                } else {
+                                    child.innerHTML = htmlUnchecked;
+                                    child.classList.remove('inherited');
+                                }
+                            });
+                        }
+                    };
+                });
+            });
+        }
+
+        function handleSave(type) { alert('Đã lưu ' + type + ' thành công!'); closeModalByClass(); }
+        function confirmDelete() { openModal('modal-delete-confirm'); }
+        function handleDelete() { alert('Đã xóa thành công!'); closeModal('modal-delete-confirm'); }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function closeModalByClass() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+
+        window.onclick = function (e) { if (e.target.classList.contains('modal-overlay')) e.target.style.display = "none"; }
+        document.addEventListener('DOMContentLoaded', initMatrix);
+    </script>
+</body>
+
+</html>
