@@ -1,0 +1,288 @@
+<title>Ideaverse — Bản đồ cấu trúc & luồng tư duy</title>
+<style>
+  :root {
+    --ground:#FBF9F3; --surface:#FFFFFF; --surface-2:#FFFDF7;
+    --ink:#201C15; --ink-soft:#6B6455; --line:#E7E1D4;
+    --yellow:#FFD24A; --yellow-deep:#E4A916; --yellow-soft:#FFF0C2;
+    --purple:#6D4AFF; --purple-soft:#ECE7FF; --purple-ink:#3E2BA8;
+    --teal:#0E9C9C; --teal-soft:#D6F2F0; --teal-ink:#0A6A6A;
+    --red:#E5533C; --red-soft:#FCE3DD; --red-ink:#A5341F;
+    --node-border:#201C15; --shadow:rgba(32,28,21,.9);
+    --s0:.72rem; --s1:.82rem; --s2:.95rem; --s3:1.15rem; --s4:1.6rem; --s6:clamp(2rem,5vw,3.1rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:#141219; --surface:#1E1B26; --surface-2:#232030;
+      --ink:#F3EFE6; --ink-soft:#A79F90; --line:#322E3D;
+      --yellow:#FFD24A; --yellow-deep:#F0C23A; --yellow-soft:#39321C;
+      --purple:#A48BFF; --purple-soft:#2A2340; --purple-ink:#CDBEFF;
+      --teal:#3CC7C2; --teal-soft:#123030; --teal-ink:#8FE6E2;
+      --red:#FF7A63; --red-soft:#3A1E18; --red-ink:#FFB3A3;
+      --node-border:#0C0B10; --shadow:rgba(0,0,0,.75);
+    }
+  }
+  :root[data-theme="light"] {
+    --ground:#FBF9F3; --surface:#FFFFFF; --surface-2:#FFFDF7; --ink:#201C15; --ink-soft:#6B6455; --line:#E7E1D4;
+    --yellow:#FFD24A; --yellow-deep:#E4A916; --yellow-soft:#FFF0C2;
+    --purple:#6D4AFF; --purple-soft:#ECE7FF; --purple-ink:#3E2BA8;
+    --teal:#0E9C9C; --teal-soft:#D6F2F0; --teal-ink:#0A6A6A;
+    --red:#E5533C; --red-soft:#FCE3DD; --red-ink:#A5341F;
+    --node-border:#201C15; --shadow:rgba(32,28,21,.9);
+  }
+  :root[data-theme="dark"] {
+    --ground:#141219; --surface:#1E1B26; --surface-2:#232030; --ink:#F3EFE6; --ink-soft:#A79F90; --line:#322E3D;
+    --yellow:#FFD24A; --yellow-deep:#F0C23A; --yellow-soft:#39321C;
+    --purple:#A48BFF; --purple-soft:#2A2340; --purple-ink:#CDBEFF;
+    --teal:#3CC7C2; --teal-soft:#123030; --teal-ink:#8FE6E2;
+    --red:#FF7A63; --red-soft:#3A1E18; --red-ink:#FFB3A3;
+    --node-border:#0C0B10; --shadow:rgba(0,0,0,.75);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1120px; margin:0 auto; padding:0 20px 80px; }
+
+  header { padding:52px 0 24px; text-align:center; }
+  .eyebrow { font-family:ui-monospace,"Cascadia Code",Consolas,monospace; font-size:var(--s1); letter-spacing:.22em; text-transform:uppercase; color:var(--yellow-deep); font-weight:700; margin:0 0 14px; }
+  h1 { font-family:ui-rounded,"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif; font-size:var(--s6); font-weight:800; letter-spacing:-.02em; margin:0 0 10px; text-wrap:balance; line-height:1.05; }
+  h1 .hl { position:relative; white-space:nowrap; }
+  h1 .hl::after { content:""; position:absolute; left:-4px; right:-4px; bottom:.08em; height:.42em; background:var(--yellow); z-index:-1; border-radius:3px; transform:rotate(-1deg); }
+  .sub { max-width:62ch; margin:6px auto 0; color:var(--ink-soft); font-size:var(--s3); text-wrap:balance; }
+
+  .section-head { text-align:center; margin:56px 0 8px; }
+  .section-head .k { font-family:ui-monospace,Consolas,monospace; font-size:var(--s1); letter-spacing:.2em; text-transform:uppercase; color:var(--ink-soft); }
+  .section-head h2 { font-family:ui-rounded,"Segoe UI","Segoe UI Variable Display",system-ui,sans-serif; font-size:var(--s4); font-weight:800; margin:4px 0 4px; letter-spacing:-.01em; }
+  .section-head p { color:var(--ink-soft); font-size:var(--s2); margin:0 auto; max-width:60ch; }
+
+  /* ACE hero cards */
+  .ace { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:26px; }
+  .ace-card { background:var(--surface); border:2px solid var(--node-border); border-radius:16px; padding:18px 18px 16px; box-shadow:4px 4px 0 var(--shadow); }
+  .ace-card .big { font-size:1.7rem; }
+  .ace-card h3 { margin:8px 0 4px; font-size:var(--s3); font-weight:800; }
+  .ace-card .role { font-family:ui-monospace,Consolas,monospace; font-size:var(--s0); text-transform:uppercase; letter-spacing:.1em; padding:2px 9px; border-radius:999px; display:inline-block; margin-bottom:8px; border:1.5px solid var(--node-border); }
+  .ace-card p { margin:0; font-size:var(--s2); color:var(--ink-soft); }
+  .ace-card.a { border-top:6px solid var(--yellow-deep); } .ace-card.a .role { background:var(--yellow); color:#201C15; }
+  .ace-card.c { border-top:6px solid var(--teal); } .ace-card.c .role { background:var(--teal-soft); color:var(--teal-ink); border-color:var(--teal); }
+  .ace-card.e { border-top:6px solid var(--purple); } .ace-card.e .role { background:var(--purple-soft); color:var(--purple-ink); border-color:var(--purple); }
+  .mnemonic { text-align:center; margin-top:16px; font-size:var(--s2); color:var(--ink-soft); }
+  .mnemonic b { color:var(--ink); }
+  .support { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:14px; }
+  .support .chip { font-size:var(--s1); padding:6px 13px; border-radius:999px; border:1.5px dashed var(--node-border); background:var(--surface-2); }
+
+  /* Spine lifecycle */
+  .roadmap { position:relative; margin-top:34px; }
+  .roadmap::before { content:""; position:absolute; top:6px; bottom:30px; left:50%; transform:translateX(-50%); width:4px; border-radius:4px; background:repeating-linear-gradient(var(--yellow-deep) 0 9px, transparent 9px 18px); z-index:0; }
+  .step { position:relative; z-index:1; }
+  .hub-wrap { display:flex; justify-content:center; }
+  .hub { display:inline-flex; align-items:center; gap:12px; background:var(--yellow); color:#201C15; border:2px solid var(--node-border); border-radius:999px; padding:10px 20px 10px 11px; margin:16px 0 12px; box-shadow:3px 3px 0 var(--shadow); max-width:100%; }
+  .hub .num { font-family:ui-monospace,Consolas,monospace; font-weight:700; background:#201C15; color:var(--yellow); border-radius:999px; width:28px; height:28px; display:grid; place-items:center; font-size:var(--s2); flex:none; }
+  .hub .t { font-family:ui-rounded,"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif; font-weight:800; font-size:var(--s3); text-align:left; line-height:1.15; }
+  .step-body { display:flex; justify-content:center; margin-bottom:6px; }
+  .step-card { background:var(--surface); border:2px solid var(--node-border); border-radius:14px; padding:13px 16px; box-shadow:3px 3px 0 var(--shadow); max-width:640px; width:100%; }
+  .step-card p { margin:0; font-size:var(--s2); }
+  .step-card .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:9px; }
+  .tag { font-size:var(--s0); font-family:ui-monospace,Consolas,monospace; padding:3px 9px; border-radius:999px; border:1.5px solid var(--node-border); font-weight:600; }
+  .tag.folder { background:var(--yellow-soft); }
+  .tag.arc { background:var(--purple-soft); color:var(--purple-ink); border-color:var(--purple); }
+  .tag.hot { background:var(--red-soft); color:var(--red-ink); border-color:var(--red); }
+  .tag.time { background:var(--teal-soft); color:var(--teal-ink); border-color:var(--teal); }
+
+  /* Folder dictionary */
+  .dict { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin-top:26px; }
+  .fcard { background:var(--surface); border:2px solid var(--node-border); border-radius:14px; padding:15px 16px; box-shadow:3px 3px 0 var(--shadow); border-left-width:7px; }
+  .fcard h3 { margin:0 0 4px; font-size:var(--s2); font-weight:800; font-family:ui-monospace,Consolas,monospace; display:flex; align-items:center; gap:8px; }
+  .fcard .mean { font-size:var(--s2); margin:0 0 9px; }
+  .fcard .when { font-size:var(--s1); color:var(--ink-soft); border-top:1.5px dashed var(--line); padding-top:8px; }
+  .fcard .when b { color:var(--ink); }
+  .fcard .subs { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+  .fcard .sub { font-size:var(--s0); padding:3px 8px; border-radius:7px; background:var(--surface-2); border:1px solid var(--line); }
+  .fcard.inbox { border-left-color:var(--red); } .fcard.atlas { border-left-color:var(--yellow-deep); }
+  .fcard.calendar { border-left-color:var(--teal); } .fcard.efforts { border-left-color:var(--purple); }
+  .fcard.sys { border-left-color:var(--ink-soft); }
+
+  /* Decision cheatsheet */
+  .decide { margin-top:26px; background:var(--surface); border:2px solid var(--node-border); border-radius:16px; padding:20px 22px; box-shadow:4px 4px 0 var(--shadow); }
+  .decide h3 { margin:0 0 14px; font-size:var(--s3); font-weight:800; text-align:center; }
+  .drow { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; padding:9px 0; border-bottom:1.5px dashed var(--line); }
+  .drow:last-child { border-bottom:none; }
+  .drow .cond { font-size:var(--s2); }
+  .drow .to { font-family:ui-monospace,Consolas,monospace; font-size:var(--s1); font-weight:700; padding:4px 11px; border-radius:8px; border:1.5px solid var(--node-border); background:var(--yellow-soft); white-space:nowrap; text-align:right; }
+  .drow .arw { color:var(--yellow-deep); font-weight:800; }
+
+  .principle { margin-top:22px; display:flex; gap:14px; align-items:flex-start; background:var(--purple-soft); border:1.5px solid var(--purple); border-radius:14px; padding:16px 18px; }
+  .principle .i { font-size:1.3rem; } .principle b { color:var(--purple-ink); }
+  .principle p { margin:0; font-size:var(--s2); }
+
+  footer { margin-top:52px; padding-top:22px; border-top:1.5px solid var(--line); text-align:center; color:var(--ink-soft); font-size:var(--s1); }
+  footer b { color:var(--ink); }
+
+  @media (max-width:700px) {
+    .roadmap::before { left:20px; transform:none; }
+    .hub-wrap, .step-body { justify-content:flex-start; }
+    .drow { grid-template-columns:1fr; gap:4px; text-align:left; }
+    .drow .to { justify-self:start; text-align:left; }
+    .drow .arw { display:none; }
+  }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+  .step, .ace-card, .fcard { opacity:0; transform:translateY(12px); animation:rise .5s ease forwards; }
+  @keyframes rise { to { opacity:1; transform:none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Ideaverse Pro · Cấu trúc &amp; Luồng tư duy</p>
+    <h1>Bản đồ <span class="hl">Ideaverse</span><br>Hệ thống hoạt động thế nào</h1>
+    <p class="sub">Mỗi thư mục nghĩa là gì · khi nào bỏ file vào đâu · và một ý tưởng chảy qua hệ thống ra sao để thành tư duy chín. Đọc kèm bộ vault của bạn.</p>
+  </header>
+
+  <!-- PART 1: ACE -->
+  <div class="section-head">
+    <span class="k">Phần 1 · Mô hình gốc</span>
+    <h2>ACE — 3 không gian cốt lõi</h2>
+    <p>Cả vault chia làm 3 vùng theo <b>chức năng của tư duy</b>, không theo chủ đề. Nhớ được 3 cái này là hiểu 80% hệ thống.</p>
+  </div>
+  <div class="ace">
+    <div class="ace-card a">
+      <div class="big">🗺️</div>
+      <span class="role">Atlas · Đầu</span>
+      <h3>Bạn BIẾT gì</h3>
+      <p>Kiến thức, ý tưởng, nguồn. Nơi tư duy <b>sống & lớn lên</b>. Gồm: Dots (ý nguyên tử) · Maps (MOC) · Sources (nguồn ngoài).</p>
+    </div>
+    <div class="ace-card c">
+      <div class="big">📅</div>
+      <span class="role">Calendar · Nhịp tim</span>
+      <h3>Bạn GẶP gì &amp; KHI NÀO</h3>
+      <p>Ghi theo thời gian: nhật ký ngày, cuộc họp, sự kiện, review. Mọi thứ gắn với <b>một mốc ngày</b>.</p>
+    </div>
+    <div class="ace-card e">
+      <div class="big">🎯</div>
+      <span class="role">Efforts · Tay</span>
+      <h3>Bạn LÀM gì</h3>
+      <p>Mục tiêu &amp; hành động: vùng dài hạn (Areas), dự án có hạn (Projects), sản phẩm xuất ra (Works). Nơi tư duy <b>biến thành kết quả</b>.</p>
+    </div>
+  </div>
+  <p class="mnemonic"><b>A</b>tlas = cái đầu (nghĩ) · <b>C</b>alendar = nhịp tim (ghi theo ngày) · <b>E</b>fforts = đôi tay (làm)</p>
+  <div class="support">
+    <span class="chip">➕ <b>+</b> — nơi bắt ý (inbox)</span>
+    <span class="chip">🧰 <b>x</b> — hệ thống (template, đồ nghề)</span>
+    <span class="chip">🏠 <b>Home Pro</b> — bảng điều khiển, bắt đầu mỗi ngày</span>
+  </div>
+
+  <!-- PART 2: lifecycle -->
+  <div class="section-head">
+    <span class="k">Phần 2 · Luồng tư duy (ARC)</span>
+    <h2>Một ý tưởng đi qua hệ thống</h2>
+    <p>Đây là "cách phát triển tư duy": theo dõi một ý từ lúc loé lên tới khi thành kết quả. Mỗi bước cho biết <b>file nằm ở đâu</b> và thuộc pha nào của <b>Add → Relate → Communicate</b>.</p>
+  </div>
+  <div class="roadmap">
+    <section class="step" style="animation-delay:.02s">
+      <div class="hub-wrap"><div class="hub"><span class="num">1</span><span class="t">Loé ý → bắt lấy</span></div></div>
+      <div class="step-body"><div class="step-card"><p>Ý bất chợt (trong họp, khi đọc, lúc tắm). Quăng ngay vào <b>+</b>, đừng bận tâm xếp đâu.</p>
+        <div class="meta"><span class="tag folder">+</span><span class="tag arc">ADD</span><span class="tag hot">còn nóng</span></div></div></div>
+    </section>
+    <section class="step" style="animation-delay:.06s">
+      <div class="hub-wrap"><div class="hub"><span class="num">2</span><span class="t">Để nguội</span></div></div>
+      <div class="step-body"><div class="step-card"><p><b>+</b> là "cooling pad" 🧊 — ý vào lúc nóng, vài ngày sau nguội thì bạn nhìn tỉnh hơn, ưu tiên đúng hơn. Đừng xử ngay.</p>
+        <div class="meta"><span class="tag folder">+</span><span class="tag arc">ADD</span></div></div></div>
+    </section>
+    <section class="step" style="animation-delay:.10s">
+      <div class="hub-wrap"><div class="hub"><span class="num">3</span><span class="t">Chế biến → thành Dot</span></div></div>
+      <div class="step-body"><div class="step-card"><p>Viết lại <b>bằng lời của mình</b> (note-making). Nó thành một ý nguyên tử → chuyển vào <b>Atlas/Dots</b>: 🧩 Thing · 📣 Statement · 🍄 Question · 💬 Quote.</p>
+        <div class="meta"><span class="tag folder">Atlas/Dots</span><span class="tag arc">ADD → RELATE</span></div></div></div>
+    </section>
+    <section class="step" style="animation-delay:.14s">
+      <div class="hub-wrap"><div class="hub"><span class="num">4</span><span class="t">Nối các dot</span></div></div>
+      <div class="step-body"><div class="step-card"><p>Link ý này với ý khác. Link chính là tư duy. Khi cùng chủ đề đủ nhiều → gom lên một <b>Map/MOC</b> trong <b>Atlas/Maps</b>.</p>
+        <div class="meta"><span class="tag folder">Atlas/Maps</span><span class="tag arc">RELATE</span></div></div></div>
+    </section>
+    <section class="step" style="animation-delay:.18s">
+      <div class="hub-wrap"><div class="hub"><span class="num">5</span><span class="t">Chăm cho lớn</span></div></div>
+      <div class="step-body"><div class="step-card"><p>Gắn tag <code>#garden/cultivate</code>. Định kỳ quay lại nuôi: thêm ví dụ, link, phản biện. Ý tưởng lớn dần (accretion).</p>
+        <div class="meta"><span class="tag folder">Garden tags</span><span class="tag arc">RELATE</span></div></div></div>
+    </section>
+    <section class="step" style="animation-delay:.22s">
+      <div class="hub-wrap"><div class="hub"><span class="num">6</span><span class="t">Cấu trúc tự nảy</span></div></div>
+      <div class="step-body"><div class="step-card"><p>Khi dots đủ chín & bạn thấy "cấn" khi điều hướng → một MOC mới <b>tự đòi</b> ra đời (Idea Emergence). Đừng dựng MOC rỗng trước.</p>
+        <div class="meta"><span class="tag folder">Atlas/Maps</span><span class="tag arc">RELATE</span></div></div></div>
+    </section>
+    <section class="step" style="animation-delay:.26s">
+      <div class="hub-wrap"><div class="hub"><span class="num">7</span><span class="t">Xuất ra kết quả</span></div></div>
+      <div class="step-body"><div class="step-card"><p>Áp hiểu biết vào việc thật (<b>Efforts/Projects</b>, <b>Efforts/Areas</b>) hoặc tạo sản phẩm chia sẻ (<b>Efforts/Works</b>). Không xuất = ý tưởng chết.</p>
+        <div class="meta"><span class="tag folder">Efforts</span><span class="tag arc">COMMUNICATE</span></div></div></div>
+    </section>
+    <section class="step" style="animation-delay:.30s">
+      <div class="hub-wrap"><div class="hub"><span class="num">8</span><span class="t">Nhìn lại định kỳ</span></div></div>
+      <div class="step-body"><div class="step-card"><p>Tuần/tháng/quý: mở <b>Calendar/Reviews</b> tổng kết, và lôi <b>Dusty Ideas</b> (note cũ) ra nối lại → vòng lặp tiếp tục.</p>
+        <div class="meta"><span class="tag folder">Calendar/Reviews</span><span class="tag time">theo thời gian</span></div></div></div>
+    </section>
+  </div>
+
+  <!-- PART 3: folder dictionary -->
+  <div class="section-head">
+    <span class="k">Phần 3 · Từ điển thư mục</span>
+    <h2>Mỗi thư mục nghĩa là gì</h2>
+    <p>Đọc mỗi thẻ: <b>nghĩa</b> + <b>“bỏ file vào đây khi…”</b>. Màu viền trái = thuộc không gian ACE nào.</p>
+  </div>
+  <div class="dict">
+    <div class="fcard inbox"><h3>➕ +</h3><p class="mean"><b>Inbox / Cooling pad.</b> Nơi bắt mọi thứ còn thô, chưa phân loại.</p><p class="when"><b>Bỏ vào khi:</b> vừa nảy ý, chưa biết xếp đâu. Xử trong vài ngày rồi chuyển đi — đừng để đọng.</p></div>
+
+    <div class="fcard atlas"><h3>🗺️ Atlas / Dots</h3><p class="mean"><b>Ý nguyên tử của bạn.</b> Mỗi note = 1 ý đã chế biến.</p>
+      <div class="subs"><span class="sub">🧩 Things</span><span class="sub">📣 Statements</span><span class="sub">🍄 Questions</span><span class="sub">💬 Quotes</span><span class="sub">👤 People</span></div>
+      <p class="when"><b>Bỏ vào khi:</b> đã viết một ý bằng <b>lời của mình</b> (không phải chép).</p></div>
+
+    <div class="fcard atlas"><h3>🗺️ Atlas / Maps</h3><p class="mean"><b>MOC &amp; bảng điều hướng.</b> Cửa gom nhiều note cùng chủ đề.</p><p class="when"><b>Bỏ vào khi:</b> cần một "hub" để tập hợp &amp; sắp xếp các note — <b>khi thấy cấn</b>, không dựng sẵn.</p></div>
+
+    <div class="fcard atlas"><h3>🗺️ Atlas / Sources</h3><p class="mean"><b>Nguồn ngoài.</b> Ghi chú gắn với một nguồn cụ thể.</p>
+      <div class="subs"><span class="sub">Books</span><span class="sub">Papers</span><span class="sub">Courses</span><span class="sub">Clippings</span><span class="sub">Talks</span><span class="sub">Movies</span></div>
+      <p class="when"><b>Bỏ vào khi:</b> ghi về một cuốn sách / khoá học / bài viết / video cụ thể.</p></div>
+
+    <div class="fcard calendar"><h3>📅 Calendar / Days</h3><p class="mean"><b>Nhật ký ngày.</b> Daily note.</p><p class="when"><b>Bỏ vào khi:</b> ghi nhanh trong ngày — điểm hạ cánh mặc định cho ghi chú theo ngày.</p></div>
+
+    <div class="fcard calendar"><h3>📅 Calendar / Records</h3><p class="mean"><b>Bản ghi theo mốc.</b> Sự kiện có thời điểm.</p>
+      <div class="subs"><span class="sub">Meetings</span><span class="sub">Events</span><span class="sub">Ideas</span><span class="sub">Nice Things</span></div>
+      <p class="when"><b>Bỏ vào khi:</b> một cuộc họp / sự kiện / ý gắn chặt với ngày xảy ra.</p></div>
+
+    <div class="fcard efforts"><h3>🎯 Efforts / Areas</h3><p class="mean"><b>Vùng trách nhiệm dài hạn (AOE).</b> Không có ngày kết thúc.</p><p class="when"><b>Bỏ vào khi:</b> một mảng bạn nuôi lâu dài — vd <b>BA Practice</b> của bạn.</p></div>
+
+    <div class="fcard efforts"><h3>🎯 Efforts / Projects</h3><p class="mean"><b>Dự án có đích &amp; hạn.</b> Sẽ hoàn thành.</p>
+      <div class="subs"><span class="sub">Active</span><span class="sub">Simmering</span><span class="sub">Sleeping</span></div>
+      <p class="when"><b>Bỏ vào khi:</b> việc có mục tiêu rõ &amp; sẽ xong — vd một module Gtel Map.</p></div>
+
+    <div class="fcard efforts"><h3>🎯 Efforts / Works</h3><p class="mean"><b>Sản phẩm xuất ra.</b> Thứ bạn tạo để chia sẻ.</p>
+      <div class="subs"><span class="sub">Articles</span><span class="sub">Videos</span><span class="sub">Newsletters</span></div>
+      <p class="when"><b>Bỏ vào khi:</b> một bài viết / video / bản chia sẻ (đầu ra của COMMUNICATE).</p></div>
+
+    <div class="fcard sys"><h3>🧰 x</h3><p class="mean"><b>Hệ thống &amp; đồ nghề.</b> Không phải nội dung tư duy.</p>
+      <div class="subs"><span class="sub">Templates</span><span class="sub">Packs</span><span class="sub">Visuals</span></div>
+      <p class="when"><b>Bỏ vào khi:</b> template, tài nguyên, đồ meta — cất khỏi tầm mắt để vault gọn.</p></div>
+  </div>
+
+  <!-- PART 4: decision -->
+  <div class="section-head">
+    <span class="k">Phần 4 · Tra nhanh</span>
+    <h2>“File này bỏ đâu?”</h2>
+    <p>Khi lăn tăn, chạy dọc bảng này từ trên xuống — gặp điều kiện đúng đầu tiên thì dừng.</p>
+  </div>
+  <div class="decide">
+    <h3>Nếu file là… → thì bỏ vào…</h3>
+    <div class="drow"><span class="cond">Chưa rõ / vừa nảy ra</span><span class="arw">→</span><span class="to">+</span></div>
+    <div class="drow"><span class="cond">Một ý đã chín, bằng lời của mình</span><span class="arw">→</span><span class="to">Atlas/Dots</span></div>
+    <div class="drow"><span class="cond">Ghi chú về sách / khoá / bài / video</span><span class="arw">→</span><span class="to">Atlas/Sources</span></div>
+    <div class="drow"><span class="cond">Cửa gom nhiều note cùng chủ đề</span><span class="arw">→</span><span class="to">Atlas/Maps</span></div>
+    <div class="drow"><span class="cond">Gắn với một ngày / cuộc họp cụ thể</span><span class="arw">→</span><span class="to">Calendar</span></div>
+    <div class="drow"><span class="cond">Mảng trách nhiệm dài hạn</span><span class="arw">→</span><span class="to">Efforts/Areas</span></div>
+    <div class="drow"><span class="cond">Dự án có mục tiêu &amp; hạn</span><span class="arw">→</span><span class="to">Efforts/Projects</span></div>
+    <div class="drow"><span class="cond">Thứ để xuất bản / chia sẻ</span><span class="arw">→</span><span class="to">Efforts/Works</span></div>
+    <div class="drow"><span class="cond">Template / đồ hệ thống</span><span class="arw">→</span><span class="to">x</span></div>
+  </div>
+
+  <div class="principle">
+    <span class="i">🧭</span>
+    <p><b>Nguyên tắc vàng của Milo:</b> đừng để việc phân loại chặn dòng chảy. Nghi ngờ thì cứ bỏ vào <b>+</b>, xử sau. Và nhớ: <b>thư mục để cất, link để nghĩ</b> — giá trị vault nằm ở các kết nối, không phải ở việc xếp folder cho gọn.</p>
+  </div>
+
+  <footer>
+    <p><b>Bộ đôi bản đồ:</b> trang này = <b>cỗ máy</b> (Ideaverse chạy thế nào) · BA Skills Roadmap = <b>nội dung</b> (bạn học gì). Dùng cỗ máy này để phát triển chính bộ kiến thức BA của bạn.</p>
+  </footer>
+</div>
