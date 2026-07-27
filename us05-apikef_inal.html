@@ -1,111 +1,934 @@
 <title>Gtel Map Admin — API Key (Mockup v2)</title>
 <style>
-  :root{
-    --bg:#F4F6FA;--panel:#FFFFFF;--panel-2:#FAFBFD;--ink:#1A2231;--ink-soft:#5B6678;--ink-faint:#8A94A6;
-    --line:#E3E8F0;--line-soft:#EEF1F6;--brand:#2563EB;--brand-soft:#E7EEFF;
-    --green:#16A34A;--green-soft:#E4F5EB;--red:#DC2626;--red-soft:#FBE6E6;--amber:#D97706;--amber-soft:#FCEFD9;--purple:#7C3AED;--purple-soft:#EFE7FE;--teal:#0D9488;--teal-soft:#DCF5F1;
-    --mono:ui-monospace,"Cascadia Code",Consolas,monospace;
+  :root {
+    --bg: #F4F6FA;
+    --panel: #FFFFFF;
+    --panel-2: #FAFBFD;
+    --ink: #1A2231;
+    --ink-soft: #5B6678;
+    --ink-faint: #8A94A6;
+    --line: #E3E8F0;
+    --line-soft: #EEF1F6;
+    --brand: #2563EB;
+    --brand-soft: #E7EEFF;
+    --green: #16A34A;
+    --green-soft: #E4F5EB;
+    --red: #DC2626;
+    --red-soft: #FBE6E6;
+    --amber: #D97706;
+    --amber-soft: #FCEFD9;
+    --purple: #7C3AED;
+    --purple-soft: #EFE7FE;
+    --teal: #0D9488;
+    --teal-soft: #DCF5F1;
+    --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
   }
-  @media (prefers-color-scheme:dark){:root{
-    --bg:#0E1420;--panel:#161E2C;--panel-2:#1B2433;--ink:#E9EDF4;--ink-soft:#9AA6B8;--ink-faint:#6B778A;
-    --line:#26303F;--line-soft:#202938;--brand:#5B8DEF;--brand-soft:#1A2740;
-    --green:#3DD07E;--green-soft:#14301F;--red:#F26B6B;--red-soft:#331717;--amber:#F0A63C;--amber-soft:#332412;--purple:#A987FF;--purple-soft:#241a3d;--teal:#3CC7C2;--teal-soft:#123030;
-  }}
-  :root[data-theme="light"]{--bg:#F4F6FA;--panel:#FFFFFF;--panel-2:#FAFBFD;--ink:#1A2231;--ink-soft:#5B6678;--ink-faint:#8A94A6;--line:#E3E8F0;--line-soft:#EEF1F6;--brand:#2563EB;--brand-soft:#E7EEFF;--green:#16A34A;--green-soft:#E4F5EB;--red:#DC2626;--red-soft:#FBE6E6;--amber:#D97706;--amber-soft:#FCEFD9;--purple:#7C3AED;--purple-soft:#EFE7FE;--teal:#0D9488;--teal-soft:#DCF5F1;}
-  :root[data-theme="dark"]{--bg:#0E1420;--panel:#161E2C;--panel-2:#1B2433;--ink:#E9EDF4;--ink-soft:#9AA6B8;--ink-faint:#6B778A;--line:#26303F;--line-soft:#202938;--brand:#5B8DEF;--brand-soft:#1A2740;--green:#3DD07E;--green-soft:#14301F;--red:#F26B6B;--red-soft:#331717;--amber:#F0A63C;--amber-soft:#332412;--purple:#A987FF;--purple-soft:#241a3d;--teal:#3CC7C2;--teal-soft:#123030;}
 
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;}
-  .app{display:flex;min-height:100vh;}
-  .side{width:210px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:16px 12px;}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;padding:6px 8px 14px;}
-  .logo .m{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--brand),var(--purple));display:grid;place-items:center;color:#fff;}
-  .nav{font-size:13px;color:var(--ink-soft);padding:8px 10px;border-radius:8px;display:flex;align-items:center;gap:9px;cursor:pointer;}
-  .nav.active{background:var(--brand-soft);color:var(--brand);font-weight:700;}
-  .side .grp{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-faint);padding:14px 10px 4px;font-weight:700;}
-  .main{flex:1;min-width:0;}
-  .topbar{background:var(--panel);border-bottom:1px solid var(--line);padding:12px 22px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:5;}
-  .crumb{font-size:12px;color:var(--ink-faint);} .crumb b{color:var(--ink-soft);}
-  .topbar h1{font-size:17px;margin:0;font-weight:800;}
-  .spacer{flex:1;}
-  .viewtabs{display:flex;gap:3px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:3px;}
-  .viewtabs span{padding:6px 13px;border-radius:7px;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;white-space:nowrap;}
-  .viewtabs span.on{background:var(--brand);color:#fff;}
-  .badge{font-size:11px;font-family:var(--mono);padding:3px 9px;border-radius:999px;background:var(--green-soft);color:var(--green);font-weight:700;display:inline-flex;align-items:center;gap:5px;}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
-  .content{padding:20px 22px 60px;display:flex;flex-direction:column;gap:16px;}
-  .zlabel{font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint);font-weight:700;margin:6px 0 -4px;}
-  .btn{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:9px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;}
-  .btn.ghost{background:transparent;color:var(--brand);}
-  .view{display:none;} .view.on{display:flex;flex-direction:column;gap:16px;}
+  @media (prefers-color-scheme:dark) {
+    :root {
+      --bg: #0E1420;
+      --panel: #161E2C;
+      --panel-2: #1B2433;
+      --ink: #E9EDF4;
+      --ink-soft: #9AA6B8;
+      --ink-faint: #6B778A;
+      --line: #26303F;
+      --line-soft: #202938;
+      --brand: #5B8DEF;
+      --brand-soft: #1A2740;
+      --green: #3DD07E;
+      --green-soft: #14301F;
+      --red: #F26B6B;
+      --red-soft: #331717;
+      --amber: #F0A63C;
+      --amber-soft: #332412;
+      --purple: #A987FF;
+      --purple-soft: #241a3d;
+      --teal: #3CC7C2;
+      --teal-soft: #123030;
+    }
+  }
 
-  .filters{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-  .sel{border:1px solid var(--line);background:var(--panel-2);border-radius:9px;padding:7px 11px;font-size:13px;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:150px;}
-  .sel .lbl{color:var(--ink-faint);font-size:11px;} .sel .v{font-weight:600;margin-left:auto;} .sel .cx{color:var(--ink-faint);}
-  .tpreset{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
-  .tpreset span{padding:7px 11px;font-size:12.5px;color:var(--ink-soft);border-right:1px solid var(--line);cursor:pointer;font-variant-numeric:tabular-nums;}
-  .tpreset span:last-child{border-right:none;} .tpreset span.on{background:var(--brand);color:#fff;font-weight:700;}
-  .rld{margin-left:auto;border:1px solid var(--line);background:var(--panel-2);border-radius:9px;width:36px;height:36px;display:grid;place-items:center;cursor:pointer;color:var(--ink-soft);}
+  :root[data-theme="light"] {
+    --bg: #F4F6FA;
+    --panel: #FFFFFF;
+    --panel-2: #FAFBFD;
+    --ink: #1A2231;
+    --ink-soft: #5B6678;
+    --ink-faint: #8A94A6;
+    --line: #E3E8F0;
+    --line-soft: #EEF1F6;
+    --brand: #2563EB;
+    --brand-soft: #E7EEFF;
+    --green: #16A34A;
+    --green-soft: #E4F5EB;
+    --red: #DC2626;
+    --red-soft: #FBE6E6;
+    --amber: #D97706;
+    --amber-soft: #FCEFD9;
+    --purple: #7C3AED;
+    --purple-soft: #EFE7FE;
+    --teal: #0D9488;
+    --teal-soft: #DCF5F1;
+  }
 
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:12px;padding:14px 16px;}
-  .kpi.g{border-left-color:var(--green);} .kpi.t{border-left-color:var(--teal);} .kpi.p{border-left-color:var(--purple);}
-  .kpi .k-top{display:flex;align-items:center;justify-content:space-between;color:var(--ink-soft);font-size:12.5px;font-weight:600;}
-  .kpi .k-val{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:8px 0 4px;font-variant-numeric:tabular-nums;}
-  .kpi .k-delta{font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
-  .up{color:var(--green);} .flat{color:var(--ink-faint);}
+  :root[data-theme="dark"] {
+    --bg: #0E1420;
+    --panel: #161E2C;
+    --panel-2: #1B2433;
+    --ink: #E9EDF4;
+    --ink-soft: #9AA6B8;
+    --ink-faint: #6B778A;
+    --line: #26303F;
+    --line-soft: #202938;
+    --brand: #5B8DEF;
+    --brand-soft: #1A2740;
+    --green: #3DD07E;
+    --green-soft: #14301F;
+    --red: #F26B6B;
+    --red-soft: #331717;
+    --amber: #F0A63C;
+    --amber-soft: #332412;
+    --purple: #A987FF;
+    --purple-soft: #241a3d;
+    --teal: #3CC7C2;
+    --teal-soft: #123030;
+  }
 
-  .charts{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
-  .card h3{margin:0 0 2px;font-size:13.5px;font-weight:700;} .card .sub{color:var(--ink-faint);font-size:11.5px;margin-bottom:10px;}
-  .card svg{display:block;width:100%;height:auto;}
-  .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--ink-soft);margin-top:8px;}
-  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
-  .barlist{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
-  .barrow{display:grid;grid-template-columns:120px 1fr 42px;align-items:center;gap:10px;font-size:12.5px;}
-  .bar{height:9px;border-radius:5px;} .bar-track{background:var(--line-soft);border-radius:5px;}
+  * {
+    box-sizing: border-box;
+  }
 
-  .tbl-wrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .tbl-tools{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);}
-  .tbl-tools .search{margin-left:auto;border:1px solid var(--line);background:var(--panel-2);border-radius:8px;padding:6px 11px;font-size:12.5px;color:var(--ink-faint);min-width:260px;}
-  table{width:100%;border-collapse:collapse;font-size:13px;}
-  thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:700;padding:9px 14px;background:var(--panel-2);border-bottom:1px solid var(--line);}
-  thead th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);}
-  tbody td{padding:9px 14px;border-bottom:1px solid var(--line-soft);} tbody tr:hover{background:var(--panel-2);}
-  .node{display:flex;align-items:center;gap:8px;cursor:pointer;} .exp{width:15px;color:var(--ink-faint);font-size:11px;}
-  .lvl2 td:first-child{padding-left:34px;} .lvl3 td:first-child{padding-left:56px;} .lvl2,.lvl3{display:none;} .open>.lvl2,.open>.lvl3{display:table-row;}
-  .chip{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--brand-soft);color:var(--brand);}
-  .chip.s{background:var(--teal-soft);color:var(--teal);} .chip.g{background:var(--panel-2);color:var(--ink-soft);border:1px solid var(--line);}
-  .lnk{color:var(--brand);cursor:pointer;font-size:15px;}
-  .st{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;} .st.act{background:var(--green-soft);color:var(--green);} .st.rev{background:var(--red-soft);color:var(--red);} .st.susp{background:var(--amber-soft);color:var(--amber);} .st.exp{background:var(--panel-2);color:var(--ink-soft);border:1px solid var(--line);} .st.rot{background:var(--brand-soft);color:var(--brand);}
-  .tbl-foot{padding:10px 14px;display:flex;align-items:center;font-size:12px;color:var(--ink-faint);}
-  .epscroll{max-height:340px;overflow-y:auto;} .epscroll thead th{position:sticky;top:0;z-index:2;}
-  .code{font-family:var(--mono);font-weight:700;padding:1px 7px;border-radius:5px;font-size:12px;}
-  .code.ok{background:var(--green-soft);color:var(--green);} .icoact{cursor:pointer;color:var(--ink-soft);margin:0 3px;}
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .side {
+    width: 210px;
+    flex: none;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 16px 12px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 6px 8px 14px;
+  }
+
+  .logo .m {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--brand), var(--purple));
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+
+  .nav {
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 8px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+  }
+
+  .nav.active {
+    background: var(--brand-soft);
+    color: var(--brand);
+    font-weight: 700;
+  }
+
+  .side .grp {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--ink-faint);
+    padding: 14px 10px 4px;
+    font-weight: 700;
+  }
+
+  .main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .topbar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .crumb {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .crumb b {
+    color: var(--ink-soft);
+  }
+
+  .topbar h1 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .viewtabs {
+    display: flex;
+    gap: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 3px;
+  }
+
+  .viewtabs span {
+    padding: 6px 13px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .viewtabs span.on {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .content {
+    padding: 20px 22px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .zlabel {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink-faint);
+    font-weight: 700;
+    margin: 6px 0 -4px;
+  }
+
+  .btn {
+    border: 1px solid var(--brand);
+    background: var(--brand);
+    color: #fff;
+    border-radius: 9px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn.ghost {
+    background: transparent;
+    color: var(--brand);
+  }
+
+  .view {
+    display: none;
+  }
+
+  .view.on {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .filters {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .sel {
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 9px;
+    padding: 7px 11px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    min-width: 150px;
+  }
+
+  .sel .lbl {
+    color: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  .sel .v {
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  .sel .cx {
+    color: var(--ink-faint);
+  }
+
+  .tpreset {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    overflow: hidden;
+  }
+
+  .tpreset span {
+    padding: 7px 11px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tpreset span:last-child {
+    border-right: none;
+  }
+
+  .tpreset span.on {
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .rld {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 9px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .kpi.g {
+    border-left-color: var(--green);
+  }
+
+  .kpi.t {
+    border-left-color: var(--teal);
+  }
+
+  .kpi.p {
+    border-left-color: var(--purple);
+  }
+
+  .kpi .k-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .kpi .k-val {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin: 8px 0 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi .k-delta {
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .up {
+    color: var(--green);
+  }
+
+  .flat {
+    color: var(--ink-faint);
+  }
+
+  .charts {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .card h3 {
+    margin: 0 0 2px;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .card .sub {
+    color: var(--ink-faint);
+    font-size: 11.5px;
+    margin-bottom: 10px;
+  }
+
+  .card svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+
+  .legend i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: -1px;
+  }
+
+  .barlist {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 4px;
+  }
+
+  .barrow {
+    display: grid;
+    grid-template-columns: 120px 1fr 42px;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+  }
+
+  .bar {
+    height: 9px;
+    border-radius: 5px;
+  }
+
+  .bar-track {
+    background: var(--line-soft);
+    border-radius: 5px;
+  }
+
+  .tbl-wrap {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .tbl-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tbl-tools .search {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    min-width: 260px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--ink-faint);
+    font-weight: 700;
+    padding: 9px 14px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  thead th.num,
+  td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--mono);
+  }
+
+  tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  tbody tr:hover {
+    background: var(--panel-2);
+  }
+
+  .node {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .exp {
+    width: 15px;
+    color: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  .lvl2 td:first-child {
+    padding-left: 34px;
+  }
+
+  .lvl3 td:first-child {
+    padding-left: 56px;
+  }
+
+  .lvl2,
+  .lvl3 {
+    display: none;
+  }
+
+  .open>.lvl2,
+  .open>.lvl3 {
+    display: table-row;
+  }
+
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .chip.s {
+    background: var(--teal-soft);
+    color: var(--teal);
+  }
+
+  .chip.g {
+    background: var(--panel-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+
+  .lnk {
+    color: var(--brand);
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .st {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .st.act {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+
+  .st.rev {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+
+  .st.susp {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
+
+  .st.exp {
+    background: var(--panel-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+
+  .st.rot {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .tbl-foot {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .epscroll {
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .epscroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .code {
+    font-family: var(--mono);
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+
+  .code.ok {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+
+  .icoact {
+    cursor: pointer;
+    color: var(--ink-soft);
+    margin: 0 3px;
+  }
 
   /* modal */
-  .overlay{position:fixed;inset:0;background:rgba(10,16,26,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:20;padding:22px;}
-  .overlay.show{display:flex;}
-  .modal{background:var(--bg);border:1px solid var(--line);border-radius:16px;width:min(1120px,95vw);max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.35);}
-  .modal.sm{width:min(640px,95vw);}
-  .modal-head{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:12px;z-index:2;}
-  .modal-head h2{font-size:15px;margin:0;font-weight:800;}
-  .mclose{margin-left:auto;border:1px solid var(--line);background:var(--panel-2);border-radius:8px;width:32px;height:32px;cursor:pointer;color:var(--ink-soft);font-size:16px;}
-  .modal-body{padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
-  .fld{display:flex;flex-direction:column;gap:5px;} .fld label{font-size:12px;font-weight:600;color:var(--ink-soft);}
-  .fld .inp{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 11px;font-size:13px;color:var(--ink-soft);}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .sect{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
-  .sect h4{margin:0 0 3px;font-size:13px;font-weight:800;} .sect .h-sub{font-size:11.5px;color:var(--ink-faint);margin-bottom:10px;}
-  .radio{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:8px;cursor:pointer;} .radio .rc{width:15px;height:15px;border-radius:50%;border:2px solid var(--brand);display:inline-block;position:relative;} .radio.on .rc::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--brand);}
-  .svcgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
-  .chk{display:flex;align-items:center;gap:8px;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);cursor:pointer;}
-  .chk .cb{width:15px;height:15px;border-radius:4px;border:2px solid var(--ink-faint);display:inline-block;} .chk.on{border-color:var(--brand);background:var(--brand-soft);} .chk.on .cb{background:var(--brand);border-color:var(--brand);position:relative;} .chk.on .cb::after{content:"✓";position:absolute;color:#fff;font-size:11px;top:-3px;left:1px;}
-  .keydisp{display:flex;align-items:center;gap:10px;font-family:var(--mono);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;}
-  .note{font-size:11.5px;color:var(--ink-faint);text-align:center;padding:8px;}
-  .mfoot{display:flex;gap:10px;justify-content:flex-end;padding-top:4px;}
-  @media (max-width:1000px){.kpis{grid-template-columns:1fr 1fr;}.charts{grid-template-columns:1fr;}.svcgrid,.row2{grid-template-columns:1fr;}}
-  @media (max-width:760px){.side{display:none;}.tbl-wrap{overflow-x:auto;}table{min-width:640px;}}
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 16, 26, .55);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 22px;
+  }
+
+  .overlay.show {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    width: min(1120px, 95vw);
+    max-height: 92vh;
+    overflow: auto;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  }
+
+  .modal.sm {
+    width: min(640px, 95vw);
+  }
+
+  .modal-head {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 2;
+  }
+
+  .modal-head h2 {
+    font-size: 15px;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  .mclose {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  .modal-body {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .fld {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .fld label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .fld .inp {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .sect {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .sect h4 {
+    margin: 0 0 3px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .sect .h-sub {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+
+  .radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+
+  .radio .rc {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid var(--brand);
+    display: inline-block;
+    position: relative;
+  }
+
+  .radio.on .rc::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .svcgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .chk {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    cursor: pointer;
+  }
+
+  .chk .cb {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    border: 2px solid var(--ink-faint);
+    display: inline-block;
+  }
+
+  .chk.on {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+  }
+
+  .chk.on .cb {
+    background: var(--brand);
+    border-color: var(--brand);
+    position: relative;
+  }
+
+  .chk.on .cb::after {
+    content: "✓";
+    position: absolute;
+    color: #fff;
+    font-size: 11px;
+    top: -3px;
+    left: 1px;
+  }
+
+  .keydisp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .note {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 8px;
+  }
+
+  .mfoot {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 4px;
+  }
+
+  @media (max-width:1000px) {
+    .kpis {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .charts {
+      grid-template-columns: 1fr;
+    }
+
+    .svcgrid,
+    .row2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width:760px) {
+    .side {
+      display: none;
+    }
+
+    .tbl-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      min-width: 640px;
+    }
+  }
 </style>
 
 <div class="app">
@@ -121,7 +944,10 @@
 
   <div class="main">
     <div class="topbar">
-      <div><div class="crumb"><b>Admin</b> › API Management</div><h1 id="ptitle">Quản lý API Key</h1></div>
+      <div>
+        <div class="crumb"><b>Admin</b> › API Management</div>
+        <h1 id="ptitle">Quản lý API Key</h1>
+      </div>
       <div class="spacer"></div>
       <span class="badge"><span class="dot"></span> realtime</span>
     </div>
@@ -135,22 +961,82 @@
       </div>
       <div class="tbl-wrap">
         <div class="tbl-tools"><strong style="font-size:13px">API Keys</strong>
-          <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-          <span class="search">🔍 Tìm theo tên key, dự án…</span></div>
+          <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span
+              class="cx">▾</span></div>
+          <span class="search">🔍 Tìm theo tên key, dự án…</span>
+        </div>
         <table>
-          <thead><tr><th>Tên Key</th><th>Dự án</th><th>Dịch vụ được phép</th><th>Trạng thái</th><th>Ngày hết hạn</th><th>Ngày tạo</th><th style="text-align:center">Hành động</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Tên Key</th>
+              <th>Dự án</th>
+              <th>Dịch vụ được phép</th>
+              <th>Trạng thái</th>
+              <th>Ngày hết hạn</th>
+              <th>Ngày tạo</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td><b>Key_Auto_004</b></td><td>VinHome Smart City</td><td><span class="chip s">Geocoding</span> <span class="chip s">Search</span> <span class="chip g">+2</span></td><td><span class="st act">🟢 Hoạt động</span></td><td style="font-family:var(--mono);font-size:12px">31/12/2026</td><td style="font-family:var(--mono);font-size:12px">04/07/2026</td><td style="text-align:center"><span class="icoact" onclick="openReauth()" title="Xem key">👁</span><span class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact" title="Khóa key (tạm)" onclick="openLock()">🔒</span><span class="icoact" title="Thu hồi key" onclick="openRevoke()" style="color:var(--red)">🚫</span></td></tr>
-            <tr><td><b>Key_Auto_005</b></td><td>VinHome Smart City</td><td><span class="chip s">Tất cả dịch vụ</span></td><td><span class="st act">🟢 Hoạt động</span></td><td style="font-family:var(--mono);font-size:12px">Không hết hạn</td><td style="font-family:var(--mono);font-size:12px">05/07/2026</td><td style="text-align:center"><span class="icoact" onclick="openReauth()" title="Xem key">👁</span><span class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact" title="Khóa key (tạm)" onclick="openLock()">🔒</span><span class="icoact" title="Thu hồi key" onclick="openRevoke()" style="color:var(--red)">🚫</span></td></tr>
-            <tr><td><b>Zalo_Map_Dev</b></td><td>Zalo Maps</td><td><span class="chip s">Map Tiles</span> <span class="chip s">Directions</span></td><td><span class="st susp">🟡 Tạm khóa</span></td><td style="font-family:var(--mono);font-size:12px">30/09/2026</td><td style="font-family:var(--mono);font-size:12px">01/06/2026</td><td style="text-align:center"><span class="icoact" onclick="openReauth()" title="Xem key">👁</span><span class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact" onclick="openUnlock()" title="Mở khóa">🔓</span><span class="icoact" title="Thu hồi key" onclick="openRevoke()" style="color:var(--red)">🚫</span></td></tr>
-            <tr><td><b>An_Giang_Prod</b></td><td>An Giang GIS</td><td><span class="chip s">Geocoding</span> <span class="chip s">Admin Units</span></td><td><span class="st rev">🔴 Đã thu hồi</span></td><td style="font-family:var(--mono);font-size:12px">—</td><td style="font-family:var(--mono);font-size:12px">12/05/2026</td><td style="text-align:center"><span class="icoact" onclick="openHistory()" title="Xem chi tiết / lịch sử">👁</span><span class="icoact" style="opacity:.35" title="Không thể tạo lại — key đã thu hồi">♻</span><span class="icoact" style="opacity:.35" title="Không thể khóa — key đã thu hồi">🔒</span></td></tr>
+            <tr>
+              <td><b>Key_Auto_004</b></td>
+              <td>VinHome Smart City</td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Search</span> <span
+                  class="chip g">+2</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">31/12/2026</td>
+              <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
+              <td style="text-align:center"><span class="icoact" onclick="openReauth()" title="Xem key">👁</span><span
+                  class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact"
+                  title="Khóa key (tạm)" onclick="openLock()">🔒</span><span class="icoact" title="Thu hồi key"
+                  onclick="openRevoke()" style="color:var(--red)">🚫</span></td>
+            </tr>
+            <tr>
+              <td><b>Key_Auto_005</b></td>
+              <td>VinHome Smart City</td>
+              <td><span class="chip s">Tất cả dịch vụ</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">Không hết hạn</td>
+              <td style="font-family:var(--mono);font-size:12px">05/07/2026</td>
+              <td style="text-align:center"><span class="icoact" onclick="openReauth()" title="Xem key">👁</span><span
+                  class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact"
+                  title="Khóa key (tạm)" onclick="openLock()">🔒</span><span class="icoact" title="Thu hồi key"
+                  onclick="openRevoke()" style="color:var(--red)">🚫</span></td>
+            </tr>
+            <tr>
+              <td><b>Zalo_Map_Dev</b></td>
+              <td>Zalo Maps</td>
+              <td><span class="chip s">Map Tiles</span> <span class="chip s">Directions</span></td>
+              <td><span class="st susp">🟡 Tạm khóa</span></td>
+              <td style="font-family:var(--mono);font-size:12px">30/09/2026</td>
+              <td style="font-family:var(--mono);font-size:12px">01/06/2026</td>
+              <td style="text-align:center"><span class="icoact" onclick="openReauth()" title="Xem key">👁</span><span
+                  class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact"
+                  onclick="openUnlock()" title="Mở khóa">🔓</span><span class="icoact" title="Thu hồi key"
+                  onclick="openRevoke()" style="color:var(--red)">🚫</span></td>
+            </tr>
+            <tr>
+              <td><b>An_Giang_Prod</b></td>
+              <td>An Giang GIS</td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Admin Units</span></td>
+              <td><span class="st rev">🔴 Đã thu hồi</span></td>
+              <td style="font-family:var(--mono);font-size:12px">—</td>
+              <td style="font-family:var(--mono);font-size:12px">12/05/2026</td>
+              <td style="text-align:center"><span class="icoact" onclick="openHistory()"
+                  title="Xem chi tiết / lịch sử">👁</span><span class="icoact" style="opacity:.35"
+                  title="Không thể tạo lại — key đã thu hồi">♻</span><span class="icoact" style="opacity:.35"
+                  title="Không thể khóa — key đã thu hồi">🔒</span></td>
+            </tr>
           </tbody>
         </table>
         <div class="tbl-foot">Hiển thị <b>1–4</b> trong 24 API Key · Số dòng/trang: <b>20 ▾</b>
-          <span class="pg"><span class="off">‹ Trước</span><span style="background:var(--brand);color:#fff;border-color:var(--brand)">1</span><span>2</span><span>Sau ›</span></span>
+          <span class="pg"><span class="off">‹ Trước</span><span
+              style="background:var(--brand);color:#fff;border-color:var(--brand)">1</span><span>2</span><span>Sau
+              ›</span></span>
         </div>
       </div>
-      <div class="note">Mockup CRUD — click 👁 hoặc "Tạo API Key" để mở form có <b>Giới hạn dịch vụ</b> + <b>Giới hạn ứng dụng</b> (chuẩn Google/Mapbox)</div>
+      <div class="note">Mockup CRUD — click 👁 hoặc "Tạo API Key" để mở form có <b>Giới hạn dịch vụ</b> + <b>Giới hạn
+          ứng dụng</b> (chuẩn Google/Mapbox)</div>
     </div>
 
     <!-- ============ VIEW: STATS (ADMIN — phác thảo) ============ -->
@@ -160,15 +1046,25 @@
         <div class="sel"><span class="lbl">Khách hàng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="sel"><span class="lbl">Dự án</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="sel"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-        <div class="tpreset"><span>1h</span><span>6h</span><span>12h</span><span>1 ngày</span><span class="on">7 ngày</span><span>14 ngày</span><span>30 ngày</span></div>
-        <div class="sel" style="min-width:auto"><span class="lbl">Từ→Đến</span><span class="v" style="font-family:var(--mono);font-size:11.5px">15/07 – 21/07</span><span class="cx">📅</span></div>
+        <div class="tpreset"><span>1h</span><span>6h</span><span>12h</span><span>1 ngày</span><span class="on">7
+            ngày</span><span>14 ngày</span><span>30 ngày</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Từ→Đến</span><span class="v"
+            style="font-family:var(--mono);font-size:11.5px">15/07 – 21/07</span><span class="cx">📅</span></div>
         <div class="rld">⟳</div>
       </div>
 
       <div class="zlabel">Vùng 2 · Chỉ số (admin lens)</div>
       <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
-        <div class="kpi"><div class="k-top">Tổng số yêu cầu <span>📈</span></div><div class="k-val">6,452,108</div><div class="k-delta up">▲ 12.5% so với kỳ trước</div></div>
-        <div class="kpi g"><div class="k-top">Tỷ lệ thành công <span>✅</span></div><div class="k-val">98.8%</div><div class="k-delta flat">6,374,683 / 6,452,108 request</div></div>
+        <div class="kpi">
+          <div class="k-top">Tổng số yêu cầu <span>📈</span></div>
+          <div class="k-val">6,452,108</div>
+          <div class="k-delta up">▲ 12.5% so với kỳ trước</div>
+        </div>
+        <div class="kpi g">
+          <div class="k-top">Tỷ lệ thành công <span>✅</span></div>
+          <div class="k-val">98.8%</div>
+          <div class="k-delta flat">6,374,683 / 6,452,108 request</div>
+        </div>
       </div>
 
       <div class="zlabel">Vùng 3 · Biểu đồ</div>
@@ -178,33 +1074,63 @@
           <div class="sub">Area · số request thành công theo thời gian (trục X ăn theo bộ lọc)</div>
           <svg viewBox="0 0 560 180" preserveAspectRatio="none" style="height:200px">
             <g stroke="var(--line-soft)" font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)">
-              <line x1="30" y1="20" x2="30" y2="150"/>
-              <line x1="30" y1="150" x2="560" y2="150"/>
-              <text x="4" y="24">1200</text><text x="8" y="56">900</text><text x="8" y="88">600</text><text x="8" y="120">300</text><text x="18" y="152">0</text>
+              <line x1="30" y1="20" x2="30" y2="150" />
+              <line x1="30" y1="150" x2="560" y2="150" />
+              <text x="4" y="24">1200</text><text x="8" y="56">900</text><text x="8" y="88">600</text><text x="8"
+                y="120">300</text><text x="18" y="152">0</text>
             </g>
-            <path d="M30,150 L560,150 L560,88 L486,82 L410,70 L334,44 L258,64 L182,72 L106,78 L30,90 Z" fill="var(--green)" opacity=".45"/>
-            <path d="M30,90 L106,78 L182,72 L258,64 L334,44 L410,70 L486,82 L560,88" fill="none" stroke="var(--green)" stroke-width="2.2"/>
-            <line x1="334" y1="44" x2="334" y2="150" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/>
-            <circle cx="334" cy="44" r="4.5" fill="var(--green)" stroke="#fff" stroke-width="1.5"/>
-            <rect x="286" y="24" width="96" height="15" rx="4" fill="var(--green)"/>
-            <text x="334" y="34.5" font-size="9.5" font-family="ui-monospace,monospace" fill="#fff" text-anchor="middle" font-weight="700">⚡ Đỉnh 18/07 · 1.24M</text>
+            <path d="M30,150 L560,150 L560,88 L486,82 L410,70 L334,44 L258,64 L182,72 L106,78 L30,90 Z"
+              fill="var(--green)" opacity=".45" />
+            <path d="M30,90 L106,78 L182,72 L258,64 L334,44 L410,70 L486,82 L560,88" fill="none" stroke="var(--green)"
+              stroke-width="2.2" />
+            <line x1="334" y1="44" x2="334" y2="150" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3"
+              opacity=".55" />
+            <circle cx="334" cy="44" r="4.5" fill="var(--green)" stroke="#fff" stroke-width="1.5" />
+            <rect x="286" y="24" width="96" height="15" rx="4" fill="var(--green)" />
+            <text x="334" y="34.5" font-size="9.5" font-family="ui-monospace,monospace" fill="#fff" text-anchor="middle"
+              font-weight="700">⚡ Đỉnh 18/07 · 1.24M</text>
             <g font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)" text-anchor="middle">
-              <text x="45" y="165">15/07 00:00</text><text x="121" y="165">15/07 06:00</text><text x="197" y="165">16/07 00:00</text><text x="273" y="165">17/07 00:00</text><text x="349" y="165">18/07 00:00</text><text x="425" y="165">19/07 12:00</text><text x="501" y="165">21/07 00:00</text>
+              <text x="45" y="165">15/07 00:00</text><text x="121" y="165">15/07 06:00</text><text x="197" y="165">16/07
+                00:00</text><text x="273" y="165">17/07 00:00</text><text x="349" y="165">18/07 00:00</text><text
+                x="425" y="165">19/07 12:00</text><text x="501" y="165">21/07 00:00</text>
             </g>
           </svg>
           <div class="legend"><span><i style="background:var(--green)"></i>Request thành công (2xx)</span></div>
-          <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);margin-top:8px;padding-top:6px">📏 <b>Granularity trục X</b> đổi theo bộ lọc: 1h→5', 6h→15', 12h→30', 1 ngày→1h, 2 ngày→2h, 4 ngày→4h, <b>7 ngày→6h</b>, 14 ngày→12h, 30 ngày→1 ngày.</div>
+          <div
+            style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);margin-top:8px;padding-top:6px">
+            📏 <b>Granularity trục X</b> đổi theo bộ lọc: 1h→5', 6h→15', 12h→30', 1 ngày→1h, 2 ngày→2h, 4 ngày→4h, <b>7
+              ngày→6h</b>, 14 ngày→12h, 30 ngày→1 ngày.</div>
         </div>
 
         <div class="card">
           <h3>Top 5 khách hàng theo lưu lượng</h3>
           <div class="sub">% tổng requests trong kỳ lọc</div>
           <div class="barlist">
-            <div class="barrow"><span>Vingroup JSC</span><div class="bar-track"><div class="bar" style="width:100%;background:var(--brand)"></div></div><span class="num">42%</span></div>
-            <div class="barrow"><span>Grab Vietnam</span><div class="bar-track"><div class="bar" style="width:69%;background:var(--teal)"></div></div><span class="num">29%</span></div>
-            <div class="barrow"><span>An Giang GIS</span><div class="bar-track"><div class="bar" style="width:43%;background:var(--purple)"></div></div><span class="num">18%</span></div>
-            <div class="barrow"><span>Zalo Maps</span><div class="bar-track"><div class="bar" style="width:19%;background:var(--brand)"></div></div><span class="num">8%</span></div>
-            <div class="barrow"><span>VNG Corp</span><div class="bar-track"><div class="bar" style="width:7%;background:var(--amber)"></div></div><span class="num">3%</span></div>
+            <div class="barrow"><span>Vingroup JSC</span>
+              <div class="bar-track">
+                <div class="bar" style="width:100%;background:var(--brand)"></div>
+              </div><span class="num">42%</span>
+            </div>
+            <div class="barrow"><span>Grab Vietnam</span>
+              <div class="bar-track">
+                <div class="bar" style="width:69%;background:var(--teal)"></div>
+              </div><span class="num">29%</span>
+            </div>
+            <div class="barrow"><span>An Giang GIS</span>
+              <div class="bar-track">
+                <div class="bar" style="width:43%;background:var(--purple)"></div>
+              </div><span class="num">18%</span>
+            </div>
+            <div class="barrow"><span>Zalo Maps</span>
+              <div class="bar-track">
+                <div class="bar" style="width:19%;background:var(--brand)"></div>
+              </div><span class="num">8%</span>
+            </div>
+            <div class="barrow"><span>VNG Corp</span>
+              <div class="bar-track">
+                <div class="bar" style="width:7%;background:var(--amber)"></div>
+              </div><span class="num">3%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -215,22 +1141,60 @@
           <span class="search">🔍 Tìm khách hàng, dự án, API key…</span>
         </div>
         <table>
-          <thead><tr><th>Khách hàng</th><th class="num">Tổng yêu cầu</th><th class="num">Yêu cầu lỗi</th><th>Dịch vụ chính</th><th style="text-align:center">Hành động</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Khách hàng</th>
+              <th class="num">Tổng yêu cầu</th>
+              <th>Dịch vụ</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
           <tbody id="g1">
-            <tr onclick="tg('g1')"><td><span class="node"><span class="exp">▶</span>👤 Vingroup JSC</span></td><td class="num">2,460,128</td><td class="num">36,902</td><td><span class="chip s">Geocoding</span></td><td></td></tr>
-            <tr class="lvl2"><td><span class="node">📁 VinHome Smart City</span></td><td class="num">1,208,540</td><td class="num">10,876</td><td><span class="chip s">Geocoding</span></td><td></td></tr>
-            <tr class="lvl3"><td>🔑 Key_Auto_004</td><td class="num">640,220</td><td class="num"><span class="pill bad">3,841</span></td><td><span class="chip s">Geocoding</span> <span class="chip s">Search</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td></tr>
-            <tr class="lvl3"><td>🔑 Key_Auto_005</td><td class="num">568,320</td><td class="num">7,035</td><td><span class="chip s">Tất cả</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td></tr>
+            <tr onclick="tg('g1')">
+              <td><span class="node"><span class="exp">▶</span>👤 Vingroup JSC</span></td>
+              <td class="num">2,460,128</td>
+              <td><span class="chip s">Geocoding</span></td>
+              <td></td>
+            </tr>
+            <tr class="lvl2">
+              <td><span class="node">📁 VinHome Smart City</span></td>
+              <td class="num">1,208,540</td>
+              <td><span class="chip s">Geocoding</span></td>
+              <td></td>
+            </tr>
+            <tr class="lvl3">
+              <td>🔑 Key_Auto_004</td>
+              <td class="num">640,220</td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Search</span></td>
+              <td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td>
+            </tr>
+            <tr class="lvl3">
+              <td>🔑 Key_Auto_005</td>
+              <td class="num">568,320</td>
+              <td><span class="chip s">Tất cả</span></td>
+              <td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td>
+            </tr>
           </tbody>
           <tbody id="g2">
-            <tr onclick="tg('g2')"><td><span class="node"><span class="exp">▶</span>👤 Grab Vietnam</span></td><td class="num">1,884,002</td><td class="num">7,536</td><td><span class="chip s">Directions</span></td><td></td></tr>
-            <tr class="lvl2"><td><span class="node">📁 GrabMaps Core</span></td><td class="num">1,884,002</td><td class="num">7,536</td><td><span class="chip s">Directions</span></td><td></td></tr>
+            <tr onclick="tg('g2')">
+              <td><span class="node"><span class="exp">▶</span>👤 Grab Vietnam</span></td>
+              <td class="num">1,884,002</td>
+              <td><span class="chip s">Directions</span></td>
+              <td></td>
+            </tr>
+            <tr class="lvl2">
+              <td><span class="node">📁 GrabMaps Core</span></td>
+              <td class="num">1,884,002</td>
+              <td><span class="chip s">Directions</span></td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
         <div class="tbl-foot">Hiển thị 12 trong tổng số 12 khách hàng</div>
       </div>
 
-      <div class="note">🎨 <b>Board admin</b> — 4 vùng: Bộ lọc · KPI · Biểu đồ (có đánh dấu Đỉnh) · Tree table (👁 xem chi tiết ở dòng key). Đã bỏ cảnh báo, quota, KPI thừa.</div>
+      <div class="note">🎨 <b>Board admin</b> — 4 vùng: Bộ lọc · KPI · Biểu đồ (có đánh dấu Đỉnh) · Tree table (👁 xem
+        chi tiết ở dòng key). Đã bỏ cảnh báo, quota, KPI thừa.</div>
     </div>
   </div>
 </div>
@@ -238,30 +1202,50 @@
 <!-- DETAIL modal — ENDPOINT GROUP -->
 <div class="overlay" id="ovDetail">
   <div class="modal">
-    <div class="modal-head"><h2>Chi tiết sử dụng theo API Key</h2><span class="chip">Vingroup JSC › VinHome Smart City › Key_Auto_004</span><button class="mclose" onclick="cls('ovDetail')">✕</button></div>
+    <div class="modal-head">
+      <h2>Chi tiết sử dụng theo API Key</h2><span class="chip">Vingroup JSC › VinHome Smart City ›
+        Key_Auto_004</span><button class="mclose" onclick="cls('ovDetail')">✕</button>
+    </div>
     <div class="modal-body">
-      <div class="sect" style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;padding:10px 14px;align-items:center">
+      <div class="sect"
+        style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;padding:10px 14px;align-items:center">
         <span>🔑 <b>Key_Auto_004</b></span>
         <span>Trạng thái: <span class="st act">🟢 Hoạt động</span></span>
         <span>Tổng: <b>640,220</b> yêu cầu</span>
-        <span>Dịch vụ được cấp: <span class="chip s">Geocoding</span> <span class="chip s">Search</span> <span class="chip s">Directions</span> <span class="chip g" style="cursor:help" title="Còn: Places, Map Tiles, Weather, Administrative Units, Reverse Geocoding, Routing">+6</span></span>
+        <span>Dịch vụ được cấp: <span class="chip s">Geocoding</span> <span class="chip s">Search</span> <span
+            class="chip s">Directions</span> <span class="chip g" style="cursor:help"
+            title="Còn: Places, Map Tiles, Weather, Administrative Units, Reverse Geocoding, Routing">+6</span></span>
         <span style="color:var(--ink-faint)">Tạo 04/07/2026</span>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="sel"><span class="lbl">Khoảng</span><span class="v">15/07 – 21/07/2026</span><span class="cx">📅</span></div>
-        <div class="sel" style="min-width:auto"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-        <div class="sel" style="min-width:auto"><span class="lbl">Tính năng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-        <div class="sel" style="min-width:auto"><span class="lbl">Method</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-        <div class="sel" style="min-width:200px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo endpoint…</span></div>
+        <div class="sel"><span class="lbl">Khoảng</span><span class="v">15/07 – 21/07/2026</span><span
+            class="cx">📅</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span
+            class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Tính năng</span><span class="v">Tất cả</span><span
+            class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Method</span><span class="v">Tất cả</span><span
+            class="cx">▾</span></div>
+        <div class="sel" style="min-width:200px"><span class="lbl">🔍</span><span class="v"
+            style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo endpoint…</span></div>
       </div>
       <div class="tbl-wrap" style="border-radius:10px">
         <div class="epscroll">
           <table>
-            <thead><tr><th>Dịch vụ</th><th>Tính năng</th><th>Endpoint</th><th>Method</th><th class="num">Số yêu cầu</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Dịch vụ</th>
+                <th>Tính năng</th>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th class="num">Số yêu cầu</th>
+              </tr>
+            </thead>
             <tbody id="epgroup"></tbody>
           </table>
         </div>
-        <div class="tbl-foot">Gộp theo endpoint · sắp theo lượt gọi giảm dần <span style="margin-left:auto;color:var(--ink-faint)">↓ Cuộn để tải thêm</span></div>
+        <div class="tbl-foot">Gộp theo endpoint · sắp theo lượt gọi giảm dần <span
+            style="margin-left:auto;color:var(--ink-faint)">↓ Cuộn để tải thêm</span></div>
       </div>
     </div>
   </div>
@@ -270,14 +1254,23 @@
 <!-- CREATE/EDIT KEY modal -->
 <div class="overlay" id="ovKey">
   <div class="modal sm">
-    <div class="modal-head"><h2>Tạo API Key</h2><button class="mclose" onclick="cls('ovKey')">✕</button></div>
+    <div class="modal-head">
+      <h2>Tạo API Key</h2><button class="mclose" onclick="cls('ovKey')">✕</button>
+    </div>
     <div class="modal-body">
       <div class="row2">
-        <div class="fld"><label>Tên định danh</label><div class="inp" style="color:var(--ink-faint)">VD: Key tra cứu địa chỉ…</div></div>
-        <div class="fld"><label>Dự án</label><div class="inp" style="color:var(--ink-faint)">Chọn dự án ▾</div></div>
+        <div class="fld"><label>Tên định danh</label>
+          <div class="inp" style="color:var(--ink-faint)">VD: Key tra cứu địa chỉ…</div>
+        </div>
+        <div class="fld"><label>Dự án</label>
+          <div class="inp" style="color:var(--ink-faint)">Chọn dự án ▾</div>
+        </div>
       </div>
       <div class="row2">
-        <div class="fld"><label>Môi trường <span style="color:var(--ink-faint);font-weight:400">(⚠️ xác nhận: thuộc key hay dự án?)</span></label><div class="inp">Live / Test ▾</div></div>
+        <div class="fld"><label>Môi trường <span style="color:var(--ink-faint);font-weight:400">(⚠️ xác nhận: thuộc key
+              hay dự án?)</span></label>
+          <div class="inp">Live / Test ▾</div>
+        </div>
         <div class="fld"><label>Hết hạn sau</label>
           <select class="inp" id="expSel" onchange="expChange()" style="cursor:pointer">
             <option>30 ngày</option>
@@ -289,12 +1282,17 @@
           </select>
           <div id="expCustom" style="display:none;margin-top:6px">
             <label style="font-size:11px;color:var(--ink-faint)">Chọn ngày hết hạn (phải sau hôm nay)</label>
-            <input type="date" class="inp" style="width:100%"/>
+            <input type="date" class="inp" style="width:100%" />
           </div>
-          <div id="expNever" style="display:none;margin-top:6px;font-size:11.5px;background:var(--amber-soft);border:1px solid var(--amber);border-radius:8px;padding:8px 10px">⚠️ Key <b>sống mãi</b> tới khi thu hồi/tạo lại thủ công. Kém an toàn — chỉ dùng khi thật sự cần.</div>
+          <div id="expNever"
+            style="display:none;margin-top:6px;font-size:11.5px;background:var(--amber-soft);border:1px solid var(--amber);border-radius:8px;padding:8px 10px">
+            ⚠️ Key <b>sống mãi</b> tới khi thu hồi/tạo lại thủ công. Kém an toàn — chỉ dùng khi thật sự cần.</div>
         </div>
       </div>
-      <div class="sect" style="background:var(--panel-2);border-style:dashed"><div style="font-size:11.5px;color:var(--ink-faint)">🔑 Mã key được sinh <b>sau khi Lưu</b> và hiển thị đầy đủ 1 lần. Xem/Copy/Tạo lại mã thực hiện từ danh sách key.</div></div>
+      <div class="sect" style="background:var(--panel-2);border-style:dashed">
+        <div style="font-size:11.5px;color:var(--ink-faint)">🔑 Mã key được sinh <b>sau khi Lưu</b> và hiển thị đầy đủ 1
+          lần. Xem/Copy/Tạo lại mã thực hiện từ danh sách key.</div>
+      </div>
 
       <div class="sect">
         <h4>🧭 Giới hạn dịch vụ (API restrictions)</h4>
@@ -313,9 +1311,11 @@
         </div>
       </div>
 
-      <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:8px">🛡️ <i>Giới hạn ứng dụng (Domain/IP) — dời sang Phase 2 (chống trộm key).</i></div>
+      <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:8px">🛡️ <i>Giới
+          hạn ứng dụng (Domain/IP) — dời sang Phase 2 (chống trộm key).</i></div>
 
-      <div class="mfoot"><button class="btn ghost" onclick="cls('ovKey')">Hủy</button><button class="btn" onclick="openKeyCreated()">Tạo key</button></div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovKey')">Hủy</button><button class="btn"
+          onclick="openKeyCreated()">Tạo key</button></div>
     </div>
   </div>
 </div>
@@ -323,11 +1323,18 @@
 <!-- KEY CREATED (copy mã 1 lần) -->
 <div class="overlay" id="ovKeyCreated">
   <div class="modal sm" style="width:min(520px,95vw)">
-    <div class="modal-head"><h2>✅ Đã tạo API Key</h2><button class="mclose" onclick="cls('ovKeyCreated')">✕</button></div>
+    <div class="modal-head">
+      <h2>✅ Đã tạo API Key</h2><button class="mclose" onclick="cls('ovKeyCreated')">✕</button>
+    </div>
     <div class="modal-body">
-      <div class="sect" style="background:var(--amber-soft);border-color:var(--amber)"><div style="font-size:12.5px;line-height:1.5">⚠️ <b>Đây là lần DUY NHẤT mã đầy đủ được hiển thị.</b> Hãy copy &amp; lưu an toàn ngay — đóng lại sẽ không xem được mã nữa (chỉ có thể Tạo lại mã).</div></div>
-      <div class="keydisp" style="font-size:14px">gtel_prod_K7m2Qp9Xr4Lb8Nv6Zt3Wy1<span style="margin-left:auto" class="icoact">⧉ Copy</span></div>
-      <div style="font-size:12px;color:var(--ink-soft)">Key <b>Key_New_012</b> · Dự án VinHome Smart City · Dịch vụ: Geocoding, Search · Hết hạn sau 90 ngày</div>
+      <div class="sect" style="background:var(--amber-soft);border-color:var(--amber)">
+        <div style="font-size:12.5px;line-height:1.5">⚠️ <b>Đây là lần DUY NHẤT mã đầy đủ được hiển thị.</b> Hãy copy
+          &amp; lưu an toàn ngay — đóng lại sẽ không xem được mã nữa (chỉ có thể Tạo lại mã).</div>
+      </div>
+      <div class="keydisp" style="font-size:14px">gtel_prod_K7m2Qp9Xr4Lb8Nv6Zt3Wy1<span style="margin-left:auto"
+          class="icoact">⧉ Copy</span></div>
+      <div style="font-size:12px;color:var(--ink-soft)">Key <b>Key_New_012</b> · Dự án VinHome Smart City · Dịch vụ:
+        Geocoding, Search · Hết hạn sau 90 ngày</div>
       <div class="mfoot"><button class="btn" onclick="cls('ovKeyCreated')">Đã copy · Xong</button></div>
     </div>
   </div>
@@ -336,11 +1343,17 @@
 <!-- RE-AUTH modal (Xem key) -->
 <div class="overlay" id="ovReauth">
   <div class="modal sm" style="width:min(440px,95vw)">
-    <div class="modal-head"><h2>🔐 Xác thực để xem API Key</h2><button class="mclose" onclick="cls('ovReauth')">✕</button></div>
+    <div class="modal-head">
+      <h2>🔐 Xác thực để xem API Key</h2><button class="mclose" onclick="cls('ovReauth')">✕</button>
+    </div>
     <div class="modal-body">
-      <p style="margin:0;font-size:13px;color:var(--ink-soft)">Vì lý do bảo mật, nhập lại <b>mật khẩu đăng nhập</b> để xem mã key đầy đủ. Key sẽ hiện <b>30 giây</b> rồi tự ẩn.</p>
-      <div class="fld"><label>Mật khẩu</label><div class="inp">••••••••••</div></div>
-      <div class="mfoot"><button class="btn ghost" onclick="cls('ovReauth')">Hủy</button><button class="btn" onclick="openReveal()">Xác nhận &amp; Xem key</button></div>
+      <p style="margin:0;font-size:13px;color:var(--ink-soft)">Vì lý do bảo mật, nhập lại <b>mật khẩu đăng nhập</b> để
+        xem mã key đầy đủ. Key sẽ hiện <b>30 giây</b> rồi tự ẩn.</p>
+      <div class="fld"><label>Mật khẩu</label>
+        <div class="inp">••••••••••</div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovReauth')">Hủy</button><button class="btn"
+          onclick="openReveal()">Xác nhận &amp; Xem key</button></div>
     </div>
   </div>
 </div>
@@ -348,10 +1361,14 @@
 <!-- REVEAL key (sau khi xác thực) -->
 <div class="overlay" id="ovReveal">
   <div class="modal sm" style="width:min(480px,95vw)">
-    <div class="modal-head"><h2>🔑 Mã API Key — Key_Auto_004</h2><button class="mclose" onclick="cls('ovReveal')">✕</button></div>
+    <div class="modal-head">
+      <h2>🔑 Mã API Key — Key_Auto_004</h2><button class="mclose" onclick="cls('ovReveal')">✕</button>
+    </div>
     <div class="modal-body">
       <div class="keydisp">gtel_prod_a1B2c3D4e5F6g7H8<span style="margin-left:auto" class="icoact">⧉ Copy</span></div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--amber)"><span>⏱</span> Mã tự ẩn sau <b id="revealCount">30</b> giây. Không chia sẻ mã này cho ai.</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--amber)"><span>⏱</span> Mã tự ẩn sau
+        <b id="revealCount">30</b> giây. Không chia sẻ mã này cho ai.
+      </div>
       <div class="mfoot"><button class="btn ghost" onclick="cls('ovReveal')">Ẩn ngay</button></div>
     </div>
   </div>
@@ -360,10 +1377,15 @@
 <!-- LOCK (khóa key) -->
 <div class="overlay" id="ovLock">
   <div class="modal sm" style="width:min(440px,95vw)">
-    <div class="modal-head"><h2>🔒 Khóa API Key</h2><button class="mclose" onclick="cls('ovLock')">✕</button></div>
+    <div class="modal-head">
+      <h2>🔒 Khóa API Key</h2><button class="mclose" onclick="cls('ovLock')">✕</button>
+    </div>
     <div class="modal-body">
-      <p style="margin:0;font-size:13px;color:var(--ink-soft)">Key <b>Key_Auto_004</b> sẽ chuyển sang <b>Tạm khóa (Suspended)</b> — mọi request bằng key này bị từ chối (403). Bạn có thể <b>mở khóa</b> lại bất cứ lúc nào; cấu hình và mã key được giữ nguyên.</p>
-      <div class="mfoot"><button class="btn ghost" onclick="cls('ovLock')">Hủy</button><button class="btn" style="background:var(--amber);border-color:var(--amber)" onclick="cls('ovLock')">Khóa key</button></div>
+      <p style="margin:0;font-size:13px;color:var(--ink-soft)">Key <b>Key_Auto_004</b> sẽ chuyển sang <b>Tạm khóa
+          (Suspended)</b> — mọi request bằng key này bị từ chối (403). Bạn có thể <b>mở khóa</b> lại bất cứ lúc nào; cấu
+        hình và mã key được giữ nguyên.</p>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovLock')">Hủy</button><button class="btn"
+          style="background:var(--amber);border-color:var(--amber)" onclick="cls('ovLock')">Khóa key</button></div>
     </div>
   </div>
 </div>
@@ -371,11 +1393,22 @@
 <!-- REVOKE (thu hồi vĩnh viễn) -->
 <div class="overlay" id="ovRevoke">
   <div class="modal sm" style="width:min(480px,95vw)">
-    <div class="modal-head"><h2>🚫 Thu hồi API Key</h2><button class="mclose" onclick="cls('ovRevoke')">✕</button></div>
+    <div class="modal-head">
+      <h2>🚫 Thu hồi API Key</h2><button class="mclose" onclick="cls('ovRevoke')">✕</button>
+    </div>
     <div class="modal-body">
-      <div class="sect" style="background:var(--red-soft);border-color:var(--red)"><div style="font-size:12.5px;line-height:1.5">⚠️ <b>Thu hồi là VĨNH VIỄN — không thể khôi phục.</b><br>Key <b>Key_Auto_004</b> sẽ ngừng hoạt động ngay; mọi ứng dụng dùng key này sẽ lỗi. Bản ghi vẫn được giữ để tra cứu lịch sử.</div></div>
-      <div class="fld"><label>Nhập <b>Key_Auto_004</b> để xác nhận</label><div class="inp" style="color:var(--ink-faint)">gõ tên key…</div></div>
-      <div class="mfoot"><button class="btn ghost" onclick="cls('ovRevoke')">Hủy</button><button class="btn" style="background:var(--red);border-color:var(--red)" onclick="cls('ovRevoke')">Thu hồi vĩnh viễn</button></div>
+      <div class="sect" style="background:var(--red-soft);border-color:var(--red)">
+        <div style="font-size:12.5px;line-height:1.5">⚠️ <b>Thu hồi là VĨNH VIỄN — không thể khôi phục.</b><br>Key
+          <b>Key_Auto_004</b> sẽ ngừng hoạt động ngay; mọi ứng dụng dùng key này sẽ lỗi. Bản ghi vẫn được giữ để tra cứu
+          lịch sử.
+        </div>
+      </div>
+      <div class="fld"><label>Nhập <b>Key_Auto_004</b> để xác nhận</label>
+        <div class="inp" style="color:var(--ink-faint)">gõ tên key…</div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovRevoke')">Hủy</button><button class="btn"
+          style="background:var(--red);border-color:var(--red)" onclick="cls('ovRevoke')">Thu hồi vĩnh viễn</button>
+      </div>
     </div>
   </div>
 </div>
@@ -383,11 +1416,18 @@
 <!-- UNLOCK (mở khóa key) -->
 <div class="overlay" id="ovUnlock">
   <div class="modal sm" style="width:min(440px,95vw)">
-    <div class="modal-head"><h2>🔓 Mở khóa API Key</h2><button class="mclose" onclick="cls('ovUnlock')">✕</button></div>
+    <div class="modal-head">
+      <h2>🔓 Mở khóa API Key</h2><button class="mclose" onclick="cls('ovUnlock')">✕</button>
+    </div>
     <div class="modal-body">
-      <div class="sect" style="background:var(--green-soft);border-color:var(--green)"><div style="font-size:12.5px">Key <b>Zalo_Map_Dev</b> sẽ chuyển từ <b>🟡 Tạm khóa</b> về <b>🟢 Hoạt động</b> — các request bằng key này được chấp nhận trở lại.</div></div>
-      <p style="margin:0;font-size:12px;color:var(--ink-faint)">Cấu hình và mã key giữ nguyên — không cần cập nhật lại ứng dụng.</p>
-      <div class="mfoot"><button class="btn ghost" onclick="cls('ovUnlock')">Hủy</button><button class="btn" style="background:var(--green);border-color:var(--green)" onclick="cls('ovUnlock')">Mở khóa</button></div>
+      <div class="sect" style="background:var(--green-soft);border-color:var(--green)">
+        <div style="font-size:12.5px">Key <b>Zalo_Map_Dev</b> sẽ chuyển từ <b>🟡 Tạm khóa</b> về <b>🟢 Hoạt động</b> —
+          các request bằng key này được chấp nhận trở lại.</div>
+      </div>
+      <p style="margin:0;font-size:12px;color:var(--ink-faint)">Cấu hình và mã key giữ nguyên — không cần cập nhật lại
+        ứng dụng.</p>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovUnlock')">Hủy</button><button class="btn"
+          style="background:var(--green);border-color:var(--green)" onclick="cls('ovUnlock')">Mở khóa</button></div>
     </div>
   </div>
 </div>
@@ -395,17 +1435,27 @@
 <!-- HISTORY / detail (read-only — cho key đã thu hồi) -->
 <div class="overlay" id="ovHistory">
   <div class="modal sm" style="width:min(560px,95vw)">
-    <div class="modal-head"><h2>Chi tiết API Key — An_Giang_Prod</h2><button class="mclose" onclick="cls('ovHistory')">✕</button></div>
+    <div class="modal-head">
+      <h2>Chi tiết API Key — An_Giang_Prod</h2><button class="mclose" onclick="cls('ovHistory')">✕</button>
+    </div>
     <div class="modal-body">
-      <div class="sect" style="background:var(--red-soft);border-color:var(--red)"><div style="font-size:12.5px">🔴 <b>Đã thu hồi</b> — key không còn hoạt động. Chế độ chỉ xem (không thao tác, không hiển thị mã bí mật).</div></div>
+      <div class="sect" style="background:var(--red-soft);border-color:var(--red)">
+        <div style="font-size:12.5px">🔴 <b>Đã thu hồi</b> — key không còn hoạt động. Chế độ chỉ xem (không thao tác,
+          không hiển thị mã bí mật).</div>
+      </div>
       <div class="sect">
         <h4>Thông tin</h4>
         <div style="display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:12.5px">
-          <div style="color:var(--ink-faint)">Dự án</div><div>An Giang GIS</div>
-          <div style="color:var(--ink-faint)">Dịch vụ</div><div>Geocoding, Administrative Units</div>
-          <div style="color:var(--ink-faint)">Môi trường</div><div>Production</div>
-          <div style="color:var(--ink-faint)">Ngày tạo</div><div>12/05/2026</div>
-          <div style="color:var(--ink-faint)">Ngày thu hồi</div><div>20/07/2026</div>
+          <div style="color:var(--ink-faint)">Dự án</div>
+          <div>An Giang GIS</div>
+          <div style="color:var(--ink-faint)">Dịch vụ</div>
+          <div>Geocoding, Administrative Units</div>
+          <div style="color:var(--ink-faint)">Môi trường</div>
+          <div>Production</div>
+          <div style="color:var(--ink-faint)">Ngày tạo</div>
+          <div>12/05/2026</div>
+          <div style="color:var(--ink-faint)">Ngày thu hồi</div>
+          <div>20/07/2026</div>
         </div>
       </div>
       <div class="sect">
@@ -424,16 +1474,26 @@
 <!-- REGENERATE modal -->
 <div class="overlay" id="ovRotate">
   <div class="modal sm" style="width:min(500px,95vw)">
-    <div class="modal-head"><h2>🔄 Tạo lại mã API Key</h2><button class="mclose" onclick="cls('ovRotate')">✕</button></div>
+    <div class="modal-head">
+      <h2>🔄 Tạo lại mã API Key</h2><button class="mclose" onclick="cls('ovRotate')">✕</button>
+    </div>
     <div class="modal-body">
       <div id="rotateConfirm">
-        <div class="sect" style="background:var(--amber-soft);border-color:var(--amber)"><div style="font-size:12.5px;line-height:1.5">⚠️ <b>Mã cũ sẽ ngừng hoạt động NGAY</b> sau khi xác nhận. Hãy sẵn sàng cập nhật mã mới vào ứng dụng.<br>Cấu hình key (tên, dịch vụ, giới hạn) <b>giữ nguyên</b> — chỉ đổi chuỗi bí mật.</div></div>
-        <div class="mfoot"><button class="btn ghost" onclick="cls('ovRotate');resetRotate()">Hủy</button><button class="btn" onclick="rotateDone()">Xác nhận tạo lại</button></div>
+        <div class="sect" style="background:var(--amber-soft);border-color:var(--amber)">
+          <div style="font-size:12.5px;line-height:1.5">⚠️ <b>Mã cũ sẽ ngừng hoạt động NGAY</b> sau khi xác nhận. Hãy
+            sẵn sàng cập nhật mã mới vào ứng dụng.<br>Cấu hình key (tên, dịch vụ, giới hạn) <b>giữ nguyên</b> — chỉ đổi
+            chuỗi bí mật.</div>
+        </div>
+        <div class="mfoot"><button class="btn ghost" onclick="cls('ovRotate');resetRotate()">Hủy</button><button
+            class="btn" onclick="rotateDone()">Xác nhận tạo lại</button></div>
       </div>
       <div id="rotateDone" style="display:none">
-        <div class="sect" style="background:var(--green-soft);border-color:var(--green)"><div style="font-size:12.5px">✅ <b>Đã tạo mã mới.</b> Mã cũ đã vô hiệu ngay.</div></div>
+        <div class="sect" style="background:var(--green-soft);border-color:var(--green)">
+          <div style="font-size:12.5px">✅ <b>Đã tạo mã mới.</b> Mã cũ đã vô hiệu ngay.</div>
+        </div>
         <div class="keydisp">gtel_prod_z9Y8x7W6v5U4t3S2<span style="margin-left:auto" class="icoact">⧉ Copy</span></div>
-        <span style="font-size:11px;color:var(--ink-faint)">⚠️ Mã đầy đủ chỉ hiện <b>1 lần</b> — copy ngay, đóng lại sẽ không xem được nữa.</span>
+        <span style="font-size:11px;color:var(--ink-faint)">⚠️ Mã đầy đủ chỉ hiện <b>1 lần</b> — copy ngay, đóng lại sẽ
+          không xem được nữa.</span>
         <div class="mfoot"><button class="btn" onclick="cls('ovRotate');resetRotate()">Đã copy · Xong</button></div>
       </div>
     </div>
@@ -441,53 +1501,57 @@
 </div>
 
 <script>
-  function show(v){
-    document.querySelectorAll('.view').forEach(function(e){e.classList.remove('on');});
-    document.getElementById('view-'+v).classList.add('on');
-    document.getElementById('nav-crud').classList.toggle('active',v==='crud');
-    document.getElementById('nav-stats').classList.toggle('active',v==='stats');
-    var tc=document.getElementById('tab-crud'), ts=document.getElementById('tab-stats');
-    if(tc) tc.classList.toggle('on',v==='crud');
-    if(ts) ts.classList.toggle('on',v==='stats');
-    document.getElementById('ptitle').textContent = v==='crud' ? 'Quản lý API Key' : 'Thống kê sử dụng API Key';
+  function show(v) {
+    document.querySelectorAll('.view').forEach(function (e) { e.classList.remove('on'); });
+    document.getElementById('view-' + v).classList.add('on');
+    document.getElementById('nav-crud').classList.toggle('active', v === 'crud');
+    document.getElementById('nav-stats').classList.toggle('active', v === 'stats');
+    var tc = document.getElementById('tab-crud'), ts = document.getElementById('tab-stats');
+    if (tc) tc.classList.toggle('on', v === 'crud');
+    if (ts) ts.classList.toggle('on', v === 'stats');
+    document.getElementById('ptitle').textContent = v === 'crud' ? 'Quản lý API Key' : 'Thống kê sử dụng API Key';
   }
-  function tg(id){var el=document.getElementById(id);el.classList.toggle('open');var e=el.querySelector('.exp');if(e)e.textContent=e.textContent==='▶'?'▼':'▶';}
-  function openDetail(){document.getElementById('ovDetail').classList.add('show');}
-  function openKey(){document.getElementById('ovKey').classList.add('show');}
-  function openKeyCreated(){cls('ovKey');document.getElementById('ovKeyCreated').classList.add('show');}
-  function openReauth(){document.getElementById('ovReauth').classList.add('show');}
-  function openReveal(){cls('ovReauth');document.getElementById('ovReveal').classList.add('show');
-    var n=30,el=document.getElementById('revealCount');clearInterval(window._rv);
-    window._rv=setInterval(function(){n--;if(el)el.textContent=n;if(n<=0){clearInterval(window._rv);cls('ovReveal');}},1000);}
-  function openLock(){document.getElementById('ovLock').classList.add('show');}
-  function openHistory(){document.getElementById('ovHistory').classList.add('show');}
-  function openUnlock(){document.getElementById('ovUnlock').classList.add('show');}
-  function openRevoke(){document.getElementById('ovRevoke').classList.add('show');}
-  function openRotate(){resetRotate();document.getElementById('ovRotate').classList.add('show');}
-  function rotateDone(){document.getElementById('rotateConfirm').style.display='none';document.getElementById('rotateDone').style.display='block';}
-  function resetRotate(){var c=document.getElementById('rotateConfirm'),d=document.getElementById('rotateDone');if(c)c.style.display='block';if(d)d.style.display='none';}
-  function expChange(){var v=document.getElementById('expSel').value;
-    document.getElementById('expCustom').style.display = v==='custom' ? 'block' : 'none';
-    document.getElementById('expNever').style.display = v==='never' ? 'block' : 'none';}
-  function cls(id){document.getElementById(id).classList.remove('show');}
-  document.querySelectorAll('.overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('show');});});
-  document.querySelectorAll('.chk').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on');});});
+  function tg(id) { var el = document.getElementById(id); el.classList.toggle('open'); var e = el.querySelector('.exp'); if (e) e.textContent = e.textContent === '▶' ? '▼' : '▶'; }
+  function openDetail() { document.getElementById('ovDetail').classList.add('show'); }
+  function openKey() { document.getElementById('ovKey').classList.add('show'); }
+  function openKeyCreated() { cls('ovKey'); document.getElementById('ovKeyCreated').classList.add('show'); }
+  function openReauth() { document.getElementById('ovReauth').classList.add('show'); }
+  function openReveal() {
+    cls('ovReauth'); document.getElementById('ovReveal').classList.add('show');
+    var n = 30, el = document.getElementById('revealCount'); clearInterval(window._rv);
+    window._rv = setInterval(function () { n--; if (el) el.textContent = n; if (n <= 0) { clearInterval(window._rv); cls('ovReveal'); } }, 1000);
+  }
+  function openLock() { document.getElementById('ovLock').classList.add('show'); }
+  function openHistory() { document.getElementById('ovHistory').classList.add('show'); }
+  function openUnlock() { document.getElementById('ovUnlock').classList.add('show'); }
+  function openRevoke() { document.getElementById('ovRevoke').classList.add('show'); }
+  function openRotate() { resetRotate(); document.getElementById('ovRotate').classList.add('show'); }
+  function rotateDone() { document.getElementById('rotateConfirm').style.display = 'none'; document.getElementById('rotateDone').style.display = 'block'; }
+  function resetRotate() { var c = document.getElementById('rotateConfirm'), d = document.getElementById('rotateDone'); if (c) c.style.display = 'block'; if (d) d.style.display = 'none'; }
+  function expChange() {
+    var v = document.getElementById('expSel').value;
+    document.getElementById('expCustom').style.display = v === 'custom' ? 'block' : 'none';
+    document.getElementById('expNever').style.display = v === 'never' ? 'block' : 'none';
+  }
+  function cls(id) { document.getElementById(id).classList.remove('show'); }
+  document.querySelectorAll('.overlay').forEach(function (o) { o.addEventListener('click', function (e) { if (e.target === o) o.classList.remove('show'); }); });
+  document.querySelectorAll('.chk').forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); }); });
   // endpoint group rows
-  var ep=[["Geocoding API","Forward Geocoding","/geocoding/v1/geocode","GET",288100,"99.6%"],
-  ["Search API","Autocomplete","/search/v1/suggest","GET",166457,"99.9%"],
-  ["Geocoding API","Reverse Geocoding","/geocoding/v1/reverse","GET",102435,"98.2%"],
-  ["Directions API","Route","/directions/v1/route","POST",57620,"99.1%"],
-  ["Search API","Places","/search/v1/places","GET",25609,"97.4%"],
-  ["Map Tiles API","Vector Tile","/tiles/v1/{z}/{x}/{y}","GET",18400,"99.8%"],
-  ["Directions API","Distance Matrix","/directions/v1/matrix","POST",9120,"98.9%"],
-  ["Weather API","Current","/weather/v1/current","GET",6300,"99.3%"],
-  ["Geocoding API","Batch Geocode","/geocoding/v1/batch","POST",4100,"96.5%"],
-  ["Admin Units API","Lookup","/admin-units/v1/lookup","GET",2050,"99.7%"]];
-  document.getElementById('epgroup').innerHTML=ep.map(function(r){
-    return '<tr><td><b style="font-size:12.5px">'+r[0]+'</b></td>'
-    +'<td style="font-size:12.5px;color:var(--ink-soft)">'+r[1]+'</td>'
-    +'<td style="font-family:var(--mono);font-size:12px;color:var(--ink-soft)">'+r[2]+'</td>'
-    +'<td><span class="code" style="background:var(--panel-2)">'+r[3]+'</span></td>'
-    +'<td class="num">'+r[4].toLocaleString()+'</td></tr>';
+  var ep = [["Geocoding API", "Forward Geocoding", "/geocoding/v1/geocode", "GET", 288100, "99.6%"],
+  ["Search API", "Autocomplete", "/search/v1/suggest", "GET", 166457, "99.9%"],
+  ["Geocoding API", "Reverse Geocoding", "/geocoding/v1/reverse", "GET", 102435, "98.2%"],
+  ["Directions API", "Route", "/directions/v1/route", "POST", 57620, "99.1%"],
+  ["Search API", "Places", "/search/v1/places", "GET", 25609, "97.4%"],
+  ["Map Tiles API", "Vector Tile", "/tiles/v1/{z}/{x}/{y}", "GET", 18400, "99.8%"],
+  ["Directions API", "Distance Matrix", "/directions/v1/matrix", "POST", 9120, "98.9%"],
+  ["Weather API", "Current", "/weather/v1/current", "GET", 6300, "99.3%"],
+  ["Geocoding API", "Batch Geocode", "/geocoding/v1/batch", "POST", 4100, "96.5%"],
+  ["Admin Units API", "Lookup", "/admin-units/v1/lookup", "GET", 2050, "99.7%"]];
+  document.getElementById('epgroup').innerHTML = ep.map(function (r) {
+    return '<tr><td><b style="font-size:12.5px">' + r[0] + '</b></td>'
+      + '<td style="font-size:12.5px;color:var(--ink-soft)">' + r[1] + '</td>'
+      + '<td style="font-family:var(--mono);font-size:12px;color:var(--ink-soft)">' + r[2] + '</td>'
+      + '<td><span class="code" style="background:var(--panel-2)">' + r[3] + '</span></td>'
+      + '<td class="num">' + r[4].toLocaleString() + '</td></tr>';
   }).join('');
 </script>
