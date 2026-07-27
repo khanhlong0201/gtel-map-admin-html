@@ -64,8 +64,6 @@
   .barlist{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
   .barrow{display:grid;grid-template-columns:120px 1fr 42px;align-items:center;gap:10px;font-size:12.5px;}
   .bar{height:9px;border-radius:5px;} .bar-track{background:var(--line-soft);border-radius:5px;}
-  .quota{margin-top:6px;} .quota .qbar{height:10px;border-radius:6px;background:var(--line-soft);overflow:hidden;}
-  .quota .qfill{height:100%;background:linear-gradient(90deg,var(--teal),var(--brand));}
 
   .tbl-wrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
   .tbl-tools{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);}
@@ -81,6 +79,7 @@
   .lnk{color:var(--brand);cursor:pointer;font-size:15px;}
   .st{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;} .st.act{background:var(--green-soft);color:var(--green);} .st.rev{background:var(--red-soft);color:var(--red);} .st.susp{background:var(--amber-soft);color:var(--amber);} .st.exp{background:var(--panel-2);color:var(--ink-soft);border:1px solid var(--line);} .st.rot{background:var(--brand-soft);color:var(--brand);}
   .tbl-foot{padding:10px 14px;display:flex;align-items:center;font-size:12px;color:var(--ink-faint);}
+  .epscroll{max-height:340px;overflow-y:auto;} .epscroll thead th{position:sticky;top:0;z-index:2;}
   .code{font-family:var(--mono);font-weight:700;padding:1px 7px;border-radius:5px;font-size:12px;}
   .code.ok{background:var(--green-soft);color:var(--green);} .icoact{cursor:pointer;color:var(--ink-soft);margin:0 3px;}
 
@@ -154,7 +153,7 @@
       <div class="note">Mockup CRUD — click 👁 hoặc "Tạo API Key" để mở form có <b>Giới hạn dịch vụ</b> + <b>Giới hạn ứng dụng</b> (chuẩn Google/Mapbox)</div>
     </div>
 
-    <!-- ============ VIEW: STATS ============ -->
+    <!-- ============ VIEW: STATS (ADMIN — phác thảo) ============ -->
     <div class="content view" id="view-stats">
       <div class="zlabel">Vùng 1 · Bộ lọc</div>
       <div class="filters">
@@ -162,67 +161,76 @@
         <div class="sel"><span class="lbl">Dự án</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="sel"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="tpreset"><span>1h</span><span>6h</span><span>12h</span><span>1 ngày</span><span class="on">7 ngày</span><span>14 ngày</span><span>30 ngày</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Từ→Đến</span><span class="v" style="font-family:var(--mono);font-size:11.5px">15/07 – 21/07</span><span class="cx">📅</span></div>
         <div class="rld">⟳</div>
       </div>
 
-      <div class="zlabel">Vùng 2 · Chỉ số usage</div>
-      <div class="kpis">
-        <div class="kpi"><div class="k-top">Tổng số yêu cầu <span>📈</span></div><div class="k-val">6,452,108</div><div class="k-delta up">▲ 12.5% <span class="flat" style="font-weight:600">so với kỳ trước</span></div></div>
-        <div class="kpi g"><div class="k-top">Tỷ lệ thành công <span>✅</span></div><div class="k-val">98.8%</div><div class="k-delta flat">● Ổn định</div></div>
-        <div class="kpi t"><div class="k-top">API Key hoạt động <span>🔑</span></div><div class="k-val">24</div><div class="k-delta flat">trên 3 khách hàng</div></div>
-        <div class="kpi p"><div class="k-top">Dịch vụ dùng nhiều nhất <span>🧭</span></div><div class="k-val" style="font-size:20px;margin-top:12px">Geocoding API</div><div class="k-delta flat">45% tổng lưu lượng</div></div>
+      <div class="zlabel">Vùng 2 · Chỉ số (admin lens)</div>
+      <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
+        <div class="kpi"><div class="k-top">Tổng số yêu cầu <span>📈</span></div><div class="k-val">6,452,108</div><div class="k-delta up">▲ 12.5% so với kỳ trước</div></div>
+        <div class="kpi g"><div class="k-top">Tỷ lệ thành công <span>✅</span></div><div class="k-val">98.8%</div><div class="k-delta flat">6,374,683 / 6,452,108 request</div></div>
       </div>
 
-      <div class="zlabel">Vùng 3 · Biểu đồ usage</div>
+      <div class="zlabel">Vùng 3 · Biểu đồ</div>
       <div class="charts">
         <div class="card">
-          <h3>Lưu lượng theo dịch vụ</h3>
-          <div class="sub">Stacked area · requests theo từng API Product (như Mapbox/Google)</div>
-          <svg viewBox="0 0 560 160" preserveAspectRatio="none">
-            <g stroke="var(--line-soft)"><line x1="0" y1="40" x2="560" y2="40"/><line x1="0" y1="80" x2="560" y2="80"/><line x1="0" y1="120" x2="560" y2="120"/></g>
-            <path d="M0,150 L93,150 L186,150 L280,150 L373,150 L466,150 L560,150 L560,96 L466,86 L373,104 L280,80 L186,100 L93,88 L0,104 Z" fill="var(--brand)" opacity=".85"/>
-            <path d="M0,104 L93,88 L186,100 L280,80 L373,104 L466,86 L560,96 L560,66 L466,58 L373,72 L280,52 L186,70 L93,60 L0,74 Z" fill="var(--teal)" opacity=".8"/>
-            <path d="M0,74 L93,60 L186,70 L280,52 L373,72 L466,58 L560,66 L560,44 L466,38 L373,50 L280,34 L186,48 L93,40 L0,52 Z" fill="var(--purple)" opacity=".8"/>
-            <path d="M0,52 L93,40 L186,48 L280,34 L373,50 L466,38 L560,44 L560,30 L466,26 L373,34 L280,24 L186,34 L93,28 L0,36 Z" fill="var(--amber)" opacity=".85"/>
+          <h3>Lưu lượng sử dụng API theo thời gian</h3>
+          <div class="sub">Area · số request thành công theo thời gian (trục X ăn theo bộ lọc)</div>
+          <svg viewBox="0 0 560 180" preserveAspectRatio="none" style="height:200px">
+            <g stroke="var(--line-soft)" font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)">
+              <line x1="30" y1="20" x2="30" y2="150"/>
+              <line x1="30" y1="150" x2="560" y2="150"/>
+              <text x="4" y="24">1200</text><text x="8" y="56">900</text><text x="8" y="88">600</text><text x="8" y="120">300</text><text x="18" y="152">0</text>
+            </g>
+            <path d="M30,150 L560,150 L560,88 L486,82 L410,70 L334,44 L258,64 L182,72 L106,78 L30,90 Z" fill="var(--green)" opacity=".45"/>
+            <path d="M30,90 L106,78 L182,72 L258,64 L334,44 L410,70 L486,82 L560,88" fill="none" stroke="var(--green)" stroke-width="2.2"/>
+            <line x1="334" y1="44" x2="334" y2="150" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/>
+            <circle cx="334" cy="44" r="4.5" fill="var(--green)" stroke="#fff" stroke-width="1.5"/>
+            <rect x="286" y="24" width="96" height="15" rx="4" fill="var(--green)"/>
+            <text x="334" y="34.5" font-size="9.5" font-family="ui-monospace,monospace" fill="#fff" text-anchor="middle" font-weight="700">⚡ Đỉnh 18/07 · 1.24M</text>
+            <g font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)" text-anchor="middle">
+              <text x="45" y="165">15/07 00:00</text><text x="121" y="165">15/07 06:00</text><text x="197" y="165">16/07 00:00</text><text x="273" y="165">17/07 00:00</text><text x="349" y="165">18/07 00:00</text><text x="425" y="165">19/07 12:00</text><text x="501" y="165">21/07 00:00</text>
+            </g>
           </svg>
-          <div class="legend"><span><i style="background:var(--brand)"></i>Geocoding</span><span><i style="background:var(--teal)"></i>Search</span><span><i style="background:var(--purple)"></i>Directions</span><span><i style="background:var(--amber)"></i>Map Tiles</span></div>
+          <div class="legend"><span><i style="background:var(--green)"></i>Request thành công (2xx)</span></div>
+          <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);margin-top:8px;padding-top:6px">📏 <b>Granularity trục X</b> đổi theo bộ lọc: 1h→5', 6h→15', 12h→30', 1 ngày→1h, 2 ngày→2h, 4 ngày→4h, <b>7 ngày→6h</b>, 14 ngày→12h, 30 ngày→1 ngày.</div>
         </div>
+
         <div class="card">
-          <h3>Phân bổ dịch vụ</h3>
-          <div class="sub">Tỉ trọng requests theo API Product</div>
+          <h3>Top 5 khách hàng theo lưu lượng</h3>
+          <div class="sub">% tổng requests trong kỳ lọc</div>
           <div class="barlist">
-            <div class="barrow"><span>Geocoding API</span><div class="bar-track"><div class="bar" style="width:100%;background:var(--brand)"></div></div><span class="num">45%</span></div>
-            <div class="barrow"><span>Search API</span><div class="bar-track"><div class="bar" style="width:62%;background:var(--teal)"></div></div><span class="num">28%</span></div>
-            <div class="barrow"><span>Directions API</span><div class="bar-track"><div class="bar" style="width:33%;background:var(--purple)"></div></div><span class="num">15%</span></div>
-            <div class="barrow"><span>Reverse Geocoding</span><div class="bar-track"><div class="bar" style="width:18%;background:var(--brand)"></div></div><span class="num">8%</span></div>
-            <div class="barrow"><span>Map Tiles API</span><div class="bar-track"><div class="bar" style="width:9%;background:var(--amber)"></div></div><span class="num">4%</span></div>
-          </div>
-          <div class="quota">
-            <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin:14px 0 5px"><span><b>Hạn mức tháng</b> (gợi ý thêm)</span><span class="num" style="font-family:var(--mono)">6.45M / 10M</span></div>
-            <div class="qbar"><div class="qfill" style="width:64.5%"></div></div>
+            <div class="barrow"><span>Vingroup JSC</span><div class="bar-track"><div class="bar" style="width:100%;background:var(--brand)"></div></div><span class="num">42%</span></div>
+            <div class="barrow"><span>Grab Vietnam</span><div class="bar-track"><div class="bar" style="width:69%;background:var(--teal)"></div></div><span class="num">29%</span></div>
+            <div class="barrow"><span>An Giang GIS</span><div class="bar-track"><div class="bar" style="width:43%;background:var(--purple)"></div></div><span class="num">18%</span></div>
+            <div class="barrow"><span>Zalo Maps</span><div class="bar-track"><div class="bar" style="width:19%;background:var(--brand)"></div></div><span class="num">8%</span></div>
+            <div class="barrow"><span>VNG Corp</span><div class="bar-track"><div class="bar" style="width:7%;background:var(--amber)"></div></div><span class="num">3%</span></div>
           </div>
         </div>
       </div>
 
       <div class="zlabel">Vùng 4 · Chi tiết theo phân cấp</div>
       <div class="tbl-wrap">
-        <div class="tbl-tools"><strong style="font-size:13px">Khách hàng → Dự án → API Key</strong><span class="search">🔍 Tìm khách hàng, dự án, API key…</span></div>
+        <div class="tbl-tools"><strong style="font-size:13px">Khách hàng → Dự án → API Key</strong>
+          <span class="search">🔍 Tìm khách hàng, dự án, API key…</span>
+        </div>
         <table>
-          <thead><tr><th>Khách hàng</th><th class="num">Tổng yêu cầu</th><th class="num">% Thành công</th><th>Dịch vụ chính</th><th style="text-align:center">Chi tiết</th></tr></thead>
+          <thead><tr><th>Khách hàng</th><th class="num">Tổng yêu cầu</th><th class="num">Yêu cầu lỗi</th><th>Dịch vụ chính</th><th style="text-align:center">Hành động</th></tr></thead>
           <tbody id="g1">
-            <tr onclick="tg('g1')"><td><span class="node"><span class="exp">▶</span>👤 Vingroup JSC</span></td><td class="num">2,460,128</td><td class="num">98.5%</td><td><span class="chip s">Geocoding</span></td><td style="text-align:center"><span class="lnk" onclick="event.stopPropagation();openDetail()">⧉</span></td></tr>
-            <tr class="lvl2"><td><span class="node">📁 VinHome Smart City</span></td><td class="num">1,208,540</td><td class="num">99.1%</td><td><span class="chip s">Geocoding</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()">⧉</span></td></tr>
-            <tr class="lvl3"><td>🔑 Key_Auto_004</td><td class="num">640,220</td><td class="num">99.4%</td><td><span class="chip s">Geocoding</span> <span class="chip s">Search</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()">⧉</span></td></tr>
-            <tr class="lvl3"><td>🔑 Key_Auto_005</td><td class="num">568,320</td><td class="num">99.8%</td><td><span class="chip s">Tất cả</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()">⧉</span></td></tr>
+            <tr onclick="tg('g1')"><td><span class="node"><span class="exp">▶</span>👤 Vingroup JSC</span></td><td class="num">2,460,128</td><td class="num">36,902</td><td><span class="chip s">Geocoding</span></td><td></td></tr>
+            <tr class="lvl2"><td><span class="node">📁 VinHome Smart City</span></td><td class="num">1,208,540</td><td class="num">10,876</td><td><span class="chip s">Geocoding</span></td><td></td></tr>
+            <tr class="lvl3"><td>🔑 Key_Auto_004</td><td class="num">640,220</td><td class="num"><span class="pill bad">3,841</span></td><td><span class="chip s">Geocoding</span> <span class="chip s">Search</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td></tr>
+            <tr class="lvl3"><td>🔑 Key_Auto_005</td><td class="num">568,320</td><td class="num">7,035</td><td><span class="chip s">Tất cả</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td></tr>
           </tbody>
           <tbody id="g2">
-            <tr onclick="tg('g2')"><td><span class="node"><span class="exp">▶</span>👤 Grab Vietnam</span></td><td class="num">1,884,002</td><td class="num">99.6%</td><td><span class="chip s">Directions</span></td><td style="text-align:center"><span class="lnk" onclick="event.stopPropagation();openDetail()">⧉</span></td></tr>
-            <tr class="lvl2"><td><span class="node">📁 GrabMaps Core</span></td><td class="num">1,884,002</td><td class="num">99.6%</td><td><span class="chip s">Directions</span></td><td style="text-align:center"><span class="lnk" onclick="openDetail()">⧉</span></td></tr>
+            <tr onclick="tg('g2')"><td><span class="node"><span class="exp">▶</span>👤 Grab Vietnam</span></td><td class="num">1,884,002</td><td class="num">7,536</td><td><span class="chip s">Directions</span></td><td></td></tr>
+            <tr class="lvl2"><td><span class="node">📁 GrabMaps Core</span></td><td class="num">1,884,002</td><td class="num">7,536</td><td><span class="chip s">Directions</span></td><td></td></tr>
           </tbody>
         </table>
         <div class="tbl-foot">Hiển thị 12 trong tổng số 12 khách hàng</div>
       </div>
-      <div class="note">Đã bỏ 5xx & latency · thêm KPI usage + hạn mức · click ⧉ mở <b>Chi tiết dạng Endpoint Group</b></div>
+
+      <div class="note">🎨 <b>Board admin</b> — 4 vùng: Bộ lọc · KPI · Biểu đồ (có đánh dấu Đỉnh) · Tree table (👁 xem chi tiết ở dòng key). Đã bỏ cảnh báo, quota, KPI thừa.</div>
     </div>
   </div>
 </div>
@@ -230,19 +238,30 @@
 <!-- DETAIL modal — ENDPOINT GROUP -->
 <div class="overlay" id="ovDetail">
   <div class="modal">
-    <div class="modal-head"><h2>Chi tiết sử dụng theo Endpoint</h2><span class="chip">Vingroup JSC › VinHome Smart City › Key_Auto_004</span><button class="mclose" onclick="cls('ovDetail')">✕</button></div>
+    <div class="modal-head"><h2>Chi tiết sử dụng theo API Key</h2><span class="chip">Vingroup JSC › VinHome Smart City › Key_Auto_004</span><button class="mclose" onclick="cls('ovDetail')">✕</button></div>
     <div class="modal-body">
+      <div class="sect" style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;padding:10px 14px;align-items:center">
+        <span>🔑 <b>Key_Auto_004</b></span>
+        <span>Trạng thái: <span class="st act">🟢 Hoạt động</span></span>
+        <span>Tổng: <b>640,220</b> yêu cầu</span>
+        <span>Dịch vụ được cấp: <span class="chip s">Geocoding</span> <span class="chip s">Search</span> <span class="chip s">Directions</span> <span class="chip g" style="cursor:help" title="Còn: Places, Map Tiles, Weather, Administrative Units, Reverse Geocoding, Routing">+6</span></span>
+        <span style="color:var(--ink-faint)">Tạo 04/07/2026</span>
+      </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <div class="sel"><span class="lbl">Khoảng</span><span class="v">15/07 – 21/07/2026</span><span class="cx">▾</span></div>
-        <div class="sel" style="min-width:240px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm endpoint / dịch vụ…</span></div>
-        <div class="sel" style="min-width:auto"><span class="v" style="margin-left:0">⚙ Bộ lọc: Method, Dịch vụ</span></div>
+        <div class="sel"><span class="lbl">Khoảng</span><span class="v">15/07 – 21/07/2026</span><span class="cx">📅</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Tính năng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Method</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:200px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo endpoint…</span></div>
       </div>
       <div class="tbl-wrap" style="border-radius:10px">
-        <table>
-          <thead><tr><th>Dịch vụ / Tính năng</th><th>Endpoint</th><th>Method</th><th class="num">Số yêu cầu</th><th class="num">% tổng</th><th class="num">% thành công</th></tr></thead>
-          <tbody id="epgroup"></tbody>
-        </table>
-        <div class="tbl-foot">Gộp theo endpoint · sắp theo lượt gọi giảm dần · tổng 640,220 yêu cầu</div>
+        <div class="epscroll">
+          <table>
+            <thead><tr><th>Dịch vụ</th><th>Tính năng</th><th>Endpoint</th><th>Method</th><th class="num">Số yêu cầu</th></tr></thead>
+            <tbody id="epgroup"></tbody>
+          </table>
+        </div>
+        <div class="tbl-foot">Gộp theo endpoint · sắp theo lượt gọi giảm dần <span style="margin-left:auto;color:var(--ink-faint)">↓ Cuộn để tải thêm</span></div>
       </div>
     </div>
   </div>
@@ -454,16 +473,21 @@
   document.querySelectorAll('.overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('show');});});
   document.querySelectorAll('.chk').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('on');});});
   // endpoint group rows
-  var ep=[["Geocoding API","Forward Geocoding","/geocoding/v1/geocode","GET",288100,"45.0%","99.6%"],
-  ["Search API","Autocomplete","/search/v1/suggest","GET",166457,"26.0%","99.9%"],
-  ["Geocoding API","Reverse Geocoding","/geocoding/v1/reverse","GET",102435,"16.0%","98.2%"],
-  ["Directions API","Route","/directions/v1/route","POST",57620,"9.0%","99.1%"],
-  ["Search API","Places","/search/v1/places","GET",25609,"4.0%","97.4%"]];
+  var ep=[["Geocoding API","Forward Geocoding","/geocoding/v1/geocode","GET",288100,"99.6%"],
+  ["Search API","Autocomplete","/search/v1/suggest","GET",166457,"99.9%"],
+  ["Geocoding API","Reverse Geocoding","/geocoding/v1/reverse","GET",102435,"98.2%"],
+  ["Directions API","Route","/directions/v1/route","POST",57620,"99.1%"],
+  ["Search API","Places","/search/v1/places","GET",25609,"97.4%"],
+  ["Map Tiles API","Vector Tile","/tiles/v1/{z}/{x}/{y}","GET",18400,"99.8%"],
+  ["Directions API","Distance Matrix","/directions/v1/matrix","POST",9120,"98.9%"],
+  ["Weather API","Current","/weather/v1/current","GET",6300,"99.3%"],
+  ["Geocoding API","Batch Geocode","/geocoding/v1/batch","POST",4100,"96.5%"],
+  ["Admin Units API","Lookup","/admin-units/v1/lookup","GET",2050,"99.7%"]];
   document.getElementById('epgroup').innerHTML=ep.map(function(r){
-    return '<tr><td><b style="font-size:12.5px">'+r[0]+'</b><div style="font-size:11px;color:var(--ink-soft)">'+r[1]+'</div></td>'
+    return '<tr><td><b style="font-size:12.5px">'+r[0]+'</b></td>'
+    +'<td style="font-size:12.5px;color:var(--ink-soft)">'+r[1]+'</td>'
     +'<td style="font-family:var(--mono);font-size:12px;color:var(--ink-soft)">'+r[2]+'</td>'
     +'<td><span class="code" style="background:var(--panel-2)">'+r[3]+'</span></td>'
-    +'<td class="num">'+r[4].toLocaleString()+'</td><td class="num">'+r[5]+'</td>'
-    +'<td class="num"><span class="code ok">'+r[6]+'</span></td></tr>';
+    +'<td class="num">'+r[4].toLocaleString()+'</td></tr>';
   }).join('');
 </script>
