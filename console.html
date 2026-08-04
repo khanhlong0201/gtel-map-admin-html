@@ -1,0 +1,2168 @@
+<title>Gtel Map Console — Mockup</title>
+<style>
+  :root {
+    --bg: #F4F6FA;
+    --panel: #FFFFFF;
+    --panel-2: #FAFBFD;
+    --ink: #1A2231;
+    --ink-soft: #5B6678;
+    --ink-faint: #8A94A6;
+    --line: #E3E8F0;
+    --line-soft: #EEF1F6;
+    --brand: #2563EB;
+    --brand-soft: #E7EEFF;
+    --green: #16A34A;
+    --green-soft: #E4F5EB;
+    --red: #DC2626;
+    --red-soft: #FBE6E6;
+    --amber: #D97706;
+    --amber-soft: #FCEFD9;
+    --purple: #7C3AED;
+    --purple-soft: #EFE7FE;
+    --teal: #0D9488;
+    --teal-soft: #DCF5F1;
+    --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme:dark) {
+    :root {
+      --bg: #0E1420;
+      --panel: #161E2C;
+      --panel-2: #1B2433;
+      --ink: #E9EDF4;
+      --ink-soft: #9AA6B8;
+      --ink-faint: #6B778A;
+      --line: #26303F;
+      --line-soft: #202938;
+      --brand: #5B8DEF;
+      --brand-soft: #1A2740;
+      --green: #3DD07E;
+      --green-soft: #14301F;
+      --red: #F26B6B;
+      --red-soft: #331717;
+      --amber: #F0A63C;
+      --amber-soft: #332412;
+      --purple: #A987FF;
+      --purple-soft: #241a3d;
+      --teal: #3CC7C2;
+      --teal-soft: #123030;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bg: #F4F6FA;
+    --panel: #FFFFFF;
+    --panel-2: #FAFBFD;
+    --ink: #1A2231;
+    --ink-soft: #5B6678;
+    --ink-faint: #8A94A6;
+    --line: #E3E8F0;
+    --line-soft: #EEF1F6;
+    --brand: #2563EB;
+    --brand-soft: #E7EEFF;
+    --green: #16A34A;
+    --green-soft: #E4F5EB;
+    --red: #DC2626;
+    --red-soft: #FBE6E6;
+    --amber: #D97706;
+    --amber-soft: #FCEFD9;
+    --purple: #7C3AED;
+    --purple-soft: #EFE7FE;
+    --teal: #0D9488;
+    --teal-soft: #DCF5F1;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0E1420;
+    --panel: #161E2C;
+    --panel-2: #1B2433;
+    --ink: #E9EDF4;
+    --ink-soft: #9AA6B8;
+    --ink-faint: #6B778A;
+    --line: #26303F;
+    --line-soft: #202938;
+    --brand: #5B8DEF;
+    --brand-soft: #1A2740;
+    --green: #3DD07E;
+    --green-soft: #14301F;
+    --red: #F26B6B;
+    --red-soft: #331717;
+    --amber: #F0A63C;
+    --amber-soft: #332412;
+    --purple: #A987FF;
+    --purple-soft: #241a3d;
+    --teal: #3CC7C2;
+    --teal-soft: #123030;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .side {
+    width: 210px;
+    flex: none;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 16px 12px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 6px 8px 14px;
+  }
+
+  .logo .m {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--brand), var(--purple));
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+
+  .nav {
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 8px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+  }
+
+  .nav.active {
+    background: var(--brand-soft);
+    color: var(--brand);
+    font-weight: 700;
+  }
+
+  .side .grp {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--ink-faint);
+    padding: 14px 10px 4px;
+    font-weight: 700;
+  }
+
+  .main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .topbar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    flex-wrap: wrap;
+  }
+
+  .crumb {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .crumb b {
+    color: var(--ink-soft);
+  }
+
+  .topbar h1 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .viewtabs {
+    display: flex;
+    gap: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 3px;
+  }
+
+  .viewtabs span {
+    padding: 6px 13px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .viewtabs span.on {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .content {
+    padding: 20px 22px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .zlabel {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink-faint);
+    font-weight: 700;
+    margin: 6px 0 -4px;
+  }
+
+  .btn {
+    border: 1px solid var(--brand);
+    background: var(--brand);
+    color: #fff;
+    border-radius: 9px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn.ghost {
+    background: transparent;
+    color: var(--brand);
+  }
+
+  .view {
+    display: none;
+  }
+
+  .view.on {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .filters {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .sel {
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 9px;
+    padding: 7px 11px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    min-width: 150px;
+  }
+
+  .sel .lbl {
+    color: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  .sel .v {
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  .sel .cx {
+    color: var(--ink-faint);
+  }
+
+  .tpreset {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    overflow: hidden;
+  }
+
+  .tpreset span {
+    padding: 7px 11px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tpreset span:last-child {
+    border-right: none;
+  }
+
+  .tpreset span.on {
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .rld {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 9px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .kpi.g {
+    border-left-color: var(--green);
+  }
+
+  .kpi.t {
+    border-left-color: var(--teal);
+  }
+
+  .kpi.p {
+    border-left-color: var(--purple);
+  }
+
+  .kpi .k-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .kpi .k-val {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin: 8px 0 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi .k-delta {
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .up {
+    color: var(--green);
+  }
+
+  .flat {
+    color: var(--ink-faint);
+  }
+
+  .charts {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .card h3 {
+    margin: 0 0 2px;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .card .sub {
+    color: var(--ink-faint);
+    font-size: 11.5px;
+    margin-bottom: 10px;
+  }
+
+  .card svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+
+  .legend i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: -1px;
+  }
+
+  .barlist {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 4px;
+  }
+
+  .barrow {
+    display: grid;
+    grid-template-columns: 120px 1fr 42px;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+  }
+
+  .bar {
+    height: 9px;
+    border-radius: 5px;
+  }
+
+  .bar-track {
+    background: var(--line-soft);
+    border-radius: 5px;
+  }
+
+  .tbl-wrap {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .tbl-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tbl-tools .search {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    min-width: 260px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--ink-faint);
+    font-weight: 700;
+    padding: 9px 14px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  thead th.num,
+  td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--mono);
+  }
+
+  tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  tbody tr:hover {
+    background: var(--panel-2);
+  }
+
+  .node {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .exp {
+    width: 15px;
+    color: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  .lvl2 td:first-child {
+    padding-left: 34px;
+  }
+
+  .lvl3 td:first-child {
+    padding-left: 56px;
+  }
+
+  .lvl2,
+  .lvl3 {
+    display: none;
+  }
+
+  .open>.lvl2,
+  .open>.lvl3 {
+    display: table-row;
+  }
+
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .chip.s {
+    background: var(--teal-soft);
+    color: var(--teal);
+  }
+
+  .chip.g {
+    background: var(--panel-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+
+  .lnk {
+    color: var(--brand);
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .st {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .st.act {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+
+  .st.rev {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+
+  .st.susp {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
+
+  .st.exp {
+    background: var(--panel-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+
+  .st.rot {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .st.pending {
+    background: var(--purple-soft);
+    color: var(--purple);
+  }
+
+  .tbl-foot {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .epscroll {
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .epscroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .code {
+    font-family: var(--mono);
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+
+  .code.ok {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+
+  .icoact {
+    cursor: pointer;
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1;
+    transition: background .15s;
+  }
+
+  .icoact:hover {
+    background: var(--brand-soft);
+  }
+
+  td .actbar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  /* Multi-select filter */
+  .msel {
+    position: relative;
+  }
+
+  .msel .sel {
+    user-select: none;
+  }
+
+  .msel-panel {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 220px;
+    max-height: 280px;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+    padding: 6px;
+    z-index: 30;
+    display: none;
+  }
+
+  .msel.open .msel-panel {
+    display: block;
+  }
+
+  .msel-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .msel-item:hover {
+    background: var(--panel-2);
+  }
+
+  .msel-item input {
+    accent-color: var(--brand);
+    cursor: pointer;
+  }
+
+  .msel-foot {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 10px 2px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: 4px;
+    font-size: 11.5px;
+  }
+
+  .msel-foot a {
+    color: var(--brand);
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .sel .v.multi {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .sel .badge-count {
+    background: var(--brand);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 999px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  th:last-child,
+  td:last-child {
+    white-space: nowrap;
+    min-width: 180px;
+  }
+
+  /* modal */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 16, 26, .55);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 22px;
+  }
+
+  .overlay.show {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    width: min(1120px, 95vw);
+    max-height: 92vh;
+    overflow: auto;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  }
+
+  .modal.sm {
+    width: min(640px, 95vw);
+  }
+
+  .modal-head {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 2;
+  }
+
+  .modal-head h2 {
+    font-size: 15px;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  .mclose {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  .modal-body {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .fld {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .fld label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .fld .inp {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  select.inp {
+    width: 100%;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  input.inp {
+    width: 100%;
+    color: var(--ink);
+  }
+
+  .fld .vh {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .fld .vh code {
+    background: var(--panel-2);
+    padding: 0 4px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+  }
+
+  .fld.locked .inp {
+    background: var(--panel-2);
+    color: var(--ink-faint);
+    cursor: not-allowed;
+    opacity: .75;
+  }
+
+  .fld.locked label::after {
+    content: " 🔒";
+    font-size: 11px;
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .sect {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .sect h4 {
+    margin: 0 0 3px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .sect .h-sub {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+
+  .radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+
+  .radio .rc {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid var(--brand);
+    display: inline-block;
+    position: relative;
+  }
+
+  .radio.on .rc::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .svcgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .chk {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    cursor: pointer;
+  }
+
+  .chk .cb {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    border: 2px solid var(--ink-faint);
+    display: inline-block;
+  }
+
+  .chk.on {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+  }
+
+  .chk.on .cb {
+    background: var(--brand);
+    border-color: var(--brand);
+    position: relative;
+  }
+
+  .chk.on .cb::after {
+    content: "✓";
+    position: absolute;
+    color: #fff;
+    font-size: 11px;
+    top: -3px;
+    left: 1px;
+  }
+
+  .keydisp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .note {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 8px;
+  }
+
+  .mfoot {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 4px;
+  }
+
+  @media (max-width:1000px) {
+    .kpis {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .charts {
+      grid-template-columns: 1fr;
+    }
+
+    .svcgrid,
+    .row2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width:760px) {
+    .side {
+      display: none;
+    }
+
+    .tbl-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      min-width: 640px;
+    }
+  }
+
+  /* ===== Console-specific additions ===== */
+  .rolebar {
+    display: flex;
+    gap: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 3px;
+  }
+
+  .rolebtn {
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .rolebtn.on {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .rolehint {
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+
+  .loginwrap {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .loginwrap.hide {
+    display: none;
+  }
+
+  .logincard {
+    width: min(380px, 92vw);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 30px 28px 24px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .18);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .logincard .logo {
+    justify-content: center;
+    padding: 0 0 10px;
+    font-size: 17px;
+  }
+
+  .logincard h2 {
+    margin: 0;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 800;
+  }
+
+  .logincard .sub {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: -8px;
+  }
+
+  .demofab {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 90;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+  }
+
+  .memberrow-actions select {
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 6px;
+    padding: 4px 7px;
+    font-size: 11.5px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .modal-tabs {
+    display: flex;
+    gap: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 3px;
+    width: fit-content;
+  }
+
+  .modal-tabs span {
+    padding: 6px 14px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .modal-tabs span.on {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .subpanel {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+  }
+</style>
+
+<!-- ============ LOGIN SCREEN (demo, toggle qua nút góc dưới phải) ============ -->
+<div class="loginwrap hide" id="login">
+  <div class="logincard">
+    <div class="logo"><span class="m">◗</span> Gtel Map Console</div>
+    <h2>Đăng nhập</h2>
+    <div class="sub">Cổng đăng nhập dùng chung My Account</div>
+    <div class="fld"><label>Email</label>
+      <input class="inp" placeholder="ban@congty.vn" />
+    </div>
+    <div class="fld"><label>Mật khẩu</label>
+      <input class="inp" type="password" placeholder="••••••••••" />
+    </div>
+    <button class="btn" style="width:100%;margin-top:4px" onclick="doLogin()">Đăng nhập</button>
+    <div class="rolehint" style="text-align:center">Tài khoản do GTEL Admin cấp qua email kích hoạt — không có đăng ký công khai</div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="app">
+  <aside class="side">
+    <div class="logo"><span class="m">◗</span> Gtel Map Console</div>
+    <div class="grp">Tổng quan</div>
+    <div class="nav active" id="nav-home" onclick="show('home')"><span>🏠</span> Trang chủ</div>
+    <div class="grp">Tổ chức</div>
+    <div class="nav org-only" id="nav-customers" onclick="show('customers')"><span>👥</span> Quản lý Khách hàng</div>
+    <div class="nav" id="nav-projects" onclick="show('projects')"><span>📁</span> Quản lý Dự án</div>
+    <div class="grp">API</div>
+    <div class="nav" id="nav-keys" onclick="show('keys')"><span>🔑</span> Quản lý API Key</div>
+    <div class="nav" id="nav-stats" onclick="show('stats')"><span>📊</span> Thống kê sử dụng</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb"><b>Tập đoàn Vingroup</b> › Console</div>
+        <h1 id="ptitle">Trang chủ</h1>
+      </div>
+      <div class="spacer"></div>
+      <div class="rolebar" id="rolebar">
+        <button class="rolebtn on" data-role="org" onclick="setRole('org')">🔵 Org Admin</button>
+        <button class="rolebtn" data-role="cust" onclick="setRole('cust')">🟢 Khách hàng Admin</button>
+        <button class="rolebtn" data-role="member" onclick="setRole('member')">⚪ Member</button>
+      </div>
+      <span class="badge"><span class="dot"></span> realtime</span>
+    </div>
+
+    <!-- ============ VIEW: HOME ============ -->
+    <div class="content view on" id="view-home">
+      <div class="zlabel">Chào mừng trở lại</div>
+      <div class="card">
+        <h3 id="homeGreet">Xin chào 👋 — Org Admin, Tổ chức Vingroup</h3>
+        <div class="sub" id="homeSub">Toàn bộ Khách hàng và Dự án trong tổ chức của bạn.</div>
+      </div>
+      <div class="zlabel">Số liệu tóm tắt</div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="k-top">Số Project <span>📁</span></div>
+          <div class="k-val" id="homeProj">5</div>
+          <div class="k-delta flat">Trong phạm vi bạn thấy</div>
+        </div>
+        <div class="kpi t">
+          <div class="k-top">Số API Key <span>🔑</span></div>
+          <div class="k-val" id="homeKeys">7</div>
+          <div class="k-delta flat">Đang hoạt động + chưa hiệu lực</div>
+        </div>
+        <div class="kpi g">
+          <div class="k-top">Tổng request tháng này <span>📈</span></div>
+          <div class="k-val">1,284,502</div>
+          <div class="k-delta up">▲ 8.4% so với tháng trước</div>
+        </div>
+        <div class="kpi p">
+          <div class="k-top">Tỷ lệ thành công <span>✅</span></div>
+          <div class="k-val">99.1%</div>
+          <div class="k-delta flat">1,272,850 / 1,284,502 request</div>
+        </div>
+      </div>
+      <div class="note">Mockup Console — dùng nút vai trò ở góc trên để xem giao diện đổi theo 🔵 Org Admin / 🟢 Khách hàng Admin / ⚪ Member.</div>
+    </div>
+
+    <!-- ============ VIEW: CUSTOMERS (chỉ Org Admin) ============ -->
+    <div class="content view" id="view-customers">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách Khách hàng</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn" onclick="openCustomerCreate()">＋ Tạo Khách hàng</button>
+      </div>
+      <div class="note" style="text-align:left;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:10px">
+        🏢 Tổ chức <b>Vingroup</b> — tầng Khách hàng dùng để chia nhỏ team/quyền quản lý trong 1 tổ chức lớn. Ví dụ: 2 Khách hàng con <b>Vinhome</b> và <b>Vinfast</b>.
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">Khách hàng</strong>
+          <span class="search">🔍 Tìm theo tên khách hàng…</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên Khách hàng</th>
+              <th>Mã</th>
+              <th>Trạng thái</th>
+              <th>Ngày tạo</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="openCustomer('vinhome')" style="cursor:pointer">
+              <td><b>Vinhome</b></td>
+              <td style="font-family:var(--mono);font-size:12px">vinhome</td>
+              <td><span class="st act">🟢 Active</span></td>
+              <td style="font-family:var(--mono);font-size:12px">10/06/2026</td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openCustomer('vinhome')" title="Xem chi tiết">ℹ️</span></span></td>
+            </tr>
+            <tr onclick="openCustomer('vinfast')" style="cursor:pointer">
+              <td><b>Vinfast</b></td>
+              <td style="font-family:var(--mono);font-size:12px">vinfast</td>
+              <td><span class="st act">🟢 Active</span></td>
+              <td style="font-family:var(--mono);font-size:12px">10/06/2026</td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openCustomer('vinfast')" title="Xem chi tiết">ℹ️</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>1–2</b> trong 2 Khách hàng</div>
+      </div>
+      <div class="note">Click 1 dòng để mở chi tiết Khách hàng — tab "Thành viên" (thêm/gỡ tài khoản, phong Khách hàng Admin).</div>
+    </div>
+
+    <!-- ============ VIEW: PROJECTS ============ -->
+    <div class="content view" id="view-projects">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách Dự án</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn no-member" onclick="openProjectCreate()">＋ Tạo Project</button>
+      </div>
+      <div class="filters">
+        <div class="sel"><span class="lbl">Khách hàng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">Project</strong>
+          <span class="search">🔍 Tìm theo tên project…</span>
+        </div>
+        <table id="projTable">
+          <thead>
+            <tr>
+              <th>Tên Project</th>
+              <th>Khách hàng cha</th>
+              <th>Trạng thái</th>
+              <th>Ngày tạo</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-cust="vinhome" data-member="y">
+              <td><b>VinHome Smart City</b></td>
+              <td>Vinhome</td>
+              <td><span class="st act">🟢 Active</span></td>
+              <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openProjectMembers('VinHome Smart City')" title="Thành viên Dự án">👥</span>
+                  <span class="icoact no-member" title="Sửa Project">✏️</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                </span></td>
+            </tr>
+            <tr data-cust="vinhome" data-member="n">
+              <td><b>VinHome Grand Park</b></td>
+              <td>Vinhome</td>
+              <td><span class="st act">🟢 Active</span></td>
+              <td style="font-family:var(--mono);font-size:12px">10/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openProjectMembers('VinHome Grand Park')" title="Thành viên Dự án">👥</span>
+                  <span class="icoact no-member" title="Sửa Project">✏️</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                </span></td>
+            </tr>
+            <tr data-cust="vinfast" data-member="n">
+              <td><b>VinFast Dealer Portal</b></td>
+              <td>Vinfast</td>
+              <td><span class="st act">🟢 Active</span></td>
+              <td style="font-family:var(--mono);font-size:12px">15/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openProjectMembers('VinFast Dealer Portal')" title="Thành viên Dự án">👥</span>
+                  <span class="icoact no-member" title="Sửa Project">✏️</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                </span></td>
+            </tr>
+            <tr data-cust="vinfast" data-member="n">
+              <td><b>VinFast EV Charging Map</b></td>
+              <td>Vinfast</td>
+              <td><span class="st susp">🟡 Tạm dừng</span></td>
+              <td style="font-family:var(--mono);font-size:12px">20/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openProjectMembers('VinFast EV Charging Map')" title="Thành viên Dự án">👥</span>
+                  <span class="icoact no-member" title="Sửa Project">✏️</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                </span></td>
+            </tr>
+            <tr data-cust="org" data-member="n">
+              <td><b>Vingroup Corporate GIS</b></td>
+              <td><span style="color:var(--ink-faint)">— (thuộc thẳng Tổ chức)</span></td>
+              <td><span class="st act">🟢 Active</span></td>
+              <td style="font-family:var(--mono);font-size:12px">01/06/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openProjectMembers('Vingroup Corporate GIS')" title="Thành viên Dự án">👥</span>
+                  <span class="icoact no-member" title="Sửa Project">✏️</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                </span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot" id="projFoot">Hiển thị <b>1–5</b> trong 5 Project</div>
+      </div>
+      <div class="note">Phạm vi bảng co giãn theo vai trò đang chọn ở góc trên — Org Admin thấy tất cả, Khách hàng Admin chỉ thấy Project của Khách hàng "Vinhome", Member chỉ thấy Project được gán.</div>
+    </div>
+
+    <!-- ============ VIEW: KEYS ============ -->
+    <div class="content view" id="view-keys">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách API Key</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn no-member" onclick="openKeyCreate()">＋ Tạo API Key</button>
+      </div>
+      <div class="filters">
+        <div class="sel"><span class="lbl">Dự án</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">API Keys</strong>
+          <span class="search">🔍 Tìm theo tên key, dự án…</span>
+        </div>
+        <table id="keyTable">
+          <thead>
+            <tr>
+              <th>Tên Key</th>
+              <th>Người quản lý (Owner)</th>
+              <th>Dự án</th>
+              <th>Dịch vụ được phép</th>
+              <th>Trạng thái</th>
+              <th>Ngày tạo</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-cust="vinhome" data-member="y">
+              <td><b>VHSC_Web_Prod</b></td>
+              <td>lan.pham@vinhome.vn</td>
+              <td>VinHome Smart City</td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Search</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openKeyDetail('VHSC_Web_Prod')" title="Xem chi tiết">ℹ️</span>
+                  <span class="icoact no-member" title="Khóa key">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                </span></td>
+            </tr>
+            <tr data-cust="vinhome" data-member="n">
+              <td><b>VHSC_Mobile_Dev</b></td>
+              <td>minh.tran@vinhome.vn</td>
+              <td>VinHome Smart City</td>
+              <td><span class="chip s">Tất cả dịch vụ</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">05/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openKeyDetail('VHSC_Mobile_Dev')" title="Xem chi tiết">ℹ️</span>
+                  <span class="icoact no-member" title="Khóa key">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                </span></td>
+            </tr>
+            <tr data-cust="vinhome" data-member="n">
+              <td><b>VHGP_Web_Staging</b></td>
+              <td>hoa.nguyen@vinhome.vn</td>
+              <td>VinHome Grand Park</td>
+              <td><span class="chip s">Map Tiles</span> <span class="chip s">Directions</span></td>
+              <td><span class="st susp">🟡 Tạm khóa</span></td>
+              <td style="font-family:var(--mono);font-size:12px">11/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openKeyDetail('VHGP_Web_Staging')" title="Xem chi tiết">ℹ️</span>
+                  <span class="icoact no-member" title="Mở khóa">🔓</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                </span></td>
+            </tr>
+            <tr data-cust="vinfast" data-member="n">
+              <td><b>VFDealer_API_Prod</b></td>
+              <td>duc.le@vinfast.vn</td>
+              <td>VinFast Dealer Portal</td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Places</span> <span class="chip g">+1</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">16/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openKeyDetail('VFDealer_API_Prod')" title="Xem chi tiết">ℹ️</span>
+                  <span class="icoact no-member" title="Khóa key">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                </span></td>
+            </tr>
+            <tr data-cust="vinfast" data-member="n">
+              <td><b>VF_Charging_IoT</b></td>
+              <td>an.vu@vinfast.vn</td>
+              <td>VinFast EV Charging Map</td>
+              <td><span class="chip s">Weather</span></td>
+              <td><span class="st rev">🔴 Đã thu hồi</span></td>
+              <td style="font-family:var(--mono);font-size:12px">21/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openKeyDetail('VF_Charging_IoT')" title="Xem chi tiết">ℹ️</span>
+                </span></td>
+            </tr>
+            <tr data-cust="org" data-member="n">
+              <td><b>Vingroup_Corp_GIS_Backend</b></td>
+              <td>lan.pham@vinhome.vn</td>
+              <td>Vingroup Corporate GIS</td>
+              <td><span class="chip s">Administrative Units</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">02/06/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openKeyDetail('Vingroup_Corp_GIS_Backend')" title="Xem chi tiết">ℹ️</span>
+                  <span class="icoact no-member" title="Khóa key">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                </span></td>
+            </tr>
+            <tr data-cust="org" data-member="n">
+              <td><b>Vingroup_Corp_GIS_Pending</b></td>
+              <td>lan.pham@vinhome.vn</td>
+              <td>Vingroup Corporate GIS</td>
+              <td><span class="chip s">Tất cả dịch vụ</span></td>
+              <td><span class="st pending">⏳ Chưa hiệu lực</span></td>
+              <td style="font-family:var(--mono);font-size:12px">28/07/2026</td>
+              <td style="text-align:center"><span class="actbar">
+                  <span class="icoact" onclick="openKeyDetail('Vingroup_Corp_GIS_Pending')" title="Xem chi tiết">ℹ️</span>
+                  <span class="icoact no-member" title="Khóa key">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                </span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot" id="keyFoot">Hiển thị <b>1–7</b> trong 7 API Key</div>
+      </div>
+      <div class="note">Phạm vi trong đúng Project mình có quyền — bảng lọc theo vai trò giống màn Quản lý Dự án.</div>
+    </div>
+
+    <!-- ============ VIEW: STATS ============ -->
+    <div class="content view" id="view-stats">
+      <div class="zlabel">Vùng 1 · Bộ lọc</div>
+      <div class="filters">
+        <div class="sel org-only"><span class="lbl">Khách hàng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Dự án</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="tpreset"><span>1 ngày</span><span class="on">7 ngày</span><span>14 ngày</span><span>30 ngày</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Từ→Đến</span><span class="v" style="font-family:var(--mono);font-size:11.5px">15/07 – 21/07</span><span class="cx">📅</span></div>
+        <div class="rld">⟳</div>
+      </div>
+      <div class="rolehint">Bộ lọc "Khách hàng" chỉ hiện với 🔵 Org Admin — 🟢 Khách hàng Admin/⚪ Member chỉ xem trong phạm vi của mình.</div>
+
+      <div class="zlabel">Vùng 2 · Chỉ số</div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="k-top">Tổng số yêu cầu <span>📈</span></div>
+          <div class="k-val" id="stKpiTotal">1,284,502</div>
+          <div class="k-delta up">▲ 8.4% so với kỳ trước</div>
+        </div>
+        <div class="kpi g">
+          <div class="k-top">Tỷ lệ thành công <span>✅</span></div>
+          <div class="k-val">99.1%</div>
+          <div class="k-delta flat">1,272,850 / 1,284,502 request</div>
+        </div>
+        <div class="kpi t">
+          <div class="k-top">Số Key hoạt động <span>🔑</span></div>
+          <div class="k-val" id="stKpiKeys">5</div>
+          <div class="k-delta flat">Trên tổng số Key trong phạm vi</div>
+        </div>
+        <div class="kpi p">
+          <div class="k-top">Dịch vụ nhiều nhất <span>🧭</span></div>
+          <div class="k-val" style="font-size:19px">Geocoding</div>
+          <div class="k-delta flat">42% tổng request</div>
+        </div>
+      </div>
+
+      <div class="zlabel">Vùng 3 · Biểu đồ</div>
+      <div class="charts">
+        <div class="card">
+          <h3>Lưu lượng sử dụng API theo thời gian</h3>
+          <div class="sub">Area · số request thành công theo thời gian (trục X ăn theo bộ lọc)</div>
+          <svg viewBox="0 0 560 180" preserveAspectRatio="none" style="height:200px">
+            <g stroke="var(--line-soft)" font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)">
+              <line x1="30" y1="20" x2="30" y2="150" />
+              <line x1="30" y1="150" x2="560" y2="150" />
+              <text x="4" y="24">220k</text><text x="8" y="56">165k</text><text x="8" y="88">110k</text><text x="8" y="120">55k</text><text x="18" y="152">0</text>
+            </g>
+            <path d="M30,150 L560,150 L560,100 L486,94 L410,80 L334,52 L258,72 L182,82 L106,88 L30,100 Z" fill="var(--brand)" opacity=".38" />
+            <path d="M30,100 L106,88 L182,82 L258,72 L334,52 L410,80 L486,94 L560,100" fill="none" stroke="var(--brand)" stroke-width="2.2" />
+            <line x1="334" y1="52" x2="334" y2="150" stroke="var(--brand)" stroke-width="1" stroke-dasharray="3 3" opacity=".55" />
+            <circle cx="334" cy="52" r="4.5" fill="var(--brand)" stroke="#fff" stroke-width="1.5" />
+            <rect x="286" y="24" width="96" height="15" rx="4" fill="var(--brand)" />
+            <text x="334" y="34.5" font-size="9.5" font-family="ui-monospace,monospace" fill="#fff" text-anchor="middle" font-weight="700">⚡ Đỉnh 18/07 · 214k</text>
+            <g font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)" text-anchor="middle">
+              <text x="45" y="165">15/07</text><text x="121" y="165">16/07</text><text x="197" y="165">17/07</text><text x="273" y="165">18/07</text><text x="349" y="165">19/07</text><text x="425" y="165">20/07</text><text x="501" y="165">21/07</text>
+            </g>
+          </svg>
+          <div class="legend"><span><i style="background:var(--brand)"></i>Request thành công (2xx)</span></div>
+        </div>
+
+        <div class="card">
+          <h3>Phân bổ dịch vụ</h3>
+          <div class="sub">Tỉ trọng % requests theo từng API Product</div>
+          <div class="barlist">
+            <div class="barrow"><span>Geocoding API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:100%;background:var(--brand)"></div>
+              </div><span class="num">42%</span>
+            </div>
+            <div class="barrow"><span>Search API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:66%;background:var(--teal)"></div>
+              </div><span class="num">28%</span>
+            </div>
+            <div class="barrow"><span>Places API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:31%;background:var(--purple)"></div>
+              </div><span class="num">13%</span>
+            </div>
+            <div class="barrow"><span>Map Tiles API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:24%;background:var(--amber)"></div>
+              </div><span class="num">10%</span>
+            </div>
+            <div class="barrow"><span>Khác</span>
+              <div class="bar-track">
+                <div class="bar" style="width:16%;background:var(--ink-faint)"></div>
+              </div><span class="num">7%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zlabel">Vùng 4 · Chi tiết theo Key</div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">API Key</strong>
+          <span class="search">🔍 Tìm theo tên key…</span>
+        </div>
+        <table id="statTable">
+          <thead>
+            <tr>
+              <th>API Key</th>
+              <th>Dự án</th>
+              <th class="num">Tổng yêu cầu</th>
+              <th class="num">Yêu cầu lỗi</th>
+              <th>Dịch vụ chính</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-cust="vinhome" data-member="y">
+              <td>🔑 VHSC_Web_Prod</td>
+              <td>VinHome Smart City</td>
+              <td class="num">540,220</td>
+              <td class="num">3,841</td>
+              <td><span class="chip s">Geocoding</span></td>
+            </tr>
+            <tr data-cust="vinhome" data-member="n">
+              <td>🔑 VHSC_Mobile_Dev</td>
+              <td>VinHome Smart City</td>
+              <td class="num">238,110</td>
+              <td class="num">1,204</td>
+              <td><span class="chip s">Tất cả</span></td>
+            </tr>
+            <tr data-cust="vinhome" data-member="n">
+              <td>🔑 VHGP_Web_Staging</td>
+              <td>VinHome Grand Park</td>
+              <td class="num">64,900</td>
+              <td class="num">980</td>
+              <td><span class="chip s">Map Tiles</span></td>
+            </tr>
+            <tr data-cust="vinfast" data-member="n">
+              <td>🔑 VFDealer_API_Prod</td>
+              <td>VinFast Dealer Portal</td>
+              <td class="num">312,480</td>
+              <td class="num">4,209</td>
+              <td><span class="chip s">Geocoding</span></td>
+            </tr>
+            <tr data-cust="org" data-member="n">
+              <td>🔑 Vingroup_Corp_GIS_Backend</td>
+              <td>Vingroup Corporate GIS</td>
+              <td class="num">128,792</td>
+              <td class="num">1,378</td>
+              <td><span class="chip s">Administrative Units</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị theo phạm vi vai trò đang chọn</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="demofab" onclick="toggleLogin()">👁 Xem màn Đăng nhập</button>
+
+<!-- ============ MODAL: CUSTOMER DETAIL ============ -->
+<div class="overlay" id="ovCustomer">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>🏢 Khách hàng — <span id="cdName">Vinhome</span></h2><button class="mclose" onclick="cls('ovCustomer')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;padding:10px 14px;align-items:center">
+        <span>Mã: <b id="cdCode" style="font-family:var(--mono)">vinhome</b></span>
+        <span>Trạng thái: <span class="st act" id="cdStatus">🟢 Active</span></span>
+        <span>Tổ chức cha: <b>Vingroup</b> <span style="color:var(--ink-faint)">(bất biến)</span></span>
+        <span style="color:var(--ink-faint)">Tạo <span id="cdCreated">10/06/2026</span></span>
+      </div>
+      <div class="modal-tabs" id="custTabs">
+        <span class="on" onclick="setCustTab('members')">Thành viên</span>
+        <span onclick="setCustTab('projects')">Project</span>
+      </div>
+
+      <div id="custTab-members">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="zlabel" style="margin:0">Thành viên trong Khách hàng</div>
+          <div class="spacer" style="flex:1"></div>
+          <button class="btn" onclick="addMember()">＋ Thêm thành viên</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tài khoản</th>
+                <th>Vai trò trong Khách hàng</th>
+                <th>Ngày gán</th>
+                <th style="text-align:center">Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="cdMembers"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="custTab-projects" style="display:none">
+        <div class="zlabel" style="margin:0">Project trong Khách hàng này (chỉ xem — quản lý ở "Quản lý Dự án")</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên Project</th>
+                <th>Trạng thái</th>
+                <th>Ngày tạo</th>
+              </tr>
+            </thead>
+            <tbody id="cdProjects"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovCustomer')">Đóng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: CREATE CUSTOMER ============ -->
+<div class="overlay" id="ovCustomerCreate">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo Khách hàng</h2><button class="mclose" onclick="cls('ovCustomerCreate')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fld"><label>Tổ chức cha</label>
+        <div class="inp" style="background:var(--panel-2);color:var(--ink-faint)">Tập đoàn Vingroup (tổ chức hiện tại)</div>
+        <span class="vh">Tự động gán = tổ chức đang đăng nhập, không chọn được khác.</span>
+      </div>
+      <div class="fld"><label>Tên Khách hàng <span style="color:var(--red)">*</span></label>
+        <input class="inp" placeholder="VD: Vinpearl" />
+        <span class="vh">2–150 ký tự. Mã (slug) sẽ tự sinh từ tên.</span>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovCustomerCreate')">Hủy</button><button class="btn" onclick="alert('Demo: đã tạo Khách hàng (giả lập)');cls('ovCustomerCreate')">Tạo Khách hàng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: CREATE PROJECT ============ -->
+<div class="overlay" id="ovProjectCreate">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo Project</h2><button class="mclose" onclick="cls('ovProjectCreate')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fld"><label>Tên Project <span style="color:var(--red)">*</span></label>
+        <input class="inp" placeholder="VD: VinHome Ocean Park" />
+        <span class="vh">Tên hiển thị, dùng để tra cứu/audit.</span>
+      </div>
+      <div class="fld"><label>Cấp cha</label>
+        <select class="inp">
+          <option value="" selected>Chọn Khách hàng (để trống nếu Tổ chức không dùng Khách hàng)</option>
+          <option value="vinhome">Vinhome</option>
+          <option value="vinfast">Vinfast</option>
+        </select>
+        <span class="vh">Chỉ chọn <b>đúng 1 cấp cha</b> — Khách hàng cụ thể, hoặc để trống nghĩa là Project thuộc thẳng Tổ chức.</span>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovProjectCreate')">Hủy</button><button class="btn" onclick="alert('Demo: đã tạo Project (giả lập)');cls('ovProjectCreate')">Tạo Project</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: PROJECT MEMBERS ============ -->
+<div class="overlay" id="ovProjectMembers">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>👥 Thành viên Dự án — <span id="pmName">VinHome Smart City</span></h2><button class="mclose" onclick="cls('ovProjectMembers')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách thành viên</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn no-member" onclick="alert('Demo: đã gán thành viên (giả lập)')">＋ Gán thành viên</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tài khoản</th>
+              <th>Ngày gán</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="pmMembers">
+            <tr>
+              <td>lan.pham@vinhome.vn</td>
+              <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
+              <td style="text-align:center"><span class="icoact no-member" style="color:var(--red)" title="Gỡ khỏi Project">✕</span></td>
+            </tr>
+            <tr>
+              <td>minh.tran@vinhome.vn</td>
+              <td style="font-family:var(--mono);font-size:12px">06/07/2026</td>
+              <td style="text-align:center"><span class="icoact no-member" style="color:var(--red)" title="Gỡ khỏi Project">✕</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovProjectMembers')">Đóng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: CREATE API KEY ============ -->
+<div class="overlay" id="ovKeyCreate">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Tạo API Key</h2><button class="mclose" onclick="cls('ovKeyCreate')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="row2">
+        <div class="fld"><label>Tên định danh <span style="color:var(--red)">*</span></label>
+          <input class="inp" placeholder="VD: VHSC_Web_Prod" />
+          <span class="vh"><b>3–50 ký tự</b> · chữ/số/<code>_</code>/<code>-</code> · không trùng trong cùng Project</span>
+        </div>
+        <div class="fld"><label>Dự án <span style="color:var(--red)">*</span></label>
+          <select class="inp">
+            <option>VinHome Smart City</option>
+            <option>VinHome Grand Park</option>
+            <option>VinFast Dealer Portal</option>
+            <option>Vingroup Corporate GIS</option>
+          </select>
+          <span class="vh">Chỉ chọn được Project bạn có quyền trong phạm vi vai trò hiện tại.</span>
+        </div>
+      </div>
+      <div class="fld"><label>Người quản lý (Owner) <span style="color:var(--red)">*</span></label>
+        <select class="inp">
+          <option>lan.pham@vinhome.vn (Khách hàng Admin)</option>
+          <option>minh.tran@vinhome.vn (Thành viên)</option>
+          <option>hoa.nguyen@vinhome.vn (Thành viên)</option>
+        </select>
+        <span class="vh">Chọn từ Member của Project đã chọn — người chịu trách nhiệm chính cho key này.</span>
+      </div>
+
+      <div class="sect">
+        <h4>🧭 API Restricted</h4>
+        <div class="h-sub">Giới hạn dịch vụ mà key được phép gọi.</div>
+        <div class="radio" data-group="apirestrict" data-value="none" onclick="setRadio('apirestrict','none')"><span class="rc"></span> None <span style="color:var(--ink-faint);font-weight:400">— chỉ nên dùng dev/test</span></div>
+        <div class="radio on" data-group="apirestrict" data-value="specific" onclick="setRadio('apirestrict','specific')"><span class="rc"></span> Restrict to specific <span style="color:var(--ink-faint);font-weight:400">— khuyến nghị cho production</span></div>
+        <div class="svcgrid" data-panel-group="apirestrict" data-panel-value="specific">
+          <div class="chk on"><span class="cb"></span> Geocoding API</div>
+          <div class="chk on"><span class="cb"></span> Search API</div>
+          <div class="chk"><span class="cb"></span> Places API</div>
+          <div class="chk"><span class="cb"></span> Administrative Units API</div>
+          <div class="chk"><span class="cb"></span> Directions API</div>
+          <div class="chk"><span class="cb"></span> Map Tiles API</div>
+          <div class="chk"><span class="cb"></span> Weather API</div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <h4>🛡️ Application Restriction</h4>
+        <div class="h-sub">Giới hạn nguồn gọi key — chỉ chọn 1 loại, khuyến nghị bật cùng lúc với API Restricted.</div>
+        <div class="radio on" data-group="apprestrict" data-value="none" onclick="setRadio('apprestrict','none')"><span class="rc"></span> None <span style="color:var(--ink-faint);font-weight:400">— chỉ dev/test</span></div>
+        <div class="radio" data-group="apprestrict" data-value="websites" onclick="setRadio('apprestrict','websites')"><span class="rc"></span> Websites <span style="color:var(--ink-faint);font-weight:400">— HTTP referrer, dùng cho frontend web</span></div>
+        <div class="radio" data-group="apprestrict" data-value="ip" onclick="setRadio('apprestrict','ip')"><span class="rc"></span> IP addresses <span style="color:var(--ink-faint);font-weight:400">— backend/server-to-server</span></div>
+        <div class="radio" data-group="apprestrict" data-value="android" onclick="setRadio('apprestrict','android')"><span class="rc"></span> Android apps</div>
+        <div class="radio" data-group="apprestrict" data-value="ios" onclick="setRadio('apprestrict','ios')"><span class="rc"></span> iOS apps</div>
+
+        <div class="subpanel" data-panel-group="apprestrict" data-panel-value="websites" style="display:none">
+          <div class="fld"><label>Domain / Subdomain</label>
+            <input class="inp" placeholder="https://*.gtelmaps.vn/*" />
+            <span class="vh">Có thể nhập nhiều dòng, mỗi dòng 1 pattern.</span>
+          </div>
+        </div>
+        <div class="subpanel" data-panel-group="apprestrict" data-panel-value="ip" style="display:none">
+          <div class="fld"><label>IP public / CIDR</label>
+            <input class="inp" placeholder="203.113.X.X/32, 203.113.X.0/24" />
+            <span class="vh">Không dùng IP private.</span>
+          </div>
+        </div>
+        <div class="subpanel" data-panel-group="apprestrict" data-panel-value="android" style="display:none">
+          <div class="row2">
+            <div class="fld"><label>Package name</label>
+              <input class="inp" placeholder="vn.vinhome.smartcity" />
+            </div>
+            <div class="fld"><label>SHA-1 fingerprint</label>
+              <input class="inp" placeholder="AA:BB:CC:... (tách debug/release)" />
+            </div>
+          </div>
+        </div>
+        <div class="subpanel" data-panel-group="apprestrict" data-panel-value="ios" style="display:none">
+          <div class="fld"><label>Bundle Identifier</label>
+            <input class="inp" placeholder="vn.vinhome.smartcity (phân biệt hoa/thường)" />
+          </div>
+        </div>
+      </div>
+
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovKeyCreate')">Hủy</button><button class="btn" onclick="submitKeyCreate()">Tạo key</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: KEY CREATED (copy mã 1 lần) ============ -->
+<div class="overlay" id="ovKeyCreated">
+  <div class="modal sm" style="width:min(520px,95vw)">
+    <div class="modal-head">
+      <h2>✅ Đã tạo API Key</h2><button class="mclose" onclick="cls('ovKeyCreated')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--amber-soft);border-color:var(--amber)">
+        <div style="font-size:12.5px;line-height:1.5">⚠️ <b>Đây là lần DUY NHẤT mã đầy đủ được hiển thị.</b> Hãy copy &amp; lưu an toàn ngay.</div>
+      </div>
+      <div class="keydisp" style="font-size:14px">gtel_console_A1b2C3d4E5f6G7h8<span style="margin-left:auto" class="icoact">⧉ Copy</span></div>
+      <div class="mfoot"><button class="btn" onclick="cls('ovKeyCreated')">Đã copy · Xong</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: KEY DETAIL ============ -->
+<div class="overlay" id="ovKeyDetail">
+  <div class="modal sm" style="width:min(640px,95vw)">
+    <div class="modal-head">
+      <h2>ℹ️ Chi tiết API Key — <span id="kdName">—</span></h2>
+      <button class="mclose" onclick="cls('ovKeyDetail')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;padding:12px 16px;align-items:center">
+        <span>Trạng thái: <span id="kdStatus"></span></span>
+      </div>
+      <div class="sect">
+        <h4>Phân cấp</h4>
+        <div style="display:grid;grid-template-columns:150px 1fr;gap:8px 12px;font-size:12.5px">
+          <div style="color:var(--ink-faint)">Dự án</div><div id="kdProj" style="font-weight:600">—</div>
+          <div style="color:var(--ink-faint)">Người quản lý (Owner)</div><div id="kdOwner">—</div>
+        </div>
+      </div>
+      <div class="sect">
+        <h4>Dịch vụ được cấp</h4>
+        <div id="kdServices" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"></div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovKeyDetail')">Đóng</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var currentRole = 'org';
+
+  // ===== Customer data (dùng cho modal Khách hàng) =====
+  var CUSTOMERS = {
+    vinhome: {
+      name: 'Vinhome', code: 'vinhome', status: '🟢 Active', created: '10/06/2026',
+      members: [
+        { account: 'lan.pham@vinhome.vn', role: 'Khách hàng Admin', date: '10/06/2026' },
+        { account: 'minh.tran@vinhome.vn', role: 'Thành viên thường', date: '12/06/2026' },
+        { account: 'hoa.nguyen@vinhome.vn', role: 'Thành viên thường', date: '15/06/2026' }
+      ],
+      projects: [
+        { name: 'VinHome Smart City', status: '🟢 Active', created: '04/07/2026' },
+        { name: 'VinHome Grand Park', status: '🟢 Active', created: '10/07/2026' }
+      ]
+    },
+    vinfast: {
+      name: 'Vinfast', code: 'vinfast', status: '🟢 Active', created: '10/06/2026',
+      members: [
+        { account: 'duc.le@vinfast.vn', role: 'Khách hàng Admin', date: '11/06/2026' },
+        { account: 'an.vu@vinfast.vn', role: 'Thành viên thường', date: '14/06/2026' }
+      ],
+      projects: [
+        { name: 'VinFast Dealer Portal', status: '🟢 Active', created: '15/07/2026' },
+        { name: 'VinFast EV Charging Map', status: '🟡 Tạm dừng', created: '20/07/2026' }
+      ]
+    }
+  };
+
+  var KEY_DATA = {
+    'VHSC_Web_Prod': { status: '<span class="st act">🟢 Hoạt động</span>', proj: 'VinHome Smart City', owner: 'lan.pham@vinhome.vn', svcs: ['Geocoding API', 'Search API'] },
+    'VHSC_Mobile_Dev': { status: '<span class="st act">🟢 Hoạt động</span>', proj: 'VinHome Smart City', owner: 'minh.tran@vinhome.vn', svcs: ['Geocoding API', 'Search API', 'Places API', 'Administrative Units API', 'Directions API', 'Map Tiles API', 'Weather API'] },
+    'VHGP_Web_Staging': { status: '<span class="st susp">🟡 Tạm khóa</span>', proj: 'VinHome Grand Park', owner: 'hoa.nguyen@vinhome.vn', svcs: ['Map Tiles API', 'Directions API'] },
+    'VFDealer_API_Prod': { status: '<span class="st act">🟢 Hoạt động</span>', proj: 'VinFast Dealer Portal', owner: 'duc.le@vinfast.vn', svcs: ['Geocoding API', 'Places API', 'Search API'] },
+    'VF_Charging_IoT': { status: '<span class="st rev">🔴 Đã thu hồi</span>', proj: 'VinFast EV Charging Map', owner: 'an.vu@vinfast.vn', svcs: ['Weather API'] },
+    'Vingroup_Corp_GIS_Backend': { status: '<span class="st act">🟢 Hoạt động</span>', proj: 'Vingroup Corporate GIS', owner: 'lan.pham@vinhome.vn', svcs: ['Administrative Units API'] },
+    'Vingroup_Corp_GIS_Pending': { status: '<span class="st pending">⏳ Chưa hiệu lực</span>', proj: 'Vingroup Corporate GIS', owner: 'lan.pham@vinhome.vn', svcs: ['Geocoding API', 'Search API', 'Places API', 'Administrative Units API', 'Directions API', 'Map Tiles API', 'Weather API'] }
+  };
+
+  // ===== Login demo toggle =====
+  function toggleLogin() {
+    document.getElementById('login').classList.toggle('hide');
+  }
+  function doLogin() {
+    document.getElementById('login').classList.add('hide');
+    show('home');
+  }
+
+  // ===== Role switch =====
+  function setRole(role) {
+    currentRole = role;
+    document.querySelectorAll('.rolebtn').forEach(function (b) { b.classList.toggle('on', b.dataset.role === role); });
+    document.querySelectorAll('.org-only').forEach(function (e) { e.style.display = role === 'org' ? '' : 'none'; });
+    document.querySelectorAll('.no-member').forEach(function (e) { e.style.display = role === 'member' ? 'none' : ''; });
+
+    var greet = document.getElementById('homeGreet');
+    var sub = document.getElementById('homeSub');
+    if (role === 'org') {
+      greet.textContent = 'Xin chào 👋 — Org Admin, Tổ chức Vingroup';
+      sub.textContent = 'Toàn bộ Khách hàng và Dự án trong tổ chức của bạn.';
+    } else if (role === 'cust') {
+      greet.textContent = 'Xin chào 👋 — Khách hàng Admin, Khách hàng Vinhome';
+      sub.textContent = 'Bạn quản lý Project trong đúng Khách hàng Vinhome.';
+    } else {
+      greet.textContent = 'Xin chào 👋 — Member';
+      sub.textContent = 'Bạn chỉ xem Project được gán, không có quyền tạo/sửa/xoá.';
+    }
+
+    // Nếu đang ở màn Khách hàng mà đổi sang vai trò không có quyền -> về Trang chủ
+    if (role !== 'org' && document.getElementById('view-customers').classList.contains('on')) {
+      show('home');
+    }
+
+    applyRoleFilter();
+  }
+
+  function applyRoleFilter() {
+    var counts = {};
+    ['projTable', 'keyTable', 'statTable'].forEach(function (tid) {
+      var shown = 0;
+      document.querySelectorAll('#' + tid + ' tbody tr').forEach(function (r) {
+        var vis = true;
+        if (currentRole === 'cust') { vis = r.dataset.cust === 'vinhome'; }
+        else if (currentRole === 'member') { vis = r.dataset.member === 'y'; }
+        r.style.display = vis ? '' : 'none';
+        if (vis) shown++;
+      });
+      counts[tid] = shown;
+    });
+    var pf = document.getElementById('projFoot');
+    if (pf) pf.innerHTML = 'Hiển thị <b>1–' + counts.projTable + '</b> trong ' + counts.projTable + ' Project';
+    var kf = document.getElementById('keyFoot');
+    if (kf) kf.innerHTML = 'Hiển thị <b>1–' + counts.keyTable + '</b> trong ' + counts.keyTable + ' API Key';
+    var hp = document.getElementById('homeProj'); if (hp) hp.textContent = counts.projTable;
+    var hk = document.getElementById('homeKeys'); if (hk) hk.textContent = counts.keyTable;
+  }
+
+  // ===== Views =====
+  var VIEW_TITLE = { home: 'Trang chủ', customers: 'Quản lý Khách hàng', projects: 'Quản lý Dự án', keys: 'Quản lý API Key', stats: 'Thống kê sử dụng API Key' };
+  function show(v) {
+    document.querySelectorAll('.view').forEach(function (e) { e.classList.remove('on'); });
+    document.getElementById('view-' + v).classList.add('on');
+    ['home', 'customers', 'projects', 'keys', 'stats'].forEach(function (id) {
+      var n = document.getElementById('nav-' + id);
+      if (n) n.classList.toggle('active', v === id);
+    });
+    document.getElementById('ptitle').textContent = VIEW_TITLE[v];
+  }
+
+  // ===== Customer modal =====
+  function openCustomer(code) {
+    var d = CUSTOMERS[code]; if (!d) return;
+    document.getElementById('cdName').textContent = d.name;
+    document.getElementById('cdCode').textContent = d.code;
+    document.getElementById('cdStatus').textContent = d.status;
+    document.getElementById('cdCreated').textContent = d.created;
+    document.getElementById('cdMembers').innerHTML = d.members.map(function (m) {
+      return '<tr><td>' + m.account + '</td><td class="mrole">' + m.role + '</td><td style="font-family:var(--mono);font-size:12px">' + m.date + '</td>'
+        + '<td class="memberrow-actions" style="text-align:center"><select onchange="this.closest(\'tr\').querySelector(\'.mrole\').textContent=this.value">'
+        + '<option' + (m.role === 'Khách hàng Admin' ? ' selected' : '') + '>Khách hàng Admin</option>'
+        + '<option' + (m.role === 'Thành viên thường' ? ' selected' : '') + '>Thành viên thường</option>'
+        + '</select> <span class="icoact" style="color:var(--red)" title="Gỡ khỏi Khách hàng" onclick="this.closest(\'tr\').remove()">✕</span></td></tr>';
+    }).join('');
+    document.getElementById('cdProjects').innerHTML = d.projects.map(function (p) {
+      return '<tr><td>' + p.name + '</td><td><span class="st ' + (p.status.indexOf('Active') > -1 ? 'act' : 'susp') + '">' + p.status + '</span></td><td style="font-family:var(--mono);font-size:12px">' + p.created + '</td></tr>';
+    }).join('');
+    setCustTab('members');
+    document.getElementById('ovCustomer').classList.add('show');
+  }
+  function setCustTab(tab) {
+    document.querySelectorAll('#custTabs span').forEach(function (s, i) { s.classList.toggle('on', (tab === 'members' && i === 0) || (tab === 'projects' && i === 1)); });
+    document.getElementById('custTab-members').style.display = tab === 'members' ? '' : 'none';
+    document.getElementById('custTab-projects').style.display = tab === 'projects' ? '' : 'none';
+  }
+  function addMember() { alert('Demo: đã thêm thành viên vào Khách hàng (giả lập)'); }
+  function openCustomerCreate() { document.getElementById('ovCustomerCreate').classList.add('show'); }
+
+  // ===== Project modals =====
+  function openProjectCreate() { document.getElementById('ovProjectCreate').classList.add('show'); }
+  function openProjectMembers(name) {
+    document.getElementById('pmName').textContent = name;
+    document.getElementById('ovProjectMembers').classList.add('show');
+  }
+
+  // ===== Key modals =====
+  function openKeyCreate() { document.getElementById('ovKeyCreate').classList.add('show'); }
+  function submitKeyCreate() { cls('ovKeyCreate'); document.getElementById('ovKeyCreated').classList.add('show'); }
+  function openKeyDetail(name) {
+    var d = KEY_DATA[name]; if (!d) return;
+    document.getElementById('kdName').textContent = name;
+    document.getElementById('kdStatus').innerHTML = d.status;
+    document.getElementById('kdProj').textContent = d.proj;
+    document.getElementById('kdOwner').textContent = d.owner;
+    document.getElementById('kdServices').innerHTML = d.svcs.map(function (s) { return '<span class="chip s">' + s + '</span>'; }).join(' ');
+    document.getElementById('ovKeyDetail').classList.add('show');
+  }
+
+  // ===== Generic radio-group (API Restricted / Application Restriction) =====
+  function setRadio(group, value) {
+    document.querySelectorAll('.radio[data-group="' + group + '"]').forEach(function (r) {
+      r.classList.toggle('on', r.dataset.value === value);
+    });
+    document.querySelectorAll('[data-panel-group="' + group + '"]').forEach(function (p) {
+      p.style.display = p.dataset.panelValue === value ? '' : 'none';
+    });
+  }
+
+  // ===== Shared modal / chk helpers (giống Admin mockup) =====
+  function cls(id) { document.getElementById(id).classList.remove('show'); }
+  document.querySelectorAll('.overlay').forEach(function (o) { o.addEventListener('click', function (e) { if (e.target === o) o.classList.remove('show'); }); });
+  document.querySelectorAll('.chk').forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); }); });
+
+  // init
+  applyRoleFilter();
+</script>
