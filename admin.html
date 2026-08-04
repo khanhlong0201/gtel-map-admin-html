@@ -1,0 +1,3473 @@
+<title>Gtel Map Admin — API Key (Mockup v2)</title>
+<style>
+  :root {
+    --bg: #F4F6FA;
+    --panel: #FFFFFF;
+    --panel-2: #FAFBFD;
+    --ink: #1A2231;
+    --ink-soft: #5B6678;
+    --ink-faint: #8A94A6;
+    --line: #E3E8F0;
+    --line-soft: #EEF1F6;
+    --brand: #2563EB;
+    --brand-soft: #E7EEFF;
+    --green: #16A34A;
+    --green-soft: #E4F5EB;
+    --red: #DC2626;
+    --red-soft: #FBE6E6;
+    --amber: #D97706;
+    --amber-soft: #FCEFD9;
+    --purple: #7C3AED;
+    --purple-soft: #EFE7FE;
+    --teal: #0D9488;
+    --teal-soft: #DCF5F1;
+    --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme:dark) {
+    :root {
+      --bg: #0E1420;
+      --panel: #161E2C;
+      --panel-2: #1B2433;
+      --ink: #E9EDF4;
+      --ink-soft: #9AA6B8;
+      --ink-faint: #6B778A;
+      --line: #26303F;
+      --line-soft: #202938;
+      --brand: #5B8DEF;
+      --brand-soft: #1A2740;
+      --green: #3DD07E;
+      --green-soft: #14301F;
+      --red: #F26B6B;
+      --red-soft: #331717;
+      --amber: #F0A63C;
+      --amber-soft: #332412;
+      --purple: #A987FF;
+      --purple-soft: #241a3d;
+      --teal: #3CC7C2;
+      --teal-soft: #123030;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bg: #F4F6FA;
+    --panel: #FFFFFF;
+    --panel-2: #FAFBFD;
+    --ink: #1A2231;
+    --ink-soft: #5B6678;
+    --ink-faint: #8A94A6;
+    --line: #E3E8F0;
+    --line-soft: #EEF1F6;
+    --brand: #2563EB;
+    --brand-soft: #E7EEFF;
+    --green: #16A34A;
+    --green-soft: #E4F5EB;
+    --red: #DC2626;
+    --red-soft: #FBE6E6;
+    --amber: #D97706;
+    --amber-soft: #FCEFD9;
+    --purple: #7C3AED;
+    --purple-soft: #EFE7FE;
+    --teal: #0D9488;
+    --teal-soft: #DCF5F1;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0E1420;
+    --panel: #161E2C;
+    --panel-2: #1B2433;
+    --ink: #E9EDF4;
+    --ink-soft: #9AA6B8;
+    --ink-faint: #6B778A;
+    --line: #26303F;
+    --line-soft: #202938;
+    --brand: #5B8DEF;
+    --brand-soft: #1A2740;
+    --green: #3DD07E;
+    --green-soft: #14301F;
+    --red: #F26B6B;
+    --red-soft: #331717;
+    --amber: #F0A63C;
+    --amber-soft: #332412;
+    --purple: #A987FF;
+    --purple-soft: #241a3d;
+    --teal: #3CC7C2;
+    --teal-soft: #123030;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .side {
+    width: 210px;
+    flex: none;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 16px 12px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 6px 8px 14px;
+  }
+
+  .logo .m {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--brand), var(--purple));
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+
+  .nav {
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 8px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+  }
+
+  .nav.active {
+    background: var(--brand-soft);
+    color: var(--brand);
+    font-weight: 700;
+  }
+
+  .side .grp {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--ink-faint);
+    padding: 14px 10px 4px;
+    font-weight: 700;
+  }
+
+  .main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .topbar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .crumb {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .crumb b {
+    color: var(--ink-soft);
+  }
+
+  .topbar h1 {
+    font-size: 17px;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .viewtabs {
+    display: flex;
+    gap: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 3px;
+  }
+
+  .viewtabs span {
+    padding: 6px 13px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .viewtabs span.on {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .content {
+    padding: 20px 22px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .zlabel {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink-faint);
+    font-weight: 700;
+    margin: 6px 0 -4px;
+  }
+
+  .btn {
+    border: 1px solid var(--brand);
+    background: var(--brand);
+    color: #fff;
+    border-radius: 9px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn.ghost {
+    background: transparent;
+    color: var(--brand);
+  }
+
+  .view {
+    display: none;
+  }
+
+  .view.on {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .filters {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .sel {
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 9px;
+    padding: 7px 11px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    min-width: 150px;
+  }
+
+  .sel .lbl {
+    color: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  .sel .v {
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  .sel .cx {
+    color: var(--ink-faint);
+  }
+
+  .tpreset {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    overflow: hidden;
+  }
+
+  .tpreset span {
+    padding: 7px 11px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tpreset span:last-child {
+    border-right: none;
+  }
+
+  .tpreset span.on {
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .rld {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 9px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .kpi.g {
+    border-left-color: var(--green);
+  }
+
+  .kpi.t {
+    border-left-color: var(--teal);
+  }
+
+  .kpi.p {
+    border-left-color: var(--purple);
+  }
+
+  .kpi .k-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .kpi .k-val {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin: 8px 0 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi .k-delta {
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .up {
+    color: var(--green);
+  }
+
+  .flat {
+    color: var(--ink-faint);
+  }
+
+  .charts {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .card h3 {
+    margin: 0 0 2px;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .card .sub {
+    color: var(--ink-faint);
+    font-size: 11.5px;
+    margin-bottom: 10px;
+  }
+
+  .card svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+
+  .legend i {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: -1px;
+  }
+
+  .barlist {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 4px;
+  }
+
+  .barrow {
+    display: grid;
+    grid-template-columns: 120px 1fr 42px;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+  }
+
+  .bar {
+    height: 9px;
+    border-radius: 5px;
+  }
+
+  .bar-track {
+    background: var(--line-soft);
+    border-radius: 5px;
+  }
+
+  .tbl-wrap {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .tbl-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tbl-tools .search {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    min-width: 260px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--ink-faint);
+    font-weight: 700;
+    padding: 9px 14px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  thead th.num,
+  td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: var(--mono);
+  }
+
+  tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  tbody tr:hover {
+    background: var(--panel-2);
+  }
+
+  .node {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .exp {
+    width: 15px;
+    color: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  .lvl2 td:first-child {
+    padding-left: 34px;
+  }
+
+  .lvl3 td:first-child {
+    padding-left: 56px;
+  }
+
+  .lvl2,
+  .lvl3 {
+    display: none;
+  }
+
+  .open>.lvl2,
+  .open>.lvl3 {
+    display: table-row;
+  }
+
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .chip.s {
+    background: var(--teal-soft);
+    color: var(--teal);
+  }
+
+  .chip.g {
+    background: var(--panel-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+
+  .lnk {
+    color: var(--brand);
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .st {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .st.act {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+
+  .st.rev {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+
+  .st.susp {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
+
+  .st.exp {
+    background: var(--panel-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+
+  .st.rot {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .st.pending {
+    background: var(--purple-soft);
+    color: var(--purple);
+  }
+
+  .tbl-foot {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .epscroll {
+    max-height: 340px;
+    overflow-y: auto;
+  }
+
+  .epscroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  .code {
+    font-family: var(--mono);
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+
+  .code.ok {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+
+  .icoact {
+    cursor: pointer;
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1;
+    transition: background .15s;
+  }
+
+  .icoact:hover {
+    background: var(--brand-soft);
+  }
+
+  td .actbar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  /* Multi-select filter */
+  .msel {
+    position: relative;
+  }
+
+  .msel .sel {
+    user-select: none;
+  }
+
+  .msel-panel {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 220px;
+    max-height: 280px;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+    padding: 6px;
+    z-index: 30;
+    display: none;
+  }
+
+  .msel.open .msel-panel {
+    display: block;
+  }
+
+  .msel-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .msel-item:hover {
+    background: var(--panel-2);
+  }
+
+  .msel-item input {
+    accent-color: var(--brand);
+    cursor: pointer;
+  }
+
+  .msel-foot {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 10px 2px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: 4px;
+    font-size: 11.5px;
+  }
+
+  .msel-foot a {
+    color: var(--brand);
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .sel .v.multi {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .sel .badge-count {
+    background: var(--brand);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 999px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  th:last-child,
+  td:last-child {
+    white-space: nowrap;
+    min-width: 180px;
+  }
+
+  /* modal */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 16, 26, .55);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 22px;
+  }
+
+  .overlay.show {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    width: min(1120px, 95vw);
+    max-height: 92vh;
+    overflow: auto;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+  }
+
+  .modal.sm {
+    width: min(640px, 95vw);
+  }
+
+  .modal-head {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 2;
+  }
+
+  .modal-head h2 {
+    font-size: 15px;
+    margin: 0;
+    font-weight: 800;
+  }
+
+  .mclose {
+    margin-left: auto;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 16px;
+  }
+
+  .modal-body {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .fld {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .fld label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .fld .inp {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .fld .vh {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .fld .vh code {
+    background: var(--panel-2);
+    padding: 0 4px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+  }
+
+  .fld.locked .inp {
+    background: var(--panel-2);
+    color: var(--ink-faint);
+    cursor: not-allowed;
+    opacity: .75;
+  }
+
+  .fld.locked label::after {
+    content: " 🔒";
+    font-size: 11px;
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .sect {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .sect h4 {
+    margin: 0 0 3px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .sect .h-sub {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+
+  .radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+
+  .radio .rc {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid var(--brand);
+    display: inline-block;
+    position: relative;
+  }
+
+  .radio.on .rc::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .svcgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .chk {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    cursor: pointer;
+  }
+
+  .chk .cb {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    border: 2px solid var(--ink-faint);
+    display: inline-block;
+  }
+
+  .chk.on {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+  }
+
+  .chk.on .cb {
+    background: var(--brand);
+    border-color: var(--brand);
+    position: relative;
+  }
+
+  .chk.on .cb::after {
+    content: "✓";
+    position: absolute;
+    color: #fff;
+    font-size: 11px;
+    top: -3px;
+    left: 1px;
+  }
+
+  .keydisp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .note {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 8px;
+  }
+
+  .mfoot {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 4px;
+  }
+
+  /* Toggle switch (Config) */
+  .toggle {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    flex: none;
+    cursor: pointer;
+  }
+
+  .toggle input {
+    display: none;
+  }
+
+  .toggle .tr {
+    position: absolute;
+    inset: 0;
+    background: var(--line);
+    border-radius: 999px;
+    transition: .15s;
+  }
+
+  .toggle .tr::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: .15s;
+  }
+
+  .toggle input:checked+.tr {
+    background: var(--brand);
+  }
+
+  .toggle input:checked+.tr::after {
+    transform: translateX(18px);
+  }
+
+  /* Audit diff modal */
+  .diffgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .diffbox {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+  }
+
+  .diffbox .dl {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  .diffbox .old {
+    color: var(--red);
+    text-decoration: line-through;
+    opacity: .75;
+  }
+
+  .diffbox .new {
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* RBAC sub-tabs */
+  .subtabs {
+    display: flex;
+    gap: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 3px;
+    align-self: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .subtabs span {
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .subtabs span.on {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .subview {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .subview.on {
+    display: flex;
+  }
+
+  /* Matrix wildcard / inherited */
+  .chk.wild .cb {
+    border-color: var(--purple);
+  }
+
+  .chk.wild.on {
+    border-color: var(--purple);
+    background: var(--purple-soft);
+  }
+
+  .chk.wild.on .cb {
+    background: var(--purple);
+    border-color: var(--purple);
+  }
+
+  .chk.inherited {
+    cursor: not-allowed;
+    opacity: .55;
+    pointer-events: none;
+  }
+
+  .chk.inherited .cb {
+    background: var(--brand-soft);
+    border-color: var(--brand);
+    position: relative;
+  }
+
+  .chk.inherited .cb::after {
+    content: "•";
+    position: absolute;
+    color: var(--brand);
+    font-size: 15px;
+    top: -6px;
+    left: 4px;
+  }
+
+  .effrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 12.5px;
+  }
+
+  .effrow:last-child {
+    border-bottom: none;
+  }
+
+  .effrow .src {
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+
+  .effrow.direct .src {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .matrixwrap {
+    overflow-x: auto;
+  }
+
+  .matrixwrap table {
+    min-width: 1400px;
+  }
+
+  .matrixwrap th:first-child,
+  .matrixwrap td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--panel);
+    z-index: 2;
+    border-right: 2px solid var(--line);
+  }
+
+  .matrixwrap thead th {
+    text-align: center;
+  }
+
+  .matrixwrap thead th:first-child {
+    text-align: left;
+    z-index: 3;
+  }
+
+  .matrixwrap .grphead {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  @media (max-width:1000px) {
+    .kpis {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .charts {
+      grid-template-columns: 1fr;
+    }
+
+    .svcgrid,
+    .row2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width:760px) {
+    .side {
+      display: none;
+    }
+
+    .tbl-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      min-width: 640px;
+    }
+  }
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="logo"><span class="m">◗</span> Gtel Map</div>
+    <div class="grp">API Management</div>
+    <div class="nav active" id="nav-crud" onclick="show('crud')"><span>🔑</span> Quản lý API Key</div>
+    <div class="nav" id="nav-stats" onclick="show('stats')"><span>📊</span> Thống kê API Key</div>
+    <div class="grp">Tổng quan</div>
+    <div class="nav" id="nav-dashboard" onclick="show('dashboard')"><span>📈</span> Dashboard Analytics</div>
+    <div class="nav" id="nav-profile" onclick="show('profile')"><span>🙍</span> Hồ sơ của tôi</div>
+    <div class="grp">Quản trị</div>
+    <div class="nav" id="nav-orgs" onclick="show('orgs')"><span>🏢</span> Quản lý Tổ chức</div>
+    <div class="nav" id="nav-customers" onclick="show('customers')"><span>👥</span> Quản lý Khách hàng</div>
+    <div class="nav" id="nav-projects" onclick="show('projects')"><span>📁</span> Quản lý Dự án</div>
+    <div class="nav" id="nav-services" onclick="show('services')"><span>🧭</span> Quản lý Dịch vụ</div>
+    <div class="nav" id="nav-config" onclick="show('config')"><span>⚙️</span> Cấu hình hệ thống</div>
+    <div class="grp">Danh tính &amp; Quyền</div>
+    <div class="nav" id="nav-users" onclick="show('users')"><span>🧑‍💼</span> Quản lý Người dùng</div>
+    <div class="nav" id="nav-viewer-users" onclick="show('viewer-users')"><span>🌍</span> Người dùng Map Viewer</div>
+    <div class="nav" id="nav-rbac" onclick="show('rbac')"><span>🛡️</span> Phân quyền (RBAC)</div>
+    <div class="grp">Nhật ký</div>
+    <div class="nav" id="nav-audit" onclick="show('audit')"><span>📜</span> Audit History</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="crumb"><b>Admin</b> › API Management</div>
+        <h1 id="ptitle">Quản lý API Key</h1>
+      </div>
+      <div class="spacer"></div>
+      <span class="badge"><span class="dot"></span> realtime</span>
+    </div>
+
+    <!-- ============ VIEW: CRUD ============ -->
+    <div class="content view on" id="view-crud">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách API Key</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn" onclick="openKey()">＋ Tạo API Key</button>
+      </div>
+      <div class="filters">
+        <div class="sel"><span class="lbl">Tổ chức</span><span class="v" style="font-weight:400;color:var(--ink-faint)">Gõ để tìm…</span><span class="cx">🔍</span></div>
+        <div class="sel"><span class="lbl">Khách hàng</span><span class="v" style="font-weight:400;color:var(--ink-faint)">Gõ để tìm…</span><span class="cx">🔍</span></div>
+        <div class="sel"><span class="lbl">Dự án</span><span class="v" style="font-weight:400;color:var(--ink-faint)">Gõ để tìm…</span><span class="cx">🔍</span></div>
+        <div class="msel" id="mselService">
+          <div class="sel" onclick="toggleMsel('mselService', event)">
+            <span class="lbl">Dịch vụ</span>
+            <span class="v" id="mselServiceV">Tất cả</span>
+            <span class="cx">▾</span>
+          </div>
+          <div class="msel-panel">
+            <label class="msel-item"><input type="checkbox" value="Geocoding API" onchange="updateMsel('mselService')"> Geocoding API</label>
+            <label class="msel-item"><input type="checkbox" value="Search API" onchange="updateMsel('mselService')"> Search API</label>
+            <label class="msel-item"><input type="checkbox" value="Directions API" onchange="updateMsel('mselService')"> Directions API</label>
+            <label class="msel-item"><input type="checkbox" value="Places API" onchange="updateMsel('mselService')"> Places API</label>
+            <label class="msel-item"><input type="checkbox" value="Map Tiles API" onchange="updateMsel('mselService')"> Map Tiles API</label>
+            <label class="msel-item"><input type="checkbox" value="Weather API" onchange="updateMsel('mselService')"> Weather API</label>
+            <label class="msel-item"><input type="checkbox" value="Administrative Units API" onchange="updateMsel('mselService')"> Administrative Units API</label>
+            <label class="msel-item"><input type="checkbox" value="Reverse Geocoding" onchange="updateMsel('mselService')"> Reverse Geocoding</label>
+            <label class="msel-item"><input type="checkbox" value="Routing API" onchange="updateMsel('mselService')"> Routing API</label>
+            <div class="msel-foot">
+              <a onclick="mselAll('mselService', true)">Chọn tất cả</a>
+              <a onclick="mselAll('mselService', false)">Bỏ chọn</a>
+            </div>
+          </div>
+        </div>
+        <div class="msel" id="mselStatus" style="min-width:auto">
+          <div class="sel" onclick="toggleMsel('mselStatus', event)" style="min-width:auto">
+            <span class="lbl">Trạng thái</span>
+            <span class="v" id="mselStatusV">Tất cả</span>
+            <span class="cx">▾</span>
+          </div>
+          <div class="msel-panel" style="min-width:200px">
+            <label class="msel-item"><input type="checkbox" value="Chưa hiệu lực" onchange="updateMsel('mselStatus')"> ⏳ Chưa hiệu lực</label>
+            <label class="msel-item"><input type="checkbox" value="Hoạt động" onchange="updateMsel('mselStatus')"> 🟢 Hoạt động</label>
+            <label class="msel-item"><input type="checkbox" value="Tạm khóa" onchange="updateMsel('mselStatus')"> 🟡 Tạm khóa</label>
+            <label class="msel-item"><input type="checkbox" value="Hết hạn" onchange="updateMsel('mselStatus')"> ⚪ Hết hạn</label>
+            <label class="msel-item"><input type="checkbox" value="Đã thu hồi" onchange="updateMsel('mselStatus')"> 🔴 Đã thu hồi</label>
+            <div class="msel-foot">
+              <a onclick="mselAll('mselStatus', true)">Chọn tất cả</a>
+              <a onclick="mselAll('mselStatus', false)">Bỏ chọn</a>
+            </div>
+          </div>
+        </div>
+        <div class="sel"><span class="lbl">Ngày hiệu lực</span><span class="v" style="font-family:var(--mono);font-size:11.5px">Từ → Đến</span><span class="cx">📅</span></div>
+        <div class="sel"><span class="lbl">Ngày hết hạn</span><span class="v" style="font-family:var(--mono);font-size:11.5px">Từ → Đến</span><span class="cx">📅</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">API Keys</strong>
+          <span class="search">🔍 Tìm theo tên key, dự án…</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Tên Key</th>
+              <th>Tổ chức</th>
+              <th>Khách hàng</th>
+              <th>Dự án</th>
+              <th>Dịch vụ được phép</th>
+              <th>Trạng thái</th>
+              <th>Thời gian hiệu lực</th>
+              <th>Ngày hết hạn</th>
+              <th>Ngày tạo</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Key_Auto_004</b></td>
+              <td>Tập đoàn Vingroup</td>
+              <td>Cty VinHome</td>
+              <td>VinHome Smart City</td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Search</span> <span
+                  class="chip g">+2</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">04/07/2026 00:00</td>
+              <td style="font-family:var(--mono);font-size:12px">31/12/2026</td>
+              <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openKeyDetail('Key_Auto_004')" title="Xem chi tiết thông tin key">ℹ️</span><span class="icoact" onclick="openReauth()" title="Xem mã key (re-auth)">🔑</span><span class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact" title="Khóa key (tạm)" onclick="openLock()">🔒</span><span class="icoact" title="Thu hồi key" onclick="openRevoke()" style="color:var(--red)">🚫</span></span></td>
+            </tr>
+            <tr>
+              <td><b>Key_Auto_005</b></td>
+              <td>Tập đoàn Vingroup</td>
+              <td>Cty VinHome</td>
+              <td>VinHome Smart City</td>
+              <td><span class="chip s">Tất cả dịch vụ</span></td>
+              <td><span class="st pending">⏳ Chưa hiệu lực</span></td>
+              <td style="font-family:var(--mono);font-size:12px;color:var(--purple);font-weight:700">01/08/2026 09:00
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">Không hết hạn</td>
+              <td style="font-family:var(--mono);font-size:12px">05/07/2026</td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openKeyDetail('Key_Auto_005')" title="Xem chi tiết thông tin key">ℹ️</span><span class="icoact" onclick="openReauth()" title="Xem mã key (re-auth)">🔑</span><span class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact" onclick="openEdit('Key_Auto_005')" title="Sửa key (Chưa hiệu lực)">✏️</span><span class="icoact" title="Thu hồi key" onclick="openRevoke()" style="color:var(--red)">🚫</span></span></td>
+            </tr>
+            <tr>
+              <td><b>Zalo_Map_Dev</b></td>
+              <td>VNG Corporation</td>
+              <td>Zalo</td>
+              <td>Zalo Maps</td>
+              <td><span class="chip s">Map Tiles</span> <span class="chip s">Directions</span></td>
+              <td><span class="st susp">🟡 Tạm khóa</span></td>
+              <td style="font-family:var(--mono);font-size:12px">01/06/2026 00:00</td>
+              <td style="font-family:var(--mono);font-size:12px">30/09/2026</td>
+              <td style="font-family:var(--mono);font-size:12px">01/06/2026</td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openKeyDetail('Zalo_Map_Dev')" title="Xem chi tiết thông tin key">ℹ️</span><span class="icoact" onclick="openReauth()" title="Xem mã key (re-auth)">🔑</span><span class="icoact" onclick="openRotate()" title="Refresh key">♻</span><span class="icoact" onclick="openUnlock()" title="Mở khóa">🔓</span><span class="icoact" title="Thu hồi key" onclick="openRevoke()" style="color:var(--red)">🚫</span></span></td>
+            </tr>
+            <tr>
+              <td><b>An_Giang_Prod</b></td>
+              <td>UBND tỉnh An Giang</td>
+              <td>Sở TN&amp;MT An Giang</td>
+              <td>An Giang GIS</td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Admin Units</span></td>
+              <td><span class="st rev">🔴 Đã thu hồi</span></td>
+              <td style="font-family:var(--mono);font-size:12px">12/05/2026 10:00</td>
+              <td style="font-family:var(--mono);font-size:12px">—</td>
+              <td style="font-family:var(--mono);font-size:12px">12/05/2026</td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openKeyDetail('An_Giang_Prod')" title="Xem chi tiết thông tin key">ℹ️</span><span class="icoact" style="opacity:.35" title="Không thể xem mã — key đã thu hồi">🔑</span><span class="icoact" style="opacity:.35" title="Không thể tạo lại — key đã thu hồi">♻</span><span class="icoact" style="opacity:.35" title="Không thể khóa — key đã thu hồi">🔒</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>1–4</b> trong 24 API Key · Số dòng/trang: <b>20 ▾</b>
+          <span class="pg"><span class="off">‹ Trước</span><span
+              style="background:var(--brand);color:#fff;border-color:var(--brand)">1</span><span>2</span><span>Sau
+              ›</span></span>
+        </div>
+      </div>
+      <div class="note">Mockup CRUD — click 👁 hoặc "Tạo API Key" để mở form có <b>Giới hạn dịch vụ</b> + <b>Giới hạn
+          ứng dụng</b> (chuẩn Google/Mapbox)</div>
+    </div>
+
+    <!-- ============ VIEW: STATS (ADMIN — phác thảo) ============ -->
+    <div class="content view" id="view-stats">
+      <div class="zlabel">Vùng 1 · Bộ lọc</div>
+      <div class="filters">
+        <div class="sel"><span class="lbl">Khách hàng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Dự án</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="tpreset"><span>1h</span><span>6h</span><span>12h</span><span>1 ngày</span><span class="on">7
+            ngày</span><span>14 ngày</span><span>30 ngày</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Từ→Đến</span><span class="v"
+            style="font-family:var(--mono);font-size:11.5px">15/07 – 21/07</span><span class="cx">📅</span></div>
+        <div class="rld">⟳</div>
+      </div>
+
+      <div class="zlabel">Vùng 2 · Chỉ số (admin lens)</div>
+      <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
+        <div class="kpi">
+          <div class="k-top">Tổng số yêu cầu <span>📈</span></div>
+          <div class="k-val">6,452,108</div>
+          <div class="k-delta up">▲ 12.5% so với kỳ trước</div>
+        </div>
+        <div class="kpi g">
+          <div class="k-top">Tỷ lệ thành công <span>✅</span></div>
+          <div class="k-val">98.8%</div>
+          <div class="k-delta flat">6,374,683 / 6,452,108 request</div>
+        </div>
+      </div>
+
+      <div class="zlabel">Vùng 3 · Biểu đồ</div>
+      <div class="charts">
+        <div class="card">
+          <h3>Lưu lượng sử dụng API theo thời gian</h3>
+          <div class="sub">Area · số request thành công theo thời gian (trục X ăn theo bộ lọc)</div>
+          <svg viewBox="0 0 560 180" preserveAspectRatio="none" style="height:200px">
+            <g stroke="var(--line-soft)" font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)">
+              <line x1="30" y1="20" x2="30" y2="150" />
+              <line x1="30" y1="150" x2="560" y2="150" />
+              <text x="4" y="24">1200</text><text x="8" y="56">900</text><text x="8" y="88">600</text><text x="8"
+                y="120">300</text><text x="18" y="152">0</text>
+            </g>
+            <path d="M30,150 L560,150 L560,88 L486,82 L410,70 L334,44 L258,64 L182,72 L106,78 L30,90 Z"
+              fill="var(--green)" opacity=".45" />
+            <path d="M30,90 L106,78 L182,72 L258,64 L334,44 L410,70 L486,82 L560,88" fill="none" stroke="var(--green)"
+              stroke-width="2.2" />
+            <line x1="334" y1="44" x2="334" y2="150" stroke="var(--green)" stroke-width="1" stroke-dasharray="3 3"
+              opacity=".55" />
+            <circle cx="334" cy="44" r="4.5" fill="var(--green)" stroke="#fff" stroke-width="1.5" />
+            <rect x="286" y="24" width="96" height="15" rx="4" fill="var(--green)" />
+            <text x="334" y="34.5" font-size="9.5" font-family="ui-monospace,monospace" fill="#fff" text-anchor="middle"
+              font-weight="700">⚡ Đỉnh 18/07 · 1.24M</text>
+            <g font-size="9" font-family="ui-monospace,monospace" fill="var(--ink-faint)" text-anchor="middle">
+              <text x="45" y="165">15/07 00:00</text><text x="121" y="165">15/07 06:00</text><text x="197" y="165">16/07
+                00:00</text><text x="273" y="165">17/07 00:00</text><text x="349" y="165">18/07 00:00</text><text
+                x="425" y="165">19/07 12:00</text><text x="501" y="165">21/07 00:00</text>
+            </g>
+          </svg>
+          <div class="legend"><span><i style="background:var(--green)"></i>Request thành công (2xx)</span></div>
+          <div
+            style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);margin-top:8px;padding-top:6px">
+            📏 <b>Granularity trục X</b> đổi theo bộ lọc: 1h→5', 6h→15', 12h→30', 1 ngày→1h, 2 ngày→2h, 4 ngày→4h, <b>7
+              ngày→6h</b>, 14 ngày→12h, 30 ngày→1 ngày.</div>
+        </div>
+
+        <div class="card">
+          <h3>Phân bổ dịch vụ</h3>
+          <div class="sub">Tỉ trọng % requests theo từng API Product</div>
+          <div class="barlist">
+            <div class="barrow"><span>Geocoding API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:100%;background:var(--brand)"></div>
+              </div><span class="num">45%</span>
+            </div>
+            <div class="barrow"><span>Search API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:62%;background:var(--teal)"></div>
+              </div><span class="num">28%</span>
+            </div>
+            <div class="barrow"><span>Directions API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:33%;background:var(--purple)"></div>
+              </div><span class="num">15%</span>
+            </div>
+            <div class="barrow"><span>Reverse Geocoding</span>
+              <div class="bar-track">
+                <div class="bar" style="width:18%;background:var(--brand)"></div>
+              </div><span class="num">8%</span>
+            </div>
+            <div class="barrow"><span>Map Tiles API</span>
+              <div class="bar-track">
+                <div class="bar" style="width:9%;background:var(--amber)"></div>
+              </div><span class="num">4%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zlabel">Vùng 4 · Chi tiết theo phân cấp</div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">Khách hàng → Dự án → API Key</strong>
+          <span class="search">🔍 Tìm khách hàng, dự án, API key…</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Khách hàng</th>
+              <th class="num">Tổng yêu cầu</th>
+              <th class="num">Yêu cầu lỗi</th>
+              <th>Dịch vụ chính</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="g1">
+            <tr onclick="tg('g1')">
+              <td><span class="node"><span class="exp">▶</span>👤 Vingroup JSC</span></td>
+              <td class="num">2,460,128</td>
+              <td class="num">36,902</td>
+              <td><span class="chip s">Geocoding</span></td>
+              <td></td>
+            </tr>
+            <tr class="lvl2">
+              <td><span class="node">📁 VinHome Smart City</span></td>
+              <td class="num">1,208,540</td>
+              <td class="num">10,876</td>
+              <td><span class="chip s">Geocoding</span></td>
+              <td></td>
+            </tr>
+            <tr class="lvl3">
+              <td>🔑 Key_Auto_004</td>
+              <td class="num">640,220</td>
+              <td class="num"><span class="pill bad">3,841</span></td>
+              <td><span class="chip s">Geocoding</span> <span class="chip s">Search</span></td>
+              <td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td>
+            </tr>
+            <tr class="lvl3">
+              <td>🔑 Key_Auto_005</td>
+              <td class="num">568,320</td>
+              <td class="num">7,035</td>
+              <td><span class="chip s">Tất cả</span></td>
+              <td style="text-align:center"><span class="lnk" onclick="openDetail()" title="Xem chi tiết">👁</span></td>
+            </tr>
+          </tbody>
+          <tbody id="g2">
+            <tr onclick="tg('g2')">
+              <td><span class="node"><span class="exp">▶</span>👤 Grab Vietnam</span></td>
+              <td class="num">1,884,002</td>
+              <td class="num">7,536</td>
+              <td><span class="chip s">Directions</span></td>
+              <td></td>
+            </tr>
+            <tr class="lvl2">
+              <td><span class="node">📁 GrabMaps Core</span></td>
+              <td class="num">1,884,002</td>
+              <td class="num">7,536</td>
+              <td><span class="chip s">Directions</span></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị 12 trong tổng số 12 khách hàng</div>
+      </div>
+
+      <div class="note">🎨 <b>Board admin</b> — 4 vùng: Bộ lọc · KPI · Biểu đồ (có đánh dấu Đỉnh) · Tree table (👁 xem
+        chi tiết ở dòng key). Đã bỏ cảnh báo, quota, KPI thừa.</div>
+    </div>
+
+    <!-- ============ VIEW: DASHBOARD ANALYTICS ============ -->
+    <div class="content view" id="view-dashboard">
+      <div class="zlabel">Tổng quan hệ thống</div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="k-top">Tổng số Tổ chức <span>🏢</span></div>
+          <div class="k-val">42</div>
+          <div class="k-delta up">▲ 3 tổ chức mới (30 ngày)</div>
+        </div>
+        <div class="kpi g">
+          <div class="k-top">API Key đang hoạt động <span>🔑</span></div>
+          <div class="k-val">318</div>
+          <div class="k-delta up">▲ 12 key mới (7 ngày)</div>
+        </div>
+        <div class="kpi t">
+          <div class="k-top">Tổng request (7 ngày) <span>📊</span></div>
+          <div class="k-val">6.45M</div>
+          <div class="k-delta up">▲ 12.5% so với kỳ trước</div>
+        </div>
+        <div class="kpi p">
+          <div class="k-top">Người dùng Map Viewer <span>🌍</span></div>
+          <div class="k-val">184,206</div>
+          <div class="k-delta flat">≈ không đổi so với kỳ trước</div>
+        </div>
+      </div>
+
+      <div class="zlabel">Lưu lượng 7 ngày gần nhất</div>
+      <div class="card">
+        <h3>Tổng request theo ngày</h3>
+        <div class="sub">Toàn hệ thống · số request thành công mỗi ngày</div>
+        <div style="display:flex;align-items:flex-end;gap:16px;height:170px;padding:6px 8px 0">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">720K</div>
+            <div style="width:100%;max-width:36px;height:75px;background:var(--brand);border-radius:6px 6px 0 0"></div>
+            <div style="font-size:11px;color:var(--ink-faint)">28/07</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">860K</div>
+            <div style="width:100%;max-width:36px;height:90px;background:var(--brand);border-radius:6px 6px 0 0"></div>
+            <div style="font-size:11px;color:var(--ink-faint)">29/07</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">1.05M</div>
+            <div style="width:100%;max-width:36px;height:110px;background:var(--brand);border-radius:6px 6px 0 0"></div>
+            <div style="font-size:11px;color:var(--ink-faint)">30/07</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">1.18M</div>
+            <div style="width:100%;max-width:36px;height:124px;background:var(--brand);border-radius:6px 6px 0 0"></div>
+            <div style="font-size:11px;color:var(--ink-faint)">31/07</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="font-size:11px;color:var(--green);font-family:var(--mono);font-weight:700">1.24M</div>
+            <div style="width:100%;max-width:36px;height:130px;background:var(--green);border-radius:6px 6px 0 0"></div>
+            <div style="font-size:11px;color:var(--ink-faint)">01/08</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">990K</div>
+            <div style="width:100%;max-width:36px;height:104px;background:var(--brand);border-radius:6px 6px 0 0"></div>
+            <div style="font-size:11px;color:var(--ink-faint)">02/08</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1">
+            <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">845K</div>
+            <div style="width:100%;max-width:36px;height:89px;background:var(--brand);border-radius:6px 6px 0 0"></div>
+            <div style="font-size:11px;color:var(--ink-faint)">03/08</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zlabel">Hoạt động gần đây</div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">Audit Log — 5 sự kiện gần nhất</strong>
+          <span class="search" style="cursor:pointer" onclick="show('audit')">Xem tất cả trong Audit History →</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Thời điểm</th><th>Actor</th><th>Hành động</th><th>Đối tượng</th><th>Mức độ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="font-family:var(--mono);font-size:12px">04/08/2026 09:12</td><td>Admin Hoàng</td><td>Khoá tài khoản</td><td>dev03@vnpay.vn</td><td><span class="st susp">Cảnh báo</span></td></tr>
+            <tr><td style="font-family:var(--mono);font-size:12px">04/08/2026 08:47</td><td>Admin Lâm</td><td>Tạo API Key</td><td>Key_Auto_006</td><td><span class="st exp">Thông thường</span></td></tr>
+            <tr><td style="font-family:var(--mono);font-size:12px">03/08/2026 22:03</td><td>root</td><td>Đổi cấu hình hệ thống</td><td>Chính sách 2FA</td><td><span class="st rev">Nghiêm trọng</span></td></tr>
+            <tr><td style="font-family:var(--mono);font-size:12px">03/08/2026 17:40</td><td>Admin Hoàng</td><td>Xoá dự án</td><td>"Demo Test"</td><td><span class="st rev">Nghiêm trọng</span></td></tr>
+            <tr><td style="font-family:var(--mono);font-size:12px">03/08/2026 15:12</td><td>Admin Lâm</td><td>Tạo tổ chức</td><td>"FPT Software"</td><td><span class="st exp">Thông thường</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="zlabel">Top 8 dự án theo lượng request (7 ngày)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Hạng</th><th>Dự án</th><th>Khách hàng</th><th class="num">Request</th><th class="num">Thay đổi</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><b>VinHome Smart City</b></td><td>Cty VinHome</td><td class="num">1,208,540</td><td class="num up">▲ 8.2%</td></tr>
+            <tr><td>2</td><td><b>GrabMaps Core</b></td><td>Grab Vietnam</td><td class="num">884,002</td><td class="num up">▲ 4.1%</td></tr>
+            <tr><td>3</td><td><b>An Giang GIS</b></td><td>Sở TN&amp;MT An Giang</td><td class="num">612,340</td><td class="num" style="color:var(--red)">▼ 2.3%</td></tr>
+            <tr><td>4</td><td><b>Zalo Maps</b></td><td>Zalo</td><td class="num">498,120</td><td class="num up">▲ 1.0%</td></tr>
+            <tr><td>5</td><td><b>FPT Logistics Tracking</b></td><td>FPT Software</td><td class="num">355,780</td><td class="num up">▲ 15.6%</td></tr>
+            <tr><td>6</td><td><b>Vietjet Route Planner</b></td><td>Vietjet Air</td><td class="num">288,450</td><td class="num flat">≈ 0%</td></tr>
+            <tr><td>7</td><td><b>Bamboo Airways Ops</b></td><td>Bamboo Airways</td><td class="num">201,900</td><td class="num up">▲ 3.4%</td></tr>
+            <tr><td>8</td><td><b>Momo Delivery Zones</b></td><td>M_Service (MoMo)</td><td class="num">176,220</td><td class="num" style="color:var(--red)">▼ 5.1%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: MY PROFILE ============ -->
+    <div class="content view" id="view-profile">
+      <div class="zlabel">Hồ sơ cá nhân</div>
+      <div class="card" style="max-width:520px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--purple));display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px">HL</div>
+          <div>
+            <div style="font-weight:800;font-size:16px">Nguyễn Hoàng Long</div>
+            <div style="color:var(--ink-faint);font-size:12.5px">long.nh@gtel.vn</div>
+          </div>
+        </div>
+        <div class="sect" style="background:var(--panel-2)">
+          <div style="display:grid;grid-template-columns:150px 1fr;gap:10px 12px;font-size:13px">
+            <div style="color:var(--ink-faint)">Họ tên</div><div style="font-weight:600">Nguyễn Hoàng Long</div>
+            <div style="color:var(--ink-faint)">Email</div><div>long.nh@gtel.vn</div>
+            <div style="color:var(--ink-faint)">Vai trò</div><div><span class="chip" style="background:var(--brand-soft);color:var(--brand)">admin</span></div>
+            <div style="color:var(--ink-faint)">Đăng nhập gần nhất</div><div style="font-family:var(--mono)">04/08/2026 08:41</div>
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:var(--ink-faint);margin:10px 0">🔒 Đổi mật khẩu được thực hiện qua <b>My Account</b> (cổng đăng nhập chung cho cả 3 phân hệ) — nhấn nút bên dưới sẽ chuyển hướng sang đó (redirect, chỉ là ghi chú UI, không xử lý trực tiếp tại màn Admin này).</div>
+        <button class="btn ghost">↗ Đổi mật khẩu (redirect My Account)</button>
+      </div>
+
+      <div class="zlabel">Bảng màu Badge vai trò (tham chiếu)</div>
+      <div class="card" style="max-width:520px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="chip" style="background:var(--purple-soft);color:var(--purple)">root</span>
+        <span class="chip" style="background:var(--brand-soft);color:var(--brand)">admin</span>
+        <span class="chip" style="background:var(--teal-soft);color:var(--teal)">res_man</span>
+        <span class="chip" style="background:var(--green-soft);color:var(--green)">developer</span>
+        <span class="chip" style="background:var(--amber-soft);color:var(--amber)">auditor</span>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: QUẢN LÝ TỔ CHỨC ============ -->
+    <div class="content view" id="view-orgs">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách Tổ chức</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn" onclick="openModal('ovOrg')">＋ Tạo Tổ chức</button>
+      </div>
+      <div class="filters">
+        <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:260px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo tên/mã tổ chức…</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">Tổ chức</strong>
+          <span class="search">🔍 Tìm theo tên, mã…</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Tên tổ chức</th><th>Mã tổ chức</th><th>Trạng thái</th><th>Ngày tạo</th><th>Tạo bởi</th><th style="text-align:center">Hành động</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Tập đoàn Vingroup</b></td><td style="font-family:var(--mono);font-size:12px">vingroup</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">12/03/2026</td><td>admin@gtel.vn</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovOrg')" title="Sửa tổ chức">✏️</span><span class="icoact" title="Suspend tổ chức">🔒</span></span></td></tr>
+            <tr><td><b>VNG Corporation</b></td><td style="font-family:var(--mono);font-size:12px">vng-corp</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">20/03/2026</td><td>admin@gtel.vn</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovOrg')" title="Sửa tổ chức">✏️</span><span class="icoact" title="Suspend tổ chức">🔒</span></span></td></tr>
+            <tr><td><b>UBND tỉnh An Giang</b></td><td style="font-family:var(--mono);font-size:12px">ubnd-an-giang</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">02/05/2026</td><td>root@gtel.vn</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovOrg')" title="Sửa tổ chức">✏️</span><span class="icoact" title="Suspend tổ chức">🔒</span></span></td></tr>
+            <tr><td><b>FPT Software</b></td><td style="font-family:var(--mono);font-size:12px">fpt-software</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">15/06/2026</td><td>admin@gtel.vn</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovOrg')" title="Sửa tổ chức">✏️</span><span class="icoact" title="Suspend tổ chức">🔒</span></span></td></tr>
+            <tr><td><b>Grab Vietnam</b></td><td style="font-family:var(--mono);font-size:12px">grab-vietnam</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">22/06/2026</td><td>admin@gtel.vn</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovOrg')" title="Sửa tổ chức">✏️</span><span class="icoact" title="Suspend tổ chức">🔒</span></span></td></tr>
+            <tr><td><b>Bamboo Airways</b></td><td style="font-family:var(--mono);font-size:12px">bamboo-airways</td><td><span class="st susp">🟡 Suspended</span></td><td style="font-family:var(--mono);font-size:12px">10/07/2026</td><td>admin@gtel.vn</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovOrg')" title="Sửa tổ chức">✏️</span><span class="icoact" title="Mở lại tổ chức">🔓</span></span></td></tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>1–6</b> trong 42 Tổ chức</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: QUẢN LÝ KHÁCH HÀNG (ADMIN OVERRIDE) ============ -->
+    <div class="content view" id="view-customers">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách Khách hàng</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn" onclick="openModal('ovCustomer')">＋ Tạo Khách hàng</button>
+      </div>
+      <div class="note" style="text-align:left">ℹ️ Admin chỉ <b>override</b> khi cần can thiệp — <b>Console (Org Admin)</b> là nơi CRUD chính của Khách hàng (xem US-CON-06). Màn này phục vụ hỗ trợ/khắc phục sự cố.</div>
+      <div class="filters">
+        <div class="sel"><span class="lbl">Tổ chức</span><span class="v" style="font-weight:400;color:var(--ink-faint)">Gõ để tìm…</span><span class="cx">🔍</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">Khách hàng</strong>
+          <span class="search">🔍 Tìm theo tên khách hàng…</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Tên Khách hàng</th><th>Mã</th><th>Tổ chức cha</th><th>Trạng thái</th><th>Ngày tạo</th><th style="text-align:center">Hành động</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Cty VinHome</b></td><td style="font-family:var(--mono);font-size:12px">vinhome</td><td>Tập đoàn Vingroup</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">14/03/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovCustomer')" title="Sửa khách hàng">✏️</span><span class="icoact" title="Suspend (override)">🔒</span></span></td></tr>
+            <tr><td><b>VinFast</b></td><td style="font-family:var(--mono);font-size:12px">vinfast</td><td>Tập đoàn Vingroup</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">14/03/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovCustomer')" title="Sửa khách hàng">✏️</span><span class="icoact" title="Suspend (override)">🔒</span></span></td></tr>
+            <tr><td><b>Zalo</b></td><td style="font-family:var(--mono);font-size:12px">zalo</td><td>VNG Corporation</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">21/03/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovCustomer')" title="Sửa khách hàng">✏️</span><span class="icoact" title="Suspend (override)">🔒</span></span></td></tr>
+            <tr><td><b>Sở TN&amp;MT An Giang</b></td><td style="font-family:var(--mono);font-size:12px">so-tnmt-an-giang</td><td>UBND tỉnh An Giang</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">03/05/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovCustomer')" title="Sửa khách hàng">✏️</span><span class="icoact" title="Suspend (override)">🔒</span></span></td></tr>
+            <tr><td><b>FPT IS</b></td><td style="font-family:var(--mono);font-size:12px">fpt-is</td><td>FPT Software</td><td><span class="st susp">🟡 Suspended</span></td><td style="font-family:var(--mono);font-size:12px">16/06/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovCustomer')" title="Sửa khách hàng">✏️</span><span class="icoact" title="Mở lại (override)">🔓</span></span></td></tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>1–5</b> trong 17 Khách hàng</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: QUẢN LÝ NGƯỜI DÙNG (ADMIN NỘI BỘ / CONSOLE) ============ -->
+    <div class="content view" id="view-users">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="zlabel" style="margin:0">Danh sách Người dùng</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn ghost" onclick="openModal('ovGrantAccess')">＋ Cấp thêm quyền cho tài khoản có sẵn</button>
+        <button class="btn" onclick="openModal('ovUserCreate')">＋ Tạo tài khoản mới</button>
+      </div>
+      <div class="filters">
+        <div class="msel" id="mselAcctType">
+          <div class="sel" onclick="toggleMsel('mselAcctType', event)">
+            <span class="lbl">Loại tài khoản</span>
+            <span class="v" id="mselAcctTypeV">Tất cả</span>
+            <span class="cx">▾</span>
+          </div>
+          <div class="msel-panel">
+            <label class="msel-item"><input type="checkbox" value="Admin nội bộ" onchange="updateMsel('mselAcctType')"> Admin nội bộ</label>
+            <label class="msel-item"><input type="checkbox" value="Console" onchange="updateMsel('mselAcctType')"> Console</label>
+            <div class="msel-foot">
+              <a onclick="mselAll('mselAcctType', true)">Chọn tất cả</a>
+              <a onclick="mselAll('mselAcctType', false)">Bỏ chọn</a>
+            </div>
+          </div>
+        </div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:260px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo tên, email…</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Họ tên</th><th>Email</th><th>Loại tài khoản</th><th>Nhóm quyền / Vai trò</th><th>Trạng thái</th><th>Ngày tạo</th><th style="text-align:center">Hành động</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>Đặng Việt Hoàng</b></td><td style="font-family:var(--mono);font-size:12px">hoang.dv@gtel.vn</td><td><span class="chip">Admin nội bộ</span></td><td><span class="chip g">admin</span></td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">10/01/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Khoá">🔒</span></span></td></tr>
+            <tr><td><b>Trịnh Xuân Lâm</b></td><td style="font-family:var(--mono);font-size:12px">lam.tx@gtel.vn</td><td><span class="chip">Admin nội bộ</span></td><td><span class="chip g">admin</span></td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">10/01/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Khoá">🔒</span></span></td></tr>
+            <tr><td><b>Nguyễn Hoàng Long</b></td><td style="font-family:var(--mono);font-size:12px">long.nh@gtel.vn</td><td><span class="chip">Admin nội bộ</span></td><td><span class="chip g">developer</span></td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">15/02/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Khoá">🔒</span></span></td></tr>
+            <tr><td><b>Nguyễn Văn A</b></td><td style="font-family:var(--mono);font-size:12px">a.nguyen@vinhome.vn</td><td><span class="chip s">Console</span></td><td>Tập đoàn Vingroup · Org Admin</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">18/03/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Khoá">🔒</span></span></td></tr>
+            <tr><td><b>Trần Thị B</b></td><td style="font-family:var(--mono);font-size:12px">b.tran@vng.com.vn</td><td><span class="chip s">Console</span></td><td>VNG Corporation · Member</td><td><span class="st pending">⏳ Pending</span></td><td style="font-family:var(--mono);font-size:12px">02/08/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Gửi lại email kích hoạt">✉️</span></span></td></tr>
+            <tr><td><b>Phan Thị Cẩm</b></td><td style="font-family:var(--mono);font-size:12px">cam.phan@fpt.com.vn</td><td><span class="chip s">Console</span></td><td>FPT Software · Org Admin</td><td><span class="st susp">🟡 Locked</span></td><td style="font-family:var(--mono);font-size:12px">20/06/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Mở khoá">🔓</span></span></td></tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>1–6</b> trong 128 tài khoản (Admin nội bộ + Console)</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: NGƯỜI DÙNG MAP VIEWER ============ -->
+    <div class="content view" id="view-viewer-users">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách Người dùng Map Viewer</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn" onclick="openModal('ovViewerCreate')">＋ Tạo hộ</button>
+      </div>
+      <div class="note" style="text-align:left">ℹ️ Tách hoàn toàn khỏi màn "Quản lý Người dùng" (Admin nội bộ/Console) — không có Tổ chức/Khách hàng/Role, chỉ phục vụ tra cứu &amp; hỗ trợ (khoá/mở khoá/xoá/tạo hộ) cho người dùng công khai tự đăng ký.</div>
+      <div class="filters">
+        <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Nguồn</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:260px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo email, tên…</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Họ tên</th><th>Email</th><th>Trạng thái</th><th>Nguồn</th><th>Ngày tạo</th><th style="text-align:center">Hành động</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Phạm Thị Mai</td><td style="font-family:var(--mono);font-size:12px">mai.pham88@gmail.com</td><td><span class="st act">🟢 Active</span></td><td><span class="chip g">Tự đăng ký</span></td><td style="font-family:var(--mono);font-size:12px">12/07/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Khoá">🔒</span><span class="icoact" title="Xoá (soft-delete)" style="color:var(--red)">🚫</span></span></td></tr>
+            <tr><td style="color:var(--ink-faint)">—</td><td style="font-family:var(--mono);font-size:12px">user2231@yahoo.com</td><td><span class="st act">🟢 Active</span></td><td><span class="chip g">Tự đăng ký</span></td><td style="font-family:var(--mono);font-size:12px">15/07/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Khoá">🔒</span><span class="icoact" title="Xoá (soft-delete)" style="color:var(--red)">🚫</span></span></td></tr>
+            <tr><td>Lê Văn Hùng</td><td style="font-family:var(--mono);font-size:12px">hung.le@outlook.com</td><td><span class="st susp">🟡 Locked</span></td><td><span class="chip g">Tự đăng ký</span></td><td style="font-family:var(--mono);font-size:12px">20/06/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Mở khoá">🔓</span><span class="icoact" title="Xoá (soft-delete)" style="color:var(--red)">🚫</span></span></td></tr>
+            <tr><td>Đỗ Thu Hà</td><td style="font-family:var(--mono);font-size:12px">support-test01@gtel.vn</td><td><span class="st act">🟢 Active</span></td><td><span class="chip g">Admin tạo hộ</span></td><td style="font-family:var(--mono);font-size:12px">01/08/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Khoá">🔒</span><span class="icoact" title="Xoá (soft-delete)" style="color:var(--red)">🚫</span></span></td></tr>
+            <tr><td>Trần Minh Khoa</td><td style="font-family:var(--mono);font-size:12px">khoa.tran@gmail.com</td><td><span class="st exp">⚪ Disabled</span></td><td><span class="chip g">Tự đăng ký</span></td><td style="font-family:var(--mono);font-size:12px">05/05/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Khôi phục">↩️</span></span></td></tr>
+            <tr><td style="color:var(--ink-faint)">—</td><td style="font-family:var(--mono);font-size:12px">qa-viewer02@gtel.vn</td><td><span class="st act">🟢 Active</span></td><td><span class="chip g">Admin tạo hộ</span></td><td style="font-family:var(--mono);font-size:12px">03/08/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" title="Khoá">🔒</span><span class="icoact" title="Xoá (soft-delete)" style="color:var(--red)">🚫</span></span></td></tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>1–6</b> trong 184,206 người dùng Map Viewer</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: QUẢN LÝ DỰ ÁN (ADMIN OVERRIDE) ============ -->
+    <div class="content view" id="view-projects">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Danh sách Dự án</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn" onclick="openModal('ovProject')">＋ Tạo Dự án</button>
+      </div>
+      <div class="filters">
+        <div class="sel"><span class="lbl">Tổ chức</span><span class="v" style="font-weight:400;color:var(--ink-faint)">Gõ để tìm…</span><span class="cx">🔍</span></div>
+        <div class="sel"><span class="lbl">Khách hàng</span><span class="v" style="font-weight:400;color:var(--ink-faint)">Gõ để tìm…</span><span class="cx">🔍</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Tên dự án</th><th>Mã dự án</th><th>Khách hàng cha</th><th>Tổ chức</th><th>Trạng thái</th><th>Ngày tạo</th><th style="text-align:center">Hành động</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>VinHome Smart City</b></td><td style="font-family:var(--mono);font-size:12px">vinhome-smart-city</td><td>Cty VinHome</td><td>Tập đoàn Vingroup</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">04/07/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovProject')" title="Sửa dự án">✏️</span><span class="icoact" style="opacity:.35" title="Không xoá được — còn API Key active">🗑️</span></span></td></tr>
+            <tr><td><b>Zalo Maps</b></td><td style="font-family:var(--mono);font-size:12px">zalo-maps</td><td>Zalo</td><td>VNG Corporation</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">01/06/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovProject')" title="Sửa dự án">✏️</span><span class="icoact" style="opacity:.35" title="Không xoá được — còn API Key active">🗑️</span></span></td></tr>
+            <tr><td><b>An Giang GIS</b></td><td style="font-family:var(--mono);font-size:12px">an-giang-gis</td><td>Sở TN&amp;MT An Giang</td><td>UBND tỉnh An Giang</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">12/05/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovProject')" title="Sửa dự án">✏️</span><span class="icoact" title="Xoá dự án">🗑️</span></span></td></tr>
+            <tr><td><b>GrabMaps Core</b></td><td style="font-family:var(--mono);font-size:12px">grabmaps-core</td><td style="color:var(--ink-faint)">— (thuộc thẳng Tổ chức)</td><td>Grab Vietnam</td><td><span class="st act">🟢 Active</span></td><td style="font-family:var(--mono);font-size:12px">22/06/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovProject')" title="Sửa dự án">✏️</span><span class="icoact" style="opacity:.35" title="Không xoá được — còn API Key active">🗑️</span></span></td></tr>
+            <tr><td><b>Demo Test</b></td><td style="font-family:var(--mono);font-size:12px">demo-test</td><td style="color:var(--ink-faint)">— (thuộc thẳng Tổ chức)</td><td>FPT Software</td><td><span class="st exp">⚪ Inactive</span></td><td style="font-family:var(--mono);font-size:12px">28/07/2026</td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openModal('ovProject')" title="Sửa dự án">✏️</span><span class="icoact" title="Xoá dự án — không còn API Key">🗑️</span></span></td></tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>1–5</b> trong 63 Dự án</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: QUẢN LÝ DỊCH VỤ ============ -->
+    <div class="content view" id="view-services">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Catalog Dịch vụ (API Product)</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn" onclick="openModal('ovService')">＋ Tạo Dịch vụ</button>
+      </div>
+      <div class="note" style="text-align:left">ℹ️ Nguồn dữ liệu duy nhất cho "API Restricted" (Console) và bộ lọc Dịch vụ (Thống kê API Key). Bấm ▶ để xem Feature con của từng Dịch vụ.</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Dịch vụ / Feature</th><th>Method · Endpoint</th><th>Loại đếm usage</th><th>Trạng thái</th><th style="text-align:center">Hành động</th></tr>
+          </thead>
+          <tbody id="svcGeocoding">
+            <tr onclick="tg('svcGeocoding')"><td><span class="node"><span class="exp">▶</span>🧭 <b>Geocoding API</b></span></td><td style="font-family:var(--mono);font-size:12px">geocoding · v1</td><td>—</td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openModal('ovService')" title="Sửa dịch vụ">✏️</span><span class="icoact" onclick="event.stopPropagation()" title="Thêm Feature">➕</span></span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Forward Geocoding</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/geocoding/v1/geocode</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Forward Geocoding structured</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/geocoding/v1/geocode/structured</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Reverse Geocoding</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/geocoding/v1/reverse</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Place Geocoding</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/geocoding/v1/place</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Batch Geocoding</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">POST</span> <span style="font-family:var(--mono);font-size:12px">/geocoding/v1/batch</span></td><td><span class="chip" style="background:var(--amber-soft);color:var(--amber);font-weight:700">⚠ Theo số mục xử lý</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+          </tbody>
+          <tbody id="svcSearch">
+            <tr onclick="tg('svcSearch')"><td><span class="node"><span class="exp">▶</span>🧭 <b>Search API</b></span></td><td style="font-family:var(--mono);font-size:12px">search · v1</td><td>—</td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openModal('ovService')" title="Sửa dịch vụ">✏️</span><span class="icoact" onclick="event.stopPropagation()" title="Thêm Feature">➕</span></span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Autocomplete</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/search/v1/autocomplete</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Text Search</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/search/v1/text</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+          </tbody>
+          <tbody id="svcPlaces">
+            <tr onclick="tg('svcPlaces')"><td><span class="node"><span class="exp">▶</span>🧭 <b>Places API</b></span></td><td style="font-family:var(--mono);font-size:12px">places · v1</td><td>—</td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openModal('ovService')" title="Sửa dịch vụ">✏️</span><span class="icoact" onclick="event.stopPropagation()" title="Thêm Feature">➕</span></span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Place Details</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/places/v1/places/{PLACE_ID}</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Place Photos</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/places/v1/places/{PLACE_ID}/photos</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+          </tbody>
+          <tbody id="svcAdminUnits">
+            <tr onclick="tg('svcAdminUnits')"><td><span class="node"><span class="exp">▶</span>🧭 <b>Administrative Units API</b></span></td><td style="font-family:var(--mono);font-size:12px">admin-units · v1</td><td>—</td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openModal('ovService')" title="Sửa dịch vụ">✏️</span><span class="icoact" onclick="event.stopPropagation()" title="Thêm Feature">➕</span></span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Province List</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/admin-units/v1/provinces</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Ward List</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/admin-units/v1/wards</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+          </tbody>
+          <tbody id="svcDirections">
+            <tr onclick="tg('svcDirections')"><td><span class="node"><span class="exp">▶</span>🧭 <b>Directions API</b></span></td><td style="font-family:var(--mono);font-size:12px">directions · v1</td><td>—</td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openModal('ovService')" title="Sửa dịch vụ">✏️</span><span class="icoact" onclick="event.stopPropagation()" title="Thêm Feature">➕</span></span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Compute Directions</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/directions/v1/routes</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Compute Route Matrix</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">POST</span> <span style="font-family:var(--mono);font-size:12px">/directions/v1/matrix</span></td><td><span class="chip" style="background:var(--amber-soft);color:var(--amber);font-weight:700">⚠ Theo số mục xử lý</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Optimized Trip</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">POST</span> <span style="font-family:var(--mono);font-size:12px">/directions/v1/optimize</span></td><td><span class="chip" style="background:var(--amber-soft);color:var(--amber);font-weight:700">⚠ Theo số mục xử lý</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+          </tbody>
+          <tbody id="svcTiles">
+            <tr onclick="tg('svcTiles')"><td><span class="node"><span class="exp">▶</span>🧭 <b>Map Tiles API</b></span></td><td style="font-family:var(--mono);font-size:12px">tiles · v1</td><td>—</td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openModal('ovService')" title="Sửa dịch vụ">✏️</span><span class="icoact" onclick="event.stopPropagation()" title="Thêm Feature">➕</span></span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Vector Tiles</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/tiles/v1/vector/{TILESET_ID}/{z}/{x}/{y}.{format}</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Style JSON</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/tiles/v1/style/{STYLE_ID}</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+          </tbody>
+          <tbody id="svcWeather">
+            <tr onclick="tg('svcWeather')"><td><span class="node"><span class="exp">▶</span>🧭 <b>Weather API</b></span></td><td style="font-family:var(--mono);font-size:12px">weather · v1</td><td>—</td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openModal('ovService')" title="Sửa dịch vụ">✏️</span><span class="icoact" onclick="event.stopPropagation()" title="Thêm Feature">➕</span></span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Current Conditions</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/weather/v1/current-conditions</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+            <tr class="lvl2"><td><span class="node">↳ Daily Forecast</span></td><td><span class="code" style="background:var(--panel-2);color:var(--ink-soft)">GET</span> <span style="font-family:var(--mono);font-size:12px">/weather/v1/forecast/daily</span></td><td><span class="chip g">Chuẩn</span></td><td><span class="st act">🟢 Active</span></td><td style="text-align:center"><span class="icoact" title="Sửa Feature">✏️</span></td></tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">7 Dịch vụ · 15 Feature</div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: PHÂN QUYỀN (RBAC) ============ -->
+    <div class="content view" id="view-rbac">
+      <div class="note" style="text-align:left">🛡️ 4 lớp phân quyền: <b>Vai trò</b> (nhóm người dùng) → <b>Nhóm quyền</b> (gom quyền theo tài nguyên) → <b>Quyền chi tiết</b> (danh mục quyền cơ sở) → <b>Override</b> (gán/ghi đè lẻ cho 1 tài khoản cụ thể).</div>
+      <div class="subtabs">
+        <span class="on" onclick="showRbacTab('matrix', this)">Ma trận đặc quyền</span>
+        <span onclick="showRbacTab('roles', this)">Nhóm người dùng</span>
+        <span onclick="showRbacTab('groups', this)">Nhóm quyền</span>
+        <span onclick="showRbacTab('perms', this)">Danh mục quyền</span>
+        <span onclick="showRbacTab('direct', this)">Quyền người dùng cụ thể</span>
+      </div>
+
+      <!-- TAB 1: MA TRẬN ĐẶC QUYỀN -->
+      <div class="subview on" id="rbtab-matrix">
+        <div class="note" style="text-align:left">Click <b>[*]</b> để gán nhanh cả nhóm tài nguyên (các quyền con chuyển sang trạng thái <b>kế thừa</b> — chấm xanh, không click lẻ được nữa). Bỏ tick <b>[*]</b> để mở lại chỉnh từng quyền con. Demo UI — chưa lưu thật.</div>
+        <div class="matrixwrap tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th rowspan="2">Vai trò (Nhóm người dùng)</th>
+                <th colspan="4" class="grphead">TỔ CHỨC / KHÁCH HÀNG</th>
+                <th colspan="4" class="grphead">NGƯỜI DÙNG</th>
+                <th colspan="4" class="grphead">DỰ ÁN / DỊCH VỤ</th>
+                <th colspan="4" class="grphead">API KEY</th>
+                <th colspan="4" class="grphead">HỆ THỐNG</th>
+              </tr>
+              <tr>
+                <th>[*]</th><th>Xem</th><th>Tạo</th><th>Suspend</th>
+                <th>[*]</th><th>Xem</th><th>Thêm</th><th>Khoá</th>
+                <th>[*]</th><th>Xem</th><th>Tạo</th><th>Xoá</th>
+                <th>[*]</th><th>Xem</th><th>Tạo</th><th>Thu hồi</th>
+                <th>[*]</th><th>config:edit</th><th>audit:view</th><th>rbac:edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="chip" style="background:var(--purple-soft);color:var(--purple)">root</span> <span style="color:var(--ink-faint);font-size:11.5px">— Toàn quyền</span></td>
+                <td><span class="chk wild on" data-wild="org-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="org-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="org-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="org-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild on" data-wild="user-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="user-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="user-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="user-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild on" data-wild="proj-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="proj-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="proj-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="proj-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild on" data-wild="key-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="key-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="key-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="key-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild on" data-wild="sys-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="sys-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="sys-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="sys-root" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+              </tr>
+              <tr>
+                <td><span class="chip">admin</span> <span style="color:var(--ink-faint);font-size:11.5px">— Vận hành</span></td>
+                <td><span class="chk wild on" data-wild="org-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="org-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="org-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="org-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild on" data-wild="user-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="user-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="user-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="user-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="proj-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="proj-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="proj-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="proj-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="key-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="key-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="key-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="key-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="sys-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="sys-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-admin" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+              </tr>
+              <tr>
+                <td><span class="chip s">res_man</span> <span style="color:var(--ink-faint);font-size:11.5px">— Tài nguyên</span></td>
+                <td><span class="chk wild" data-wild="org-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="org-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="org-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="org-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="user-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="user-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="user-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="user-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild on" data-wild="proj-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="proj-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="proj-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="proj-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild on" data-wild="key-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="key-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="key-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on inherited" data-group="key-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="sys-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="sys-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-res" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+              </tr>
+              <tr>
+                <td><span class="chip" style="background:var(--green-soft);color:var(--green)">developer</span> <span style="color:var(--ink-faint);font-size:11.5px">— Phạm vi gán</span></td>
+                <td><span class="chk wild" data-wild="org-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="org-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="org-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="org-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="user-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="user-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="user-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="user-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="proj-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="proj-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="proj-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="proj-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="key-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="key-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="key-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="key-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="sys-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-dev" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+              </tr>
+              <tr>
+                <td><span class="chip" style="background:var(--amber-soft);color:var(--amber)">auditor</span> <span style="color:var(--ink-faint);font-size:11.5px">— Chỉ xem</span></td>
+                <td><span class="chk wild" data-wild="org-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="org-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="org-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="org-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="user-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="user-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="user-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="user-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="proj-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="proj-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="proj-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="proj-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="key-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="key-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="key-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="key-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk wild" data-wild="sys-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk on" data-group="sys-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+                <td><span class="chk" data-group="sys-aud" onclick="rbCellClick(this)"><span class="cb"></span></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: NHÓM NGƯỜI DÙNG -->
+      <div class="subview" id="rbtab-roles">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="zlabel" style="margin:0">Danh sách Nhóm người dùng (Vai trò)</div>
+          <div class="spacer" style="flex:1"></div>
+          <button class="btn" onclick="openModal('ovRoleForm')">＋ Thêm nhóm &amp; gán quyền</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Mã nhóm</th><th>Tên hiển thị</th><th>Mô tả</th><th class="num">SL user</th><th>Hành động</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code class="code ok">root</code></td><td>Super Admin</td><td>Toàn quyền hệ thống, không giới hạn</td><td class="num">2</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovRoleForm')">Sửa &amp; gán lại quyền</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">admin</code></td><td>Admin</td><td>Quản trị vận hành — Tổ chức, Người dùng, Dự án, Dịch vụ</td><td class="num">5</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovRoleForm')">Sửa &amp; gán lại quyền</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">res_man</code></td><td>Resource Manager</td><td>Quản lý tài nguyên — API Key, Dự án, Thống kê</td><td class="num">8</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovRoleForm')">Sửa &amp; gán lại quyền</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">developer</code></td><td>Developer</td><td>Tạo/xem API Key trong phạm vi được gán</td><td class="num">34</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovRoleForm')">Sửa &amp; gán lại quyền</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">auditor</code></td><td>Auditor</td><td>Chỉ xem &amp; kiểm toán, không có quyền ghi</td><td class="num">3</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovRoleForm')">Sửa &amp; gán lại quyền</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+            </tbody>
+          </table>
+          <div class="tbl-foot">5 Nhóm người dùng · 52 tài khoản Admin nội bộ được gán</div>
+        </div>
+      </div>
+
+      <!-- TAB 3: NHÓM QUYỀN -->
+      <div class="subview" id="rbtab-groups">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="zlabel" style="margin:0">Danh sách Nhóm quyền (gom theo tài nguyên)</div>
+          <div class="spacer" style="flex:1"></div>
+          <button class="btn" onclick="openModal('ovResourceForm')">＋ Thêm nhóm quyền</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Mã nhóm quyền</th><th>Tên nhóm quyền</th><th class="num">SL quyền con</th><th>Mô tả phạm vi</th><th>Hành động</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code class="code ok">org</code></td><td>Tổ chức &amp; Khách hàng</td><td class="num">3</td><td>Xem / Tạo / Suspend tổ chức &amp; khách hàng</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovResourceForm')">Sửa &amp; gán lại quyền con</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">user</code></td><td>Người dùng</td><td class="num">3</td><td>Xem / Thêm / Khoá tài khoản</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovResourceForm')">Sửa &amp; gán lại quyền con</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">proj</code></td><td>Dự án &amp; Dịch vụ</td><td class="num">3</td><td>Xem / Tạo / Xoá dự án, dịch vụ</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovResourceForm')">Sửa &amp; gán lại quyền con</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">key</code></td><td>API Key</td><td class="num">3</td><td>Xem / Tạo / Thu hồi API Key</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovResourceForm')">Sửa &amp; gán lại quyền con</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td><code class="code ok">sys</code></td><td>Hệ thống</td><td class="num">3</td><td>Sửa cấu hình / Xem audit / Sửa ma trận RBAC</td><td class="actbar"><button class="btn ghost" onclick="openModal('ovResourceForm')">Sửa &amp; gán lại quyền con</button><span class="icoact" title="Xóa">🗑️</span></td></tr>
+            </tbody>
+          </table>
+          <div class="tbl-foot">5 Nhóm quyền · 15 quyền cơ sở</div>
+        </div>
+      </div>
+
+      <!-- TAB 4: DANH MỤC QUYỀN -->
+      <div class="subview" id="rbtab-perms">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="zlabel" style="margin:0">Danh mục Quyền cơ sở</div>
+          <div class="spacer" style="flex:1"></div>
+          <button class="btn" onclick="openModal('ovPermissionForm')">＋ Thêm quyền</button>
+        </div>
+        <div class="tbl-wrap">
+          <table class="epscroll">
+            <thead>
+              <tr><th>Mã định danh</th><th>Tên hiển thị</th><th>Thuộc nhóm</th><th>Mô tả</th><th>Hành động</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-family:var(--mono);font-size:12px">org:view</td><td>Xem tổ chức</td><td><span class="chip">org</span></td><td>Truy cập danh sách &amp; chi tiết tổ chức</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">org:create</td><td>Tạo tổ chức</td><td><span class="chip">org</span></td><td>Khởi tạo hồ sơ tổ chức mới</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">org:suspend</td><td>Suspend tổ chức</td><td><span class="chip">org</span></td><td>Tạm khoá toàn bộ truy cập của 1 tổ chức</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">user:view</td><td>Xem người dùng</td><td><span class="chip">user</span></td><td>Truy cập danh sách tài khoản</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">user:add</td><td>Thêm người dùng</td><td><span class="chip">user</span></td><td>Tạo tài khoản mới hoặc cấp thêm quyền</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">user:lock</td><td>Khoá người dùng</td><td><span class="chip">user</span></td><td>Khoá/mở khoá tài khoản</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">proj:view</td><td>Xem dự án</td><td><span class="chip s">proj</span></td><td>Truy cập danh sách dự án</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">proj:create</td><td>Tạo dự án</td><td><span class="chip s">proj</span></td><td>Khởi tạo dự án mới</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">proj:delete</td><td>Xoá dự án</td><td><span class="chip s">proj</span></td><td>Xoá vĩnh viễn 1 dự án</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">key:view</td><td>Xem API Key</td><td><span class="chip" style="background:var(--green-soft);color:var(--green)">key</span></td><td>Truy cập danh sách API Key</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">key:create</td><td>Tạo API Key</td><td><span class="chip" style="background:var(--green-soft);color:var(--green)">key</span></td><td>Sinh API Key mới cho 1 dự án</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">key:revoke</td><td>Thu hồi API Key</td><td><span class="chip" style="background:var(--green-soft);color:var(--green)">key</span></td><td>Thu hồi vĩnh viễn 1 API Key</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">config:edit</td><td>Sửa cấu hình hệ thống</td><td><span class="chip" style="background:var(--amber-soft);color:var(--amber)">sys</span></td><td>Đổi tham số vận hành toàn hệ thống</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">audit:view</td><td>Xem Audit History</td><td><span class="chip" style="background:var(--amber-soft);color:var(--amber)">sys</span></td><td>Truy vết nhật ký hành động toàn hệ thống</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">rbac:edit</td><td>Sửa Ma trận phân quyền</td><td><span class="chip" style="background:var(--amber-soft);color:var(--amber)">sys</span></td><td>Đổi quyền của Nhóm người dùng khác — quyền nhạy cảm nhất hệ thống</td><td class="actbar"><span class="icoact" title="Sửa">✏️</span><span class="icoact" title="Xóa">🗑️</span></td></tr>
+            </tbody>
+          </table>
+          <div class="tbl-foot">15 quyền cơ sở · 5 nhóm quyền</div>
+        </div>
+      </div>
+
+      <!-- TAB 5: QUYỀN NGƯỜI DÙNG CỤ THỂ -->
+      <div class="subview" id="rbtab-direct">
+        <div class="note" style="text-align:left">Dùng khi 1 tài khoản cần thêm/bớt quyền ngoại lệ so với Nhóm người dùng mặc định — hiếm dùng, ưu tiên cao nhất khi tính quyền thực tế (Effective).</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Tài khoản</th><th>Họ tên</th><th>Nhóm (vai trò)</th><th>Quyền override</th><th>Hành động</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-family:var(--mono);font-size:12px">admin.hoang@gtel.vn</td><td>Admin Hoàng</td><td><span class="chip">admin</span></td><td><span class="chip" style="background:var(--green-soft);color:var(--green)">rbac:edit</span> <span style="color:var(--ink-faint);font-size:11px">(gán trực tiếp)</span></td><td><button class="btn ghost" onclick="openModal('ovUserPermissions')">🛡️ Chỉnh sửa quyền</button></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">admin.lam@gtel.vn</td><td>Admin Lâm</td><td><span class="chip">admin</span></td><td><span class="chip" style="background:var(--green-soft);color:var(--green)">config:edit</span> <span style="color:var(--ink-faint);font-size:11px">(gán trực tiếp)</span></td><td><button class="btn ghost" onclick="openModal('ovUserPermissions')">🛡️ Chỉnh sửa quyền</button></td></tr>
+              <tr><td style="font-family:var(--mono);font-size:12px">dev03@vnpay.vn</td><td>Nguyễn Văn Dev</td><td><span class="chip" style="background:var(--green-soft);color:var(--green)">developer</span></td><td><span style="color:var(--ink-faint);font-size:11.5px">— không override —</span></td><td><button class="btn ghost" onclick="openModal('ovUserPermissions')">🛡️ Chỉnh sửa quyền</button></td></tr>
+            </tbody>
+          </table>
+          <div class="tbl-foot">3 / 52 tài khoản Admin nội bộ · 2 tài khoản có override</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: CẤU HÌNH HỆ THỐNG ============ -->
+    <div class="content view" id="view-config">
+      <div class="zlabel">Ngôn ngữ &amp; Giao diện</div>
+      <div class="sect">
+        <div class="row2">
+          <div class="fld"><label>Ngôn ngữ mặc định</label>
+            <select class="inp"><option>Tiếng Việt</option><option>English</option></select>
+          </div>
+          <div class="fld"><label>Theme mặc định</label>
+            <select class="inp"><option>Theo hệ thống</option><option>Sáng</option><option>Tối</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="zlabel">Vận hành hệ thống</div>
+      <div class="sect">
+        <div style="display:flex;align-items:center;gap:12px;justify-content:space-between">
+          <div>
+            <h4 style="margin:0 0 2px">Chế độ bảo trì (Maintenance Mode)</h4>
+            <div class="h-sub" style="margin:0">Khi bật: tạm dừng truy cập Console/Map Viewer, chỉ Admin nội bộ đăng nhập được. Dùng khi nâng cấp hạ tầng.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" /><span class="tr"></span></label>
+        </div>
+      </div>
+
+      <div class="zlabel">Bảo mật</div>
+      <div class="sect">
+        <h4>Chính sách xác thực 2 lớp (2FA)</h4>
+        <div class="h-sub">Áp dụng cho tài khoản Admin nội bộ — chưa áp dụng Console/Map Viewer (Phase sau)</div>
+        <div class="radio on"><span class="rc"></span> Disabled — không bắt buộc</div>
+        <div class="radio"><span class="rc"></span> Optional — người dùng tự bật</div>
+        <div class="radio"><span class="rc"></span> Required — bắt buộc mọi tài khoản Admin nội bộ</div>
+      </div>
+
+      <div class="zlabel">Giới hạn API</div>
+      <div class="sect">
+        <div class="row2">
+          <div class="fld"><label>Giới hạn Request/giây toàn hệ thống (RPS)</label>
+            <input class="inp" type="number" value="5000" />
+            <span class="vh">Ngưỡng bảo vệ hệ thống trước tấn công DDoS hoặc traffic đột biến — áp dụng chung cho mọi API Key, độc lập với quota riêng từng Key.</span>
+          </div>
+          <div class="fld"><label>Ngưỡng cảnh báo (% của giới hạn)</label>
+            <input class="inp" type="number" value="80" />
+            <span class="vh">Vượt ngưỡng này → tự động ghi Audit History mức "Cảnh báo" và gửi email cho root.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="zlabel">Bản đồ mặc định</div>
+      <div class="sect">
+        <div class="row2">
+          <div class="fld"><label>Basemap mặc định</label>
+            <select class="inp"><option>Vector Standard</option><option>Satellite</option><option>Terrain</option></select>
+          </div>
+          <div class="fld"><label>Zoom mặc định</label>
+            <input class="inp" type="number" value="12" />
+          </div>
+        </div>
+        <div class="fld" style="margin-top:12px"><label>BBox mặc định (Kinh độ Tây, Vĩ độ Nam, Kinh độ Đông, Vĩ độ Bắc)</label>
+          <div class="row2">
+            <input class="inp" placeholder="102.14" />
+            <input class="inp" placeholder="8.18" />
+          </div>
+          <div class="row2" style="margin-top:8px">
+            <input class="inp" placeholder="109.46" />
+            <input class="inp" placeholder="23.39" />
+          </div>
+          <span class="vh">Mặc định phủ toàn bộ lãnh thổ Việt Nam — khách hàng có thể override theo Dự án.</span>
+        </div>
+      </div>
+
+      <div class="mfoot" style="justify-content:flex-start">
+        <button class="btn">💾 Lưu cấu hình</button>
+      </div>
+    </div>
+
+    <!-- ============ VIEW: AUDIT HISTORY ============ -->
+    <div class="content view" id="view-audit">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="zlabel" style="margin:0">Audit History (toàn hệ thống)</div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn ghost" onclick="alert('Đã xuất Audit History ra file .xlsx (demo)')">⬇️ Xuất Report</button>
+      </div>
+      <div class="filters">
+        <div class="sel" style="min-width:170px">
+          <span class="lbl">Phân hệ</span>
+          <select class="v" id="auditModuleSel" onchange="filterAuditModule(this.value)" style="border:none;background:transparent;font-weight:600;font-size:13px;font-family:inherit;color:var(--ink);cursor:pointer;outline:none">
+            <option value="all">Tất cả</option>
+            <option value="orgs">Tổ chức / Khách hàng</option>
+            <option value="users">Người dùng</option>
+            <option value="rbac">Phân quyền (RBAC)</option>
+            <option value="projects">Dự án / Dịch vụ</option>
+            <option value="apikey">API Key</option>
+            <option value="config">Cấu hình hệ thống</option>
+          </select>
+        </div>
+        <div class="msel" id="mselSeverity">
+          <div class="sel" onclick="toggleMsel('mselSeverity', event)">
+            <span class="lbl">Mức độ</span>
+            <span class="v" id="mselSeverityV">Tất cả</span>
+            <span class="cx">▾</span>
+          </div>
+          <div class="msel-panel">
+            <label class="msel-item"><input type="checkbox" value="Thông thường" onchange="updateMsel('mselSeverity')"> ⚪ Thông thường</label>
+            <label class="msel-item"><input type="checkbox" value="Cảnh báo" onchange="updateMsel('mselSeverity')"> 🟡 Cảnh báo</label>
+            <label class="msel-item"><input type="checkbox" value="Nghiêm trọng" onchange="updateMsel('mselSeverity')"> 🔴 Nghiêm trọng</label>
+            <div class="msel-foot">
+              <a onclick="mselAll('mselSeverity', true)">Chọn tất cả</a>
+              <a onclick="mselAll('mselSeverity', false)">Bỏ chọn</a>
+            </div>
+          </div>
+        </div>
+        <div class="sel"><span class="lbl">Actor</span><span class="v" style="font-weight:400;color:var(--ink-faint)">Gõ để tìm…</span><span class="cx">🔍</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Từ→Đến</span><span class="v" style="font-family:var(--mono);font-size:11.5px">28/07 – 04/08</span><span class="cx">📅</span></div>
+        <div class="rld" title="Xóa lọc" onclick="document.getElementById('auditModuleSel').value='all';filterAuditModule('all')">⟳</div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Thời điểm</th><th>Actor</th><th>Phân hệ</th><th>Hành động</th><th>Đối tượng</th><th>Mức độ</th><th>Chi tiết</th></tr>
+          </thead>
+          <tbody id="auditTbody">
+            <tr data-module="users"><td style="font-family:var(--mono);font-size:12px">04/08/2026 09:12</td><td>Admin Hoàng</td><td><span class="chip g">Người dùng</span></td><td>Khoá tài khoản</td><td>dev03@vnpay.vn</td><td><span class="st susp">🟡 Cảnh báo</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('users-lock')">Lý do</button></td></tr>
+            <tr data-module="apikey"><td style="font-family:var(--mono);font-size:12px">04/08/2026 08:47</td><td>Admin Lâm</td><td><span class="chip g">API Key</span></td><td>Tạo API Key</td><td>Key_Auto_006</td><td><span class="st exp">⚪ Thông thường</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('apikey-create')">Chi tiết</button></td></tr>
+            <tr data-module="config"><td style="font-family:var(--mono);font-size:12px">03/08/2026 22:03</td><td>root</td><td><span class="chip g">Cấu hình</span></td><td>Đổi cấu hình hệ thống</td><td>Chính sách 2FA</td><td><span class="st rev">🔴 Nghiêm trọng</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('config-2fa')">Xem Diff</button></td></tr>
+            <tr data-module="rbac"><td style="font-family:var(--mono);font-size:12px">03/08/2026 19:22</td><td>Admin Hoàng</td><td><span class="chip g">RBAC</span></td><td>Cập nhật Ma trận phân quyền</td><td>Nhóm res_man</td><td><span class="st susp">🟡 Cảnh báo</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('rbac-matrix')">Xem Diff</button></td></tr>
+            <tr data-module="projects"><td style="font-family:var(--mono);font-size:12px">03/08/2026 17:40</td><td>Admin Hoàng</td><td><span class="chip g">Dự án</span></td><td>Xoá dự án</td><td>"Demo Test"</td><td><span class="st rev">🔴 Nghiêm trọng</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('proj-del')">Lý do</button></td></tr>
+            <tr data-module="orgs"><td style="font-family:var(--mono);font-size:12px">03/08/2026 15:12</td><td>Admin Lâm</td><td><span class="chip g">Tổ chức</span></td><td>Tạo tổ chức</td><td>"FPT Software"</td><td><span class="st exp">⚪ Thông thường</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('org-create')">Chi tiết</button></td></tr>
+            <tr data-module="orgs"><td style="font-family:var(--mono);font-size:12px">02/08/2026 11:30</td><td>root</td><td><span class="chip g">Tổ chức</span></td><td>Suspend tổ chức</td><td>"Bamboo Airways"</td><td><span class="st rev">🔴 Nghiêm trọng</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('org-suspend')">Lý do</button></td></tr>
+            <tr data-module="apikey"><td style="font-family:var(--mono);font-size:12px">01/08/2026 16:05</td><td>Admin Hoàng</td><td><span class="chip g">API Key</span></td><td>Thu hồi API Key</td><td>An_Giang_Prod</td><td><span class="st susp">🟡 Cảnh báo</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('apikey-revoke')">Lý do</button></td></tr>
+            <tr data-module="projects"><td style="font-family:var(--mono);font-size:12px">30/07/2026 09:50</td><td>Admin Lâm</td><td><span class="chip g">Dịch vụ</span></td><td>Thêm Feature dịch vụ</td><td>Batch Geocoding (Geocoding API)</td><td><span class="st exp">⚪ Thông thường</span></td><td><button class="btn ghost" style="padding:5px 10px;font-size:12px" onclick="openAuditDiff('svc-add')">Chi tiết</button></td></tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b id="auditCount">1–9</b> trong 2,486 sự kiện</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: AUDIT DIFF -->
+<div class="overlay" id="ovAuditDiff">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2 id="auditDiffTitle">Chi tiết thay đổi</h2><button class="mclose" onclick="cls('ovAuditDiff')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="auditDiffBody"></div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovAuditDiff')">Đóng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- RBAC: Modal Nhóm người dùng (Vai trò) -->
+<div class="overlay" id="ovRoleForm">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo / Sửa Nhóm người dùng</h2><button class="mclose" onclick="cls('ovRoleForm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="row2">
+        <div class="fld"><label>Mã nhóm</label><input class="inp" placeholder="vd: res_man" /></div>
+        <div class="fld"><label>Tên hiển thị</label><input class="inp" placeholder="vd: Resource Manager" /></div>
+      </div>
+      <div class="fld"><label>Mô tả nhóm</label><input class="inp" placeholder="Trách nhiệm &amp; phạm vi của nhóm này" /></div>
+      <div class="fld"><label>Gán Nhóm quyền (Permission Groups)</label>
+        <div class="svcgrid">
+          <span class="chk on"><span class="cb"></span> Tổ chức &amp; Khách hàng (org)</span>
+          <span class="chk"><span class="cb"></span> Người dùng (user)</span>
+          <span class="chk on"><span class="cb"></span> Dự án &amp; Dịch vụ (proj)</span>
+          <span class="chk on"><span class="cb"></span> API Key (key)</span>
+          <span class="chk"><span class="cb"></span> Hệ thống (sys)</span>
+        </div>
+      </div>
+      <div class="fld"><label>Gán thêm Quyền lẻ (Individual Permissions)</label>
+        <div class="svcgrid">
+          <span class="chk on"><span class="cb"></span> audit:view</span>
+          <span class="chk"><span class="cb"></span> rbac:edit</span>
+        </div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovRoleForm')">Hủy</button><button class="btn" onclick="cls('ovRoleForm')">Lưu Nhóm người dùng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- RBAC: Modal Nhóm quyền -->
+<div class="overlay" id="ovResourceForm">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo / Sửa Nhóm quyền</h2><button class="mclose" onclick="cls('ovResourceForm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="row2">
+        <div class="fld"><label>Mã nhóm quyền</label><input class="inp" placeholder="vd: proj" /></div>
+        <div class="fld"><label>Tên nhóm quyền</label><input class="inp" placeholder="vd: Dự án &amp; Dịch vụ" /></div>
+      </div>
+      <div class="fld"><label>Mô tả phạm vi</label><input class="inp" placeholder="Nhóm quyền này bao phủ hành động gì" /></div>
+      <div class="fld"><label>Thành phần Quyền con (Sub-permissions)</label>
+        <div class="svcgrid">
+          <span class="chk on"><span class="cb"></span> proj:view</span>
+          <span class="chk on"><span class="cb"></span> proj:create</span>
+          <span class="chk on"><span class="cb"></span> proj:delete</span>
+        </div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovResourceForm')">Hủy</button><button class="btn" onclick="cls('ovResourceForm')">Lưu Nhóm quyền</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- RBAC: Modal Quyền cơ sở -->
+<div class="overlay" id="ovPermissionForm">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo / Sửa Quyền</h2><button class="mclose" onclick="cls('ovPermissionForm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="row2">
+        <div class="fld"><label>Mã định danh</label><input class="inp" placeholder="vd: proj:view" /></div>
+        <div class="fld"><label>Tên hiển thị</label><input class="inp" placeholder="vd: Xem dự án" /></div>
+      </div>
+      <div class="fld"><label>Thuộc nhóm quyền</label>
+        <select class="inp"><option>org</option><option>user</option><option selected>proj</option><option>key</option><option>sys</option></select>
+      </div>
+      <div class="fld"><label>Mô tả</label><input class="inp" placeholder="Quyền này cho phép làm gì" /></div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovPermissionForm')">Hủy</button><button class="btn" onclick="cls('ovPermissionForm')">Lưu Quyền</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- RBAC: Modal Quyền người dùng cụ thể + Effective preview -->
+<div class="overlay" id="ovUserPermissions">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Phân quyền chi tiết &amp; Xem trước quyền — <span style="color:var(--brand)">Admin Hoàng</span></h2><button class="mclose" onclick="cls('ovUserPermissions')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="charts">
+        <div class="card">
+          <h3>Cấu hình override</h3>
+          <div class="sub">Nhóm người dùng gốc: <span class="chip">admin</span></div>
+          <div class="fld"><label>Gán thêm Nhóm quyền riêng</label>
+            <div class="svcgrid">
+              <span class="chk"><span class="cb"></span> Hệ thống (sys)</span>
+              <span class="chk"><span class="cb"></span> API Key (key)</span>
+            </div>
+          </div>
+          <div class="fld" style="margin-top:10px"><label>Gán thêm Quyền lẻ (ghi đè)</label>
+            <div class="svcgrid">
+              <span class="chk on"><span class="cb"></span> rbac:edit</span>
+              <span class="chk"><span class="cb"></span> key:revoke</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>⚡ Tổng hợp quyền thực tế (Effective)</h3>
+          <div class="sub">Quyền gán trực tiếp có độ ưu tiên cao nhất, ghi đè lên Nhóm.</div>
+          <div class="effrow"><span>org:view, org:create, org:suspend</span><span class="src">Nhóm: admin</span></div>
+          <div class="effrow"><span>user:view, user:add, user:lock</span><span class="src">Nhóm: admin</span></div>
+          <div class="effrow"><span>proj:view, proj:create</span><span class="src">Nhóm: admin</span></div>
+          <div class="effrow"><span>key:view</span><span class="src">Nhóm: admin</span></div>
+          <div class="effrow"><span>audit:view</span><span class="src">Nhóm: admin</span></div>
+          <div class="effrow direct"><span>rbac:edit</span><span class="src">🟢 Gán trực tiếp</span></div>
+        </div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovUserPermissions')">Hủy</button><button class="btn" onclick="cls('ovUserPermissions')">Lưu &amp; Áp dụng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL modal — ENDPOINT GROUP -->
+<div class="overlay" id="ovDetail">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Chi tiết sử dụng theo API Key</h2><span class="chip">Vingroup JSC › VinHome Smart City ›
+        Key_Auto_004</span><button class="mclose" onclick="cls('ovDetail')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect"
+        style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;padding:10px 14px;align-items:center">
+        <span>🔑 <b>Key_Auto_004</b></span>
+        <span>Trạng thái: <span class="st act">🟢 Hoạt động</span></span>
+        <span>Tổng: <b>640,220</b> yêu cầu</span>
+        <span>Dịch vụ được cấp: <span class="chip s">Geocoding</span> <span class="chip s">Search</span> <span
+            class="chip s">Directions</span> <span class="chip g" style="cursor:help"
+            title="Còn: Places, Map Tiles, Weather, Administrative Units, Reverse Geocoding, Routing">+6</span></span>
+        <span style="color:var(--ink-faint)">Tạo 04/07/2026</span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="sel"><span class="lbl">Khoảng</span><span class="v">15/07 – 21/07/2026</span><span
+            class="cx">📅</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span
+            class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Tính năng</span><span class="v">Tất cả</span><span
+            class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Method</span><span class="v">Tất cả</span><span
+            class="cx">▾</span></div>
+        <div class="sel" style="min-width:200px"><span class="lbl">🔍</span><span class="v"
+            style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo endpoint…</span></div>
+      </div>
+      <div class="tbl-wrap" style="border-radius:10px">
+        <div class="epscroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Dịch vụ</th>
+                <th>Tính năng</th>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th class="num">Số yêu cầu</th>
+              </tr>
+            </thead>
+            <tbody id="epgroup"></tbody>
+          </table>
+        </div>
+        <div class="tbl-foot">Gộp theo endpoint · sắp theo lượt gọi giảm dần <span
+            style="margin-left:auto;color:var(--ink-faint)">↓ Cuộn để tải thêm</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE/EDIT KEY modal -->
+<div class="overlay" id="ovKey">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2 id="kfTitle">Tạo API Key</h2><button class="mclose" onclick="cls('ovKey')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="row2">
+        <div class="fld"><label>Tổ chức <span style="color:var(--red)">*</span></label>
+          <div class="inp" id="kfOrg" style="color:var(--ink-faint)">🔍 Gõ để tìm tổ chức…</div>
+          <span class="vh">Bắt buộc · autocomplete (~100 tổ chức)</span>
+        </div>
+        <div class="fld"><label>Khách hàng <span style="color:var(--red)">*</span></label>
+          <div class="inp" id="kfCust" style="color:var(--ink-faint)">🔍 Gõ để tìm khách hàng…</div>
+          <span class="vh">Bắt buộc · lọc theo Tổ chức đã chọn (cascade)</span>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Tên định danh <span style="color:var(--red)">*</span></label>
+          <div class="inp" id="kfName" style="color:var(--ink-faint)">VD: Key tra cứu địa chỉ…</div>
+          <span class="vh"><b>3–50 ký tự</b> · chữ/số/<code>_</code>/<code>-</code> · <b>không trùng</b> trong cùng dự án</span>
+        </div>
+        <div class="fld"><label>Dự án <span style="color:var(--red)">*</span></label>
+          <div class="inp" id="kfProj" style="color:var(--ink-faint)">🔍 Gõ để tìm dự án…</div>
+          <span class="vh">Bắt buộc · lọc theo Khách hàng đã chọn (cascade)</span>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Thời gian hiệu lực <span style="color:var(--ink-faint);font-weight:400">(Effective)</span></label>
+          <input type="datetime-local" class="inp" id="kfEff" style="width:100%;cursor:pointer" />
+          <span class="vh">Bỏ trống = kích hoạt <b>ngay</b>. Nếu điền: phải <b>≥ hiện tại</b> và <b>&lt; Ngày hết hạn</b>. Đặt tương lai → <b>⏳ Chưa hiệu lực</b> tới lúc đó rồi tự <b>🟢 Hoạt động</b>.</span>
+        </div>
+        <div class="fld"><label>Hết hạn sau <span style="color:var(--red)">*</span></label>
+          <select class="inp" id="expSel" onchange="expChange()" style="cursor:pointer">
+            <option>30 ngày</option>
+            <option selected>90 ngày</option>
+            <option>6 tháng</option>
+            <option>1 năm</option>
+            <option value="custom">Tùy chỉnh…</option>
+            <option value="never">Không hết hạn</option>
+          </select>
+          <span class="vh">Tính từ <b>Thời gian hiệu lực</b> (không phải Ngày tạo).</span>
+          <div id="expCustom" style="display:none;margin-top:6px">
+            <label style="font-size:11px;color:var(--ink-faint)">Chọn ngày hết hạn</label>
+            <input type="date" class="inp" style="width:100%" />
+            <span class="vh">Phải <b>&gt; Thời gian hiệu lực</b>.</span>
+          </div>
+          <div id="expNever"
+            style="display:none;margin-top:6px;font-size:11.5px;background:var(--amber-soft);border:1px solid var(--amber);border-radius:8px;padding:8px 10px">
+            ⚠️ Key <b>sống mãi</b> tới khi thu hồi/tạo lại thủ công. Kém an toàn — chỉ dùng khi thật sự cần.</div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <h4>🧭 Giới hạn dịch vụ (API restrictions) <span style="color:var(--red)">*</span></h4>
+        <div class="h-sub">Key chỉ gọi được các dịch vụ được chọn — chuẩn Google/Mapbox scopes. <b>Bắt buộc chọn ≥1 dịch vụ</b> khi bật "Giới hạn".</div>
+        <div class="radio"><span class="rc"></span> Tất cả dịch vụ</div>
+        <div class="radio on"><span class="rc"></span> Giới hạn theo dịch vụ</div>
+        <div class="svcgrid">
+          <div class="chk on"><span class="cb"></span> Geocoding API</div>
+          <div class="chk on"><span class="cb"></span> Search API</div>
+          <div class="chk"><span class="cb"></span> Directions API</div>
+          <div class="chk"><span class="cb"></span> Places API</div>
+          <div class="chk"><span class="cb"></span> Map Tiles API</div>
+          <div class="chk"><span class="cb"></span> Weather API</div>
+          <div class="chk"><span class="cb"></span> Administrative Units API</div>
+          <div class="chk"><span class="cb"></span> Reverse Geocoding</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:8px">🛡️ <i>Giới
+          hạn ứng dụng (Domain/IP) — dời sang Phase 2 (chống trộm key).</i></div>
+
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovKey')">Hủy</button><button class="btn" id="kfSubmit"
+          onclick="submitKeyForm()">Tạo key</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- KEY DETAIL modal (Xem chi tiết thông tin key - Read-only đủ field) -->
+<div class="overlay" id="ovKeyDetail">
+  <div class="modal sm" style="width:min(640px,95vw)">
+    <div class="modal-head">
+      <h2>ℹ️ Chi tiết API Key — <span id="kdName">Key_Auto_004</span></h2>
+      <button class="mclose" onclick="cls('ovKeyDetail')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Summary header badge -->
+      <div class="sect" style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;padding:12px 16px;align-items:center">
+        <span>🔑 Tên Key: <b id="kdTitle">Key_Auto_004</b></span>
+        <span>Trạng thái: <span class="st act" id="kdStatus">🟢 Hoạt động</span></span>
+      </div>
+
+      <!-- Section 1: Phân cấp & Tổ chức -->
+      <div class="sect">
+        <h4>🏢 Tổ chức & Phân cấp</h4>
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:8px 12px;font-size:12.5px">
+          <div style="color:var(--ink-faint)">Tổ chức</div>
+          <div style="font-weight:600" id="kdOrg">Tập đoàn Vingroup</div>
+          <div style="color:var(--ink-faint)">Khách hàng</div>
+          <div style="font-weight:600" id="kdCust">Cty VinHome</div>
+          <div style="color:var(--ink-faint)">Dự án</div>
+          <div style="font-weight:600" id="kdProj">VinHome Smart City</div>
+        </div>
+      </div>
+
+      <!-- Section 2: Thời gian & Hiệu lực -->
+      <div class="sect">
+        <h4>📅 Thời gian & Hiệu lực</h4>
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:8px 12px;font-size:12.5px">
+          <div style="color:var(--ink-faint)">Ngày tạo</div>
+          <div style="font-family:var(--mono)" id="kdCreated">04/07/2026 14:30:22</div>
+          <div style="color:var(--ink-faint)">Thời gian hiệu lực</div>
+          <div style="font-family:var(--mono)" id="kdEffective">04/07/2026 00:00</div>
+          <div style="color:var(--ink-faint)">Ngày hết hạn</div>
+          <div style="font-family:var(--mono)" id="kdExpired">31/12/2026 23:59:59 (Còn 156 ngày)</div>
+        </div>
+      </div>
+
+      <!-- Section 3: Tất cả dịch vụ được cấp -->
+      <div class="sect">
+        <h4>🧭 Dịch vụ API được cấp quyền</h4>
+        <div id="kdServices" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+          <span class="chip s">Geocoding API</span>
+          <span class="chip s">Reverse Geocoding API</span>
+          <span class="chip s">Search API</span>
+          <span class="chip s">Directions API</span>
+          <span class="chip s">Map Tiles API</span>
+        </div>
+        <div style="font-size:11.5px;color:var(--ink-faint);margin-top:8px">Tất cả các dịch vụ API thuộc key này được phép sử dụng.</div>
+      </div>
+
+      <div class="mfoot">
+        <button class="btn ghost" onclick="cls('ovKeyDetail')">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KEY CREATED (copy mã 1 lần) -->
+<div class="overlay" id="ovKeyCreated">
+  <div class="modal sm" style="width:min(520px,95vw)">
+    <div class="modal-head">
+      <h2>✅ Đã tạo API Key</h2><button class="mclose" onclick="cls('ovKeyCreated')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--amber-soft);border-color:var(--amber)">
+        <div style="font-size:12.5px;line-height:1.5">⚠️ <b>Đây là lần DUY NHẤT mã đầy đủ được hiển thị.</b> Hãy copy
+          &amp; lưu an toàn ngay — đóng lại sẽ không xem được mã nữa (chỉ có thể Tạo lại mã).</div>
+      </div>
+      <div class="keydisp" style="font-size:14px">gtel_prod_K7m2Qp9Xr4Lb8Nv6Zt3Wy1<span style="margin-left:auto"
+          class="icoact">⧉ Copy</span></div>
+      <div style="font-size:12px;color:var(--ink-soft)">Key <b>Key_New_012</b> · Dự án VinHome Smart City · Dịch vụ:
+        Geocoding, Search · Hết hạn sau 90 ngày</div>
+      <div class="mfoot"><button class="btn" onclick="cls('ovKeyCreated')">Đã copy · Xong</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL KEY modal (Xem chi tiết thông tin key — read-only, đủ trường như form Tạo) -->
+<div class="overlay" id="ovKeyDetail">
+  <div class="modal sm" style="width:min(640px,95vw)">
+    <div class="modal-head">
+      <h2>ℹ️ Chi tiết API Key — <span id="kdTitle" style="color:var(--brand)">—</span></h2>
+      <button class="mclose" onclick="cls('ovKeyDetail')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--panel-2);padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="font-size:12.5px;color:var(--ink-faint)">Trạng thái hiện tại:</span>
+        <span id="kdStatus"></span>
+        <span style="margin-left:auto;font-size:11.5px;color:var(--ink-faint)">Chế độ chỉ xem (read-only) · không hiển thị mã bí mật</span>
+      </div>
+
+      <div class="sect">
+        <h4 style="margin-bottom:10px">👤 Chủ sở hữu</h4>
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:8px 12px;font-size:13px">
+          <div style="color:var(--ink-faint)">Tổ chức</div><div id="kdOrg">—</div>
+          <div style="color:var(--ink-faint)">Khách hàng</div><div id="kdCustomer">—</div>
+          <div style="color:var(--ink-faint)">Dự án</div><div id="kdProject">—</div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <h4 style="margin-bottom:10px">🔑 Thông tin key</h4>
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:8px 12px;font-size:13px">
+          <div style="color:var(--ink-faint)">Tên định danh</div><div id="kdName" style="font-weight:600">—</div>
+          <div style="color:var(--ink-faint)">Mã key</div>
+          <div style="font-family:var(--mono);font-size:12px;color:var(--ink-soft)">gtel_prod_••••••••••••<span style="margin-left:8px;color:var(--ink-faint);font-family:'Segoe UI',system-ui;font-size:11px">(bấm 👁 ở danh sách để xem mã đầy đủ)</span></div>
+          <div style="color:var(--ink-faint)">Dịch vụ được cấp</div><div id="kdServices">—</div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <h4 style="margin-bottom:10px">⏰ Thời gian</h4>
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:8px 12px;font-size:13px;font-family:var(--mono)">
+          <div style="color:var(--ink-faint);font-family:'Segoe UI',system-ui">Ngày tạo</div><div id="kdCreated">—</div>
+          <div style="color:var(--ink-faint);font-family:'Segoe UI',system-ui">Thời gian hiệu lực</div><div id="kdEffective">—</div>
+          <div style="color:var(--ink-faint);font-family:'Segoe UI',system-ui">Ngày hết hạn</div><div id="kdExpiry">—</div>
+          <div id="kdRevokedRow" style="display:none;color:var(--red);font-family:'Segoe UI',system-ui">Ngày thu hồi</div><div id="kdRevoked" style="display:none;color:var(--red)">—</div>
+        </div>
+      </div>
+
+      <div class="mfoot">
+        <button class="btn ghost" onclick="cls('ovKeyDetail')">Đóng</button>
+        <button class="btn" id="kdEditBtn" style="display:none">✏️ Sửa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RE-AUTH modal (Xem key) -->
+<div class="overlay" id="ovReauth">
+  <div class="modal sm" style="width:min(440px,95vw)">
+    <div class="modal-head">
+      <h2>🔐 Xác thực để xem API Key</h2><button class="mclose" onclick="cls('ovReauth')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0;font-size:13px;color:var(--ink-soft)">Vì lý do bảo mật, nhập lại <b>mật khẩu đăng nhập</b> để
+        xem mã key đầy đủ. Key sẽ hiện <b>30 giây</b> rồi tự ẩn.</p>
+      <div class="fld"><label>Mật khẩu</label>
+        <div class="inp">••••••••••</div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovReauth')">Hủy</button><button class="btn"
+          onclick="openReveal()">Xác nhận &amp; Xem key</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- REVEAL key (sau khi xác thực) -->
+<div class="overlay" id="ovReveal">
+  <div class="modal sm" style="width:min(480px,95vw)">
+    <div class="modal-head">
+      <h2>🔑 Mã API Key — Key_Auto_004</h2><button class="mclose" onclick="cls('ovReveal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="keydisp">gtel_prod_a1B2c3D4e5F6g7H8<span style="margin-left:auto" class="icoact">⧉ Copy</span></div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--amber)"><span>⏱</span> Mã tự ẩn sau
+        <b id="revealCount">30</b> giây. Không chia sẻ mã này cho ai.</div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovReveal')">Ẩn ngay</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOCK (khóa key) -->
+<div class="overlay" id="ovLock">
+  <div class="modal sm" style="width:min(440px,95vw)">
+    <div class="modal-head">
+      <h2>🔒 Khóa API Key</h2><button class="mclose" onclick="cls('ovLock')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0;font-size:13px;color:var(--ink-soft)">Key <b>Key_Auto_004</b> sẽ chuyển sang <b>Tạm khóa
+          (Suspended)</b> — mọi request bằng key này bị từ chối (403). Bạn có thể <b>mở khóa</b> lại bất cứ lúc nào; cấu
+        hình và mã key được giữ nguyên.</p>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovLock')">Hủy</button><button class="btn"
+          style="background:var(--amber);border-color:var(--amber)" onclick="cls('ovLock')">Khóa key</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- REVOKE (thu hồi vĩnh viễn) -->
+<div class="overlay" id="ovRevoke">
+  <div class="modal sm" style="width:min(480px,95vw)">
+    <div class="modal-head">
+      <h2>🚫 Thu hồi API Key</h2><button class="mclose" onclick="cls('ovRevoke')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--red-soft);border-color:var(--red)">
+        <div style="font-size:12.5px;line-height:1.5">⚠️ <b>Thu hồi là VĨNH VIỄN — không thể khôi phục.</b><br>Key
+          <b>Key_Auto_004</b> sẽ ngừng hoạt động ngay; mọi ứng dụng dùng key này sẽ lỗi. Bản ghi vẫn được giữ để tra cứu
+          lịch sử.</div>
+      </div>
+      <div class="fld"><label>Nhập <b>Key_Auto_004</b> để xác nhận</label>
+        <div class="inp" style="color:var(--ink-faint)">gõ tên key…</div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovRevoke')">Hủy</button><button class="btn"
+          style="background:var(--red);border-color:var(--red)" onclick="cls('ovRevoke')">Thu hồi vĩnh viễn</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNLOCK (mở khóa key) -->
+<div class="overlay" id="ovUnlock">
+  <div class="modal sm" style="width:min(440px,95vw)">
+    <div class="modal-head">
+      <h2>🔓 Mở khóa API Key</h2><button class="mclose" onclick="cls('ovUnlock')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--green-soft);border-color:var(--green)">
+        <div style="font-size:12.5px">Key <b>Zalo_Map_Dev</b> sẽ chuyển từ <b>🟡 Tạm khóa</b> về <b>🟢 Hoạt động</b> —
+          các request bằng key này được chấp nhận trở lại.</div>
+      </div>
+      <p style="margin:0;font-size:12px;color:var(--ink-faint)">Cấu hình và mã key giữ nguyên — không cần cập nhật lại
+        ứng dụng.</p>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovUnlock')">Hủy</button><button class="btn"
+          style="background:var(--green);border-color:var(--green)" onclick="cls('ovUnlock')">Mở khóa</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY / detail (read-only — cho key đã thu hồi) -->
+<div class="overlay" id="ovHistory">
+  <div class="modal sm" style="width:min(560px,95vw)">
+    <div class="modal-head">
+      <h2>Chi tiết API Key — An_Giang_Prod</h2><button class="mclose" onclick="cls('ovHistory')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--red-soft);border-color:var(--red)">
+        <div style="font-size:12.5px">🔴 <b>Đã thu hồi</b> — key không còn hoạt động. Chế độ chỉ xem (không thao tác,
+          không hiển thị mã bí mật).</div>
+      </div>
+      <div class="sect">
+        <h4>Thông tin</h4>
+        <div style="display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:12.5px">
+          <div style="color:var(--ink-faint)">Dự án</div>
+          <div>An Giang GIS</div>
+          <div style="color:var(--ink-faint)">Dịch vụ</div>
+          <div>Geocoding, Administrative Units</div>
+          <div style="color:var(--ink-faint)">Môi trường</div>
+          <div>Production</div>
+          <div style="color:var(--ink-faint)">Ngày tạo</div>
+          <div>12/05/2026</div>
+          <div style="color:var(--ink-faint)">Ngày thu hồi</div>
+          <div>20/07/2026</div>
+        </div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovHistory')">Đóng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- REGENERATE modal -->
+<div class="overlay" id="ovRotate">
+  <div class="modal sm" style="width:min(500px,95vw)">
+    <div class="modal-head">
+      <h2>🔄 Tạo lại mã API Key</h2><button class="mclose" onclick="cls('ovRotate')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="rotateConfirm">
+        <div class="sect" style="background:var(--amber-soft);border-color:var(--amber)">
+          <div style="font-size:12.5px;line-height:1.5">⚠️ <b>Mã cũ sẽ ngừng hoạt động NGAY</b> sau khi xác nhận. Hãy
+            sẵn sàng cập nhật mã mới vào ứng dụng.<br>Cấu hình key (tên, dịch vụ, giới hạn) <b>giữ nguyên</b> — chỉ đổi
+            chuỗi bí mật.</div>
+        </div>
+        <div class="mfoot"><button class="btn ghost" onclick="cls('ovRotate');resetRotate()">Hủy</button><button
+            class="btn" onclick="rotateDone()">Xác nhận tạo lại</button></div>
+      </div>
+      <div id="rotateDone" style="display:none">
+        <div class="sect" style="background:var(--green-soft);border-color:var(--green)">
+          <div style="font-size:12.5px">✅ <b>Đã tạo mã mới.</b> Mã cũ đã vô hiệu ngay.</div>
+        </div>
+        <div class="keydisp">gtel_prod_z9Y8x7W6v5U4t3S2<span style="margin-left:auto" class="icoact">⧉ Copy</span></div>
+        <span style="font-size:11px;color:var(--ink-faint)">⚠️ Mã đầy đủ chỉ hiện <b>1 lần</b> — copy ngay, đóng lại sẽ
+          không xem được nữa.</span>
+        <div class="mfoot"><button class="btn" onclick="cls('ovRotate');resetRotate()">Đã copy · Xong</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE/EDIT ORG modal -->
+<div class="overlay" id="ovOrg">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo / Sửa Tổ chức</h2><button class="mclose" onclick="cls('ovOrg')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fld"><label>Tên tổ chức <span style="color:var(--red)">*</span></label>
+        <input class="inp" placeholder="VD: Tập đoàn Vingroup" />
+        <span class="vh">2–150 ký tự</span>
+      </div>
+      <div class="fld locked"><label>Mã tổ chức</label>
+        <div class="inp">vingroup</div>
+        <span class="vh">Auto-generate (slug từ tên) · <b>không sửa được</b></span>
+      </div>
+      <div class="sect">
+        <h4>Trạng thái</h4>
+        <div class="radio on"><span class="rc"></span> 🟢 Active</div>
+        <div class="radio"><span class="rc"></span> 🟡 Suspended</div>
+      </div>
+      <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:8px">Ngày tạo &amp; Tạo bởi được hệ thống tự ghi nhận, không chỉnh sửa tại đây.</div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovOrg')">Hủy</button><button class="btn" onclick="cls('ovOrg')">Lưu Tổ chức</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE/EDIT CUSTOMER modal -->
+<div class="overlay" id="ovCustomer">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo / Sửa Khách hàng <span style="font-size:11px;font-weight:400;color:var(--ink-faint)">(Admin override)</span></h2><button class="mclose" onclick="cls('ovCustomer')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fld"><label>Tên Khách hàng <span style="color:var(--red)">*</span></label>
+        <input class="inp" placeholder="VD: Cty VinHome" />
+        <span class="vh">2–150 ký tự</span>
+      </div>
+      <div class="fld"><label>Tổ chức cha <span style="color:var(--red)">*</span></label>
+        <div class="inp" style="color:var(--ink-faint)">🔍 Gõ để tìm tổ chức…</div>
+        <span class="vh">Bất biến sau khi tạo (BR-05 US-CON-06)</span>
+      </div>
+      <div class="sect">
+        <h4>Trạng thái</h4>
+        <div class="h-sub">Suspend chỉ thực hiện từ phía Admin (override) — luồng chuẩn là Console (Org Admin) tự CRUD</div>
+        <div class="radio on"><span class="rc"></span> 🟢 Active</div>
+        <div class="radio"><span class="rc"></span> 🟡 Suspended</div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovCustomer')">Hủy</button><button class="btn" onclick="cls('ovCustomer')">Lưu Khách hàng</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE USER modal (Admin nội bộ / Console) -->
+<div class="overlay" id="ovUserCreate">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>＋ Tạo tài khoản mới</h2><button class="mclose" onclick="cls('ovUserCreate')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="row2">
+        <div class="fld"><label>Họ tên <span style="color:var(--red)">*</span></label>
+          <input class="inp" placeholder="VD: Nguyễn Văn A" />
+        </div>
+        <div class="fld"><label>Email <span style="color:var(--red)">*</span></label>
+          <input class="inp" placeholder="ten@congty.vn" />
+          <span class="vh">Global-unique — trùng email sẽ được gợi ý chuyển sang "Cấp thêm quyền"</span>
+        </div>
+      </div>
+
+      <div class="sect">
+        <h4>Loại tài khoản <span style="color:var(--red)">*</span></h4>
+        <div class="h-sub">Chỉ chọn 1 trong 2 khi tạo mới — Map Viewer không tạo ở màn này</div>
+        <div id="acctTypeInternal" class="radio on" onclick="selectAcctType('internal')"><span class="rc"></span> Admin nội bộ</div>
+        <div id="acctTypeConsole" class="radio" onclick="selectAcctType('console')"><span class="rc"></span> Console</div>
+      </div>
+
+      <div class="sect" id="acctSectionInternal">
+        <h4>🧑‍💼 Nhóm quyền RBAC</h4>
+        <div class="h-sub">Áp dụng khi Loại tài khoản = Admin nội bộ</div>
+        <select class="inp">
+          <option>root</option>
+          <option selected>admin</option>
+          <option>res_man</option>
+          <option>developer</option>
+          <option>auditor</option>
+        </select>
+      </div>
+
+      <div class="sect" id="acctSectionConsole" style="display:none">
+        <h4>🏢 Tổ chức + Vai trò cơ bản</h4>
+        <div class="h-sub">Áp dụng khi Loại tài khoản = Console</div>
+        <div class="fld"><label>Tổ chức <span style="color:var(--red)">*</span></label>
+          <div class="inp" style="color:var(--ink-faint)">🔍 Tạo Tổ chức mới hoặc chọn Tổ chức có sẵn…</div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="radio on"><span class="rc"></span> Org Admin</div>
+          <div class="radio"><span class="rc"></span> Member</div>
+        </div>
+      </div>
+
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovUserCreate')">Hủy</button><button class="btn" onclick="cls('ovUserCreate')">Tạo tài khoản</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- GRANT ADDITIONAL ACCESS modal -->
+<div class="overlay" id="ovGrantAccess">
+  <div class="modal sm" style="width:min(560px,95vw)">
+    <div class="modal-head">
+      <h2>＋ Cấp thêm quyền cho tài khoản có sẵn</h2><button class="mclose" onclick="cls('ovGrantAccess')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--panel-2)">
+        <div style="font-size:12.5px;line-height:1.5">ℹ️ Dùng khi 1 email <b>đã tồn tại</b> trong hệ thống (vd đã có tài khoản Map Viewer tự đăng ký) cần thêm quyền Console/Admin nội bộ. Hành động này <b>không tạo bản ghi Người dùng mới</b> — chỉ cộng thêm access vào đúng danh tính đã có.</div>
+      </div>
+      <div class="fld"><label>Email tài khoản có sẵn <span style="color:var(--red)">*</span></label>
+        <div class="inp" style="color:var(--ink-faint)">🔍 Gõ để tìm email đã tồn tại…</div>
+        <span class="vh">Hệ thống kiểm tra tồn tại real-time trước khi cho chọn loại quyền</span>
+      </div>
+      <div class="sect">
+        <h4>Loại quyền thêm</h4>
+        <div id="grantTypeInternal" class="radio on" onclick="selectGrantType('internal')"><span class="rc"></span> Thêm quyền Admin nội bộ</div>
+        <div id="grantTypeConsole" class="radio" onclick="selectGrantType('console')"><span class="rc"></span> Thêm quyền Console</div>
+      </div>
+      <div id="grantSectionInternal">
+        <div class="fld"><label>Nhóm quyền RBAC</label>
+          <select class="inp"><option>root</option><option selected>admin</option><option>res_man</option><option>developer</option><option>auditor</option></select>
+        </div>
+      </div>
+      <div id="grantSectionConsole" style="display:none">
+        <div class="row2">
+          <div class="fld"><label>Tổ chức</label>
+            <div class="inp" style="color:var(--ink-faint)">🔍 Gõ để tìm tổ chức…</div>
+          </div>
+          <div class="fld"><label>Vai trò cơ bản</label>
+            <select class="inp"><option>Org Admin</option><option selected>Member</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovGrantAccess')">Hủy</button><button class="btn" onclick="cls('ovGrantAccess')">Cấp quyền</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- TẠO HỘ MAP VIEWER modal -->
+<div class="overlay" id="ovViewerCreate">
+  <div class="modal sm" style="width:min(440px,95vw)">
+    <div class="modal-head">
+      <h2>＋ Tạo hộ tài khoản Map Viewer</h2><button class="mclose" onclick="cls('ovViewerCreate')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0;font-size:12.5px;color:var(--ink-soft)">Luồng đơn giản — chỉ 2 field, không qua các bước kích hoạt nhiều bước như tài khoản Console.</p>
+      <div class="fld"><label>Họ tên</label>
+        <input class="inp" placeholder="VD: Đỗ Thu Hà (có thể để trống)" />
+      </div>
+      <div class="fld"><label>Email <span style="color:var(--red)">*</span></label>
+        <input class="inp" placeholder="ten@email.com" />
+        <span class="vh">Kiểm tra trùng toàn hệ thống — trùng với Console/Admin sẽ bị chặn và hướng dẫn sang US-07</span>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovViewerCreate')">Hủy</button><button class="btn" onclick="cls('ovViewerCreate')">Tạo hộ</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE/EDIT PROJECT modal -->
+<div class="overlay" id="ovProject">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo / Sửa Dự án <span style="font-size:11px;font-weight:400;color:var(--ink-faint)">(Admin override)</span></h2><button class="mclose" onclick="cls('ovProject')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fld"><label>Tên dự án <span style="color:var(--red)">*</span></label>
+        <input class="inp" placeholder="VD: VinHome Smart City" />
+      </div>
+      <div class="fld locked"><label>Mã dự án</label>
+        <div class="inp">vinhome-smart-city</div>
+        <span class="vh">Bất biến sau khi tạo — khoá sửa</span>
+      </div>
+      <div class="fld"><label>Khách hàng cha <span style="color:var(--ink-faint);font-weight:400">(tuỳ chọn)</span></label>
+        <div class="inp" style="color:var(--ink-faint)">🔍 Gõ để tìm khách hàng…</div>
+        <span class="vh">Để trống = Dự án thuộc thẳng Tổ chức (không dùng tầng Khách hàng)</span>
+      </div>
+      <div class="sect">
+        <h4>Trạng thái</h4>
+        <div class="radio on"><span class="rc"></span> 🟢 Active</div>
+        <div class="radio"><span class="rc"></span> ⚪ Inactive</div>
+      </div>
+      <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:8px">🗑️ Nút Xoá bị khoá/tooltip cảnh báo nếu Dự án còn API Key đang <b>hoạt động</b> — phải thu hồi/khoá hết Key trước.</div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovProject')">Hủy</button><button class="btn" onclick="cls('ovProject')">Lưu Dự án</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE/EDIT SERVICE modal -->
+<div class="overlay" id="ovService">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>Tạo / Sửa Dịch vụ (API Product)</h2><button class="mclose" onclick="cls('ovService')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="row2">
+        <div class="fld"><label>Tên Dịch vụ <span style="color:var(--red)">*</span></label>
+          <input class="inp" placeholder="VD: Geocoding API" />
+        </div>
+        <div class="fld"><label>Mã/Namespace <span style="color:var(--red)">*</span></label>
+          <input class="inp" placeholder="VD: geocoding" />
+          <span class="vh">unique, lowercase · dùng làm <code>{api-product}</code> trong URL path</span>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Version hiện tại</label>
+          <input class="inp" value="v1" />
+        </div>
+        <div class="fld"><label>Trạng thái</label>
+          <select class="inp"><option>Active</option><option>Deprecated</option></select>
+        </div>
+      </div>
+      <div class="fld"><label>Mô tả</label>
+        <input class="inp" placeholder="Mô tả ngắn mục đích Dịch vụ" />
+      </div>
+      <div style="font-size:11px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:8px">➕ Thêm/sửa Feature con thực hiện trong context Dịch vụ này (chưa demo modal riêng ở mockup — xem icon ➕/✏️ ở từng dòng Feature trong bảng).</div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovService')">Hủy</button><button class="btn" onclick="cls('ovService')">Lưu Dịch vụ</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var keyDataMap = {
+    'Key_Auto_004': {
+      name: 'Key_Auto_004',
+      org: 'Tập đoàn Vingroup',
+      cust: 'Cty VinHome',
+      proj: 'VinHome Smart City',
+      status: '🟢 Hoạt động',
+      stClass: 'st act',
+      maskKey: 'gtel_prod_a1B2c3D4e5F6g7H8...',
+      created: '04/07/2026 14:30:22',
+      effective: '04/07/2026 00:00',
+      expired: '31/12/2026 23:59:59 (Còn 156 ngày)',
+      svcs: ['Geocoding API', 'Reverse Geocoding API', 'Search API', 'Directions API', 'Map Tiles API']
+    },
+    'Key_Auto_005': {
+      name: 'Key_Auto_005',
+      org: 'Tập đoàn Vingroup',
+      cust: 'Cty VinHome',
+      proj: 'VinHome Smart City',
+      status: '⏳ Chưa hiệu lực',
+      stClass: 'st pending',
+      maskKey: 'gtel_prod_k5L6m7N8p9Q0r1S2...',
+      created: '05/07/2026 09:15:10',
+      effective: '01/08/2026 09:00 (Hẹn giờ kích hoạt)',
+      expired: 'Không hết hạn (Vĩnh viễn)',
+      svcs: ['Geocoding API', 'Reverse Geocoding API', 'Search API', 'Directions API', 'Map Tiles API', 'Distance Matrix API', 'Weather API', 'Batch Geocode API', 'Admin Units API (Tất cả 9 dịch vụ)']
+    },
+    'Zalo_Map_Dev': {
+      name: 'Zalo_Map_Dev',
+      org: 'VNG Corporation',
+      cust: 'Zalo',
+      proj: 'Zalo Maps',
+      status: '🟡 Tạm khóa',
+      stClass: 'st susp',
+      maskKey: 'gtel_test_z9Y8x7W6v5U4t3S2...',
+      created: '01/06/2026 10:00:00',
+      effective: '01/06/2026 00:00',
+      expired: '30/09/2026 (Còn 64 ngày)',
+      svcs: ['Map Tiles API', 'Directions API', 'Distance Matrix API']
+    },
+    'An_Giang_Prod': {
+      name: 'An_Giang_Prod',
+      org: 'UBND tỉnh An Giang',
+      cust: 'Sở TN&MT An Giang',
+      proj: 'An Giang GIS',
+      status: '🔴 Đã thu hồi',
+      stClass: 'st rev',
+      maskKey: 'gtel_prod_****************...',
+      created: '12/05/2026 10:20:00',
+      effective: '12/05/2026 10:00',
+      expired: 'Đã thu hồi vĩnh viễn ngày 20/07/2026',
+      svcs: ['Geocoding API', 'Admin Units API (Lookup)']
+    }
+  };
+
+  function openKeyDetail(keyName) {
+    try {
+      var d = (keyName && keyDataMap && keyDataMap[keyName]) ? keyDataMap[keyName] : keyDataMap['Key_Auto_004'];
+      if(document.getElementById('kdName')) document.getElementById('kdName').textContent = d.name;
+      if(document.getElementById('kdTitle')) document.getElementById('kdTitle').textContent = d.name;
+      if(document.getElementById('kdMaskKey')) document.getElementById('kdMaskKey').textContent = d.maskKey;
+      if(document.getElementById('kdOrg')) document.getElementById('kdOrg').textContent = d.org;
+      if(document.getElementById('kdCust')) document.getElementById('kdCust').textContent = d.cust;
+      if(document.getElementById('kdProj')) document.getElementById('kdProj').textContent = d.proj;
+      
+      var stEl = document.getElementById('kdStatus');
+      if(stEl) {
+        stEl.textContent = d.status;
+        stEl.className = d.stClass;
+      }
+      
+      if(document.getElementById('kdCreated')) document.getElementById('kdCreated').textContent = d.created;
+      if(document.getElementById('kdEffective')) document.getElementById('kdEffective').textContent = d.effective;
+      if(document.getElementById('kdExpired')) document.getElementById('kdExpired').textContent = d.expired;
+      
+      if(document.getElementById('kdServices')) {
+        var svcsHtml = d.svcs.map(function(s){ return '<span class="chip s" style="font-size:12px;padding:3px 9px;margin:2px 0">' + s + '</span>'; }).join(' ');
+        document.getElementById('kdServices').innerHTML = svcsHtml;
+      }
+    } catch(err) {
+      console.error('Error opening key detail:', err);
+    }
+    var modal = document.getElementById('ovKeyDetail');
+    if(modal) {
+      modal.classList.add('show');
+    }
+  }
+  // ===== 11 additional admin screens (added) =====
+  var PAGE_TITLES = {
+    crud: 'Quản lý API Key',
+    stats: 'Thống kê sử dụng API Key',
+    dashboard: 'Dashboard Analytics',
+    profile: 'Hồ sơ của tôi',
+    orgs: 'Quản lý Tổ chức',
+    customers: 'Quản lý Khách hàng',
+    users: 'Quản lý Người dùng',
+    'viewer-users': 'Người dùng Map Viewer',
+    projects: 'Quản lý Dự án',
+    services: 'Quản lý Dịch vụ',
+    rbac: 'Phân quyền (RBAC)',
+    config: 'Cấu hình hệ thống',
+    audit: 'Audit History'
+  };
+  function show(v) {
+    document.querySelectorAll('.view').forEach(function (e) { e.classList.remove('on'); });
+    var vw = document.getElementById('view-' + v);
+    if (vw) vw.classList.add('on');
+    document.querySelectorAll('.nav[id^="nav-"]').forEach(function (n) {
+      n.classList.toggle('active', n.id === 'nav-' + v);
+    });
+    var tc = document.getElementById('tab-crud'), ts = document.getElementById('tab-stats');
+    if (tc) tc.classList.toggle('on', v === 'crud');
+    if (ts) ts.classList.toggle('on', v === 'stats');
+    var pt = document.getElementById('ptitle');
+    if (pt) pt.textContent = PAGE_TITLES[v] || v;
+  }
+  function openModal(id) { var m = document.getElementById(id); if (m) m.classList.add('show'); }
+  function selectAcctType(type) {
+    var i = document.getElementById('acctTypeInternal'), c = document.getElementById('acctTypeConsole');
+    var si = document.getElementById('acctSectionInternal'), sc = document.getElementById('acctSectionConsole');
+    if (i) i.classList.toggle('on', type === 'internal');
+    if (c) c.classList.toggle('on', type === 'console');
+    if (si) si.style.display = type === 'internal' ? 'block' : 'none';
+    if (sc) sc.style.display = type === 'console' ? 'block' : 'none';
+  }
+  function selectGrantType(type) {
+    var i = document.getElementById('grantTypeInternal'), c = document.getElementById('grantTypeConsole');
+    var si = document.getElementById('grantSectionInternal'), sc = document.getElementById('grantSectionConsole');
+    if (i) i.classList.toggle('on', type === 'internal');
+    if (c) c.classList.toggle('on', type === 'console');
+    if (si) si.style.display = type === 'internal' ? 'block' : 'none';
+    if (sc) sc.style.display = type === 'console' ? 'block' : 'none';
+  }
+  function tg(id) { var el = document.getElementById(id); el.classList.toggle('open'); var e = el.querySelector('.exp'); if (e) e.textContent = e.textContent === '▶' ? '▼' : '▶'; }
+  function openDetail() { document.getElementById('ovDetail').classList.add('show'); }
+  // Multi-select filter
+  function toggleMsel(id, e) {
+    if (e) e.stopPropagation();
+    var el = document.getElementById(id);
+    document.querySelectorAll('.msel.open').forEach(function (m) { if (m !== el) m.classList.remove('open'); });
+    el.classList.toggle('open');
+  }
+  function updateMsel(id) {
+    var el = document.getElementById(id);
+    var boxes = el.querySelectorAll('input[type="checkbox"]');
+    var checked = Array.prototype.filter.call(boxes, function (b) { return b.checked; });
+    var total = boxes.length;
+    var v = document.getElementById(id + 'V');
+    if (checked.length === 0) { v.innerHTML = 'Tất cả'; v.className = 'v'; }
+    else if (checked.length === total) { v.innerHTML = 'Tất cả (' + total + ')'; v.className = 'v'; }
+    else if (checked.length === 1) { v.textContent = checked[0].value; v.className = 'v'; }
+    else { v.innerHTML = checked[0].value + ' <span class="badge-count">+' + (checked.length - 1) + '</span>'; v.className = 'v multi'; }
+  }
+  function mselAll(id, on) {
+    document.getElementById(id).querySelectorAll('input[type="checkbox"]').forEach(function (b) { b.checked = on; });
+    updateMsel(id);
+  }
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.msel')) document.querySelectorAll('.msel.open').forEach(function (m) { m.classList.remove('open'); });
+  });
+
+  // Audit History — lọc theo Phân hệ
+  function filterAuditModule(mod) {
+    var rows = document.querySelectorAll('#auditTbody tr');
+    var shown = 0;
+    rows.forEach(function (r) {
+      var ok = (mod === 'all' || r.getAttribute('data-module') === mod);
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    var c = document.getElementById('auditCount');
+    if (c) c.textContent = shown ? ('1–' + shown) : '0';
+  }
+
+  var AUDIT_DIFF = {
+    'config-2fa': { title: 'Đổi cấu hình hệ thống — Chính sách 2FA', old: 'twoFactorPolicy: "disabled"', new: 'twoFactorPolicy: "optional"' },
+    'rbac-matrix': { title: 'Cập nhật Ma trận phân quyền — Nhóm res_man', old: 'key:revoke: false', new: 'key:revoke: true' },
+    'apikey-create': { title: 'Tạo API Key Key_Auto_006', note: 'Key mới tạo cho Dự án VinHome Smart City, phạm vi: Geocoding API, Search API.' },
+    'apikey-revoke': { title: 'Thu hồi API Key An_Giang_Prod', note: 'Lý do: phát hiện key bị lộ trong repo public GitHub của bên thứ 3 — thu hồi khẩn theo quy trình bảo mật.' },
+    'proj-del': { title: 'Xoá dự án "Demo Test"', note: 'Lý do: dự án demo nội bộ hết hạn dùng thử, không còn API Key nào tham chiếu.' },
+    'org-create': { title: 'Tạo tổ chức "FPT Software"', note: 'Khởi tạo hồ sơ tổ chức mới theo yêu cầu onboard khách hàng.' },
+    'org-suspend': { title: 'Suspend tổ chức "Bamboo Airways"', note: 'Lý do: quá hạn thanh toán hợp đồng dịch vụ Map API 30 ngày.' },
+    'svc-add': { title: 'Thêm Feature Batch Geocoding (Geocoding API)', note: 'Bổ sung tính năng xử lý hàng loạt vào danh mục dịch vụ Geocoding API.' },
+    'users-lock': { title: 'Khoá tài khoản dev03@vnpay.vn', note: 'Lý do: 5 lần đăng nhập sai liên tiếp — hệ thống tự khoá theo chính sách bảo mật.' }
+  };
+  function openAuditDiff(key) {
+    var d = AUDIT_DIFF[key]; if (!d) return;
+    document.getElementById('auditDiffTitle').textContent = d.title;
+    var body = document.getElementById('auditDiffBody');
+    if (d.old !== undefined) {
+      body.innerHTML = '<div class="diffgrid">' +
+        '<div class="diffbox"><div class="dl">Trước thay đổi</div><span class="old">' + d.old + '</span></div>' +
+        '<div class="diffbox"><div class="dl">Sau thay đổi</div><span class="new">' + d.new + '</span></div>' +
+        '</div>';
+    } else {
+      body.innerHTML = '<div class="note" style="text-align:left;padding:0">' + d.note + '</div>';
+    }
+    document.getElementById('ovAuditDiff').classList.add('show');
+  }
+
+  // RBAC — chuyển sub-tab
+  function showRbacTab(id, el) {
+    var container = el.closest('#view-rbac');
+    container.querySelectorAll('.subview').forEach(function (v) { v.classList.remove('on'); });
+    container.querySelectorAll('.subtabs span').forEach(function (s) { s.classList.remove('on'); });
+    document.getElementById('rbtab-' + id).classList.add('on');
+    el.classList.add('on');
+  }
+
+  // RBAC — Ma trận đặc quyền: click [*] gán/bỏ cả nhóm, hoặc click quyền con lẻ
+  function rbCellClick(el) {
+    if (el.dataset.wild) {
+      var turningOn = !el.classList.contains('on');
+      el.classList.toggle('on');
+      var children = document.querySelectorAll('.chk[data-group="' + el.dataset.wild + '"]');
+      children.forEach(function (c) {
+        if (turningOn) { c.classList.add('on'); c.classList.add('inherited'); }
+        else { c.classList.remove('inherited'); }
+      });
+    } else {
+      if (el.classList.contains('inherited')) return;
+      el.classList.toggle('on');
+    }
+  }
+
+  var KF_MODE = 'create', KF_EDITING = null;
+  function openKey() { resetKeyForm(); document.getElementById('ovKey').classList.add('show'); }
+  function openEdit(name) {
+    var d = KEY_DATA[name]; if (!d) return;
+    if (!d.canEdit) { alert('Chỉ key ở trạng thái ⏳ Chưa hiệu lực mới được sửa cấu hình.\nKey đang chạy → dùng nút 🔒 Khóa để tạm dừng.'); return; }
+    KF_MODE = 'edit'; KF_EDITING = name;
+    document.getElementById('kfTitle').innerHTML = '✏️ Sửa API Key — <span style="color:var(--brand)">' + name + '</span>';
+    document.getElementById('kfSubmit').textContent = 'Lưu thay đổi';
+    // Prefill + LOCK owner fields (BR: không đổi chủ sở hữu)
+    ['kfOrg','kfCust','kfProj'].forEach(function(id){
+      var el = document.getElementById(id); if (!el) return;
+      el.parentElement.classList.add('locked');
+    });
+    document.getElementById('kfOrg').textContent = d.org;
+    document.getElementById('kfCust').textContent = d.customer;
+    document.getElementById('kfProj').textContent = d.project;
+    document.getElementById('kfName').textContent = name;
+    document.getElementById('ovKeyDetail') && cls('ovKeyDetail');
+    document.getElementById('ovKey').classList.add('show');
+  }
+  function resetKeyForm() {
+    KF_MODE = 'create'; KF_EDITING = null;
+    document.getElementById('kfTitle').textContent = 'Tạo API Key';
+    document.getElementById('kfSubmit').textContent = 'Tạo key';
+    ['kfOrg','kfCust','kfProj'].forEach(function(id){
+      var el = document.getElementById(id); if (!el) return;
+      el.parentElement.classList.remove('locked');
+    });
+    document.getElementById('kfOrg').textContent = '🔍 Gõ để tìm tổ chức…';
+    document.getElementById('kfCust').textContent = '🔍 Gõ để tìm khách hàng…';
+    document.getElementById('kfProj').textContent = '🔍 Gõ để tìm dự án…';
+    document.getElementById('kfName').textContent = 'VD: Key tra cứu địa chỉ…';
+  }
+  function submitKeyForm() {
+    if (KF_MODE === 'create') { openKeyCreated(); }
+    else { alert('✅ Đã lưu thay đổi cho ' + KF_EDITING + ' (demo)'); cls('ovKey'); resetKeyForm(); }
+  }
+  var KEY_DATA = {
+    'Key_Auto_004': { status: '<span class="st act">🟢 Hoạt động</span>', org: 'Tập đoàn Vingroup', customer: 'Cty VinHome', project: 'VinHome Smart City', services: '<span class="chip s">Geocoding API</span> <span class="chip s">Search API</span> <span class="chip s">Directions API</span> <span class="chip s">Places API</span> <span class="chip s">Map Tiles API</span> <span class="chip s">Weather API</span> <span class="chip s">Administrative Units API</span> <span class="chip s">Reverse Geocoding</span> <span class="chip s">Routing API</span>', created: '04/07/2026 09:32', effective: '04/07/2026 00:00', expiry: '31/12/2026', revoked: null, canEdit: false },
+    'Key_Auto_005': { status: '<span class="st pending">⏳ Chưa hiệu lực</span>', org: 'Tập đoàn Vingroup', customer: 'Cty VinHome', project: 'VinHome Smart City', services: '<span class="chip s">Geocoding API</span> <span class="chip s">Reverse Geocoding</span> <span class="chip s">Search API</span> <span class="chip s">Places API</span> <span class="chip s">Directions API</span> <span class="chip s">Routing API</span> <span class="chip s">Map Tiles API</span> <span class="chip s">Weather API</span> <span class="chip s">Administrative Units API</span> <span style="font-size:11.5px;color:var(--ink-faint);margin-left:4px">(Tất cả dịch vụ)</span>', created: '05/07/2026 14:20', effective: '<b style="color:var(--purple)">01/08/2026 09:00</b> <span style="color:var(--ink-faint);font-family:\'Segoe UI\',system-ui;font-size:11px">(còn ~3 ngày)</span>', expiry: 'Không hết hạn', revoked: null, canEdit: true },
+    'Zalo_Map_Dev': { status: '<span class="st susp">🟡 Tạm khóa</span>', org: 'VNG Corporation', customer: 'Zalo', project: 'Zalo Maps', services: '<span class="chip s">Map Tiles API</span> <span class="chip s">Directions API</span>', created: '01/06/2026 10:15', effective: '01/06/2026 00:00', expiry: '30/09/2026', revoked: null, canEdit: false },
+    'An_Giang_Prod': { status: '<span class="st rev">🔴 Đã thu hồi</span>', org: 'UBND tỉnh An Giang', customer: 'Sở TN&MT An Giang', project: 'An Giang GIS', services: '<span class="chip s">Geocoding API</span> <span class="chip s">Administrative Units API</span>', created: '12/05/2026 10:00', effective: '12/05/2026 10:00', expiry: '—', revoked: '20/07/2026 14:02', canEdit: false }
+  };
+  function openKeyDetail(name) {
+    var d = KEY_DATA[name]; if (!d) return;
+    document.getElementById('kdTitle').textContent = name;
+    document.getElementById('kdStatus').innerHTML = d.status;
+    document.getElementById('kdOrg').textContent = d.org;
+    document.getElementById('kdCustomer').textContent = d.customer;
+    document.getElementById('kdProject').textContent = d.project;
+    document.getElementById('kdName').textContent = name;
+    document.getElementById('kdServices').innerHTML = d.services;
+    document.getElementById('kdCreated').textContent = d.created;
+    document.getElementById('kdEffective').innerHTML = d.effective;
+    document.getElementById('kdExpiry').textContent = d.expiry;
+    var rr = document.getElementById('kdRevokedRow'), rv = document.getElementById('kdRevoked');
+    if (d.revoked) { rr.style.display = ''; rv.style.display = ''; rv.textContent = d.revoked; }
+    else { rr.style.display = 'none'; rv.style.display = 'none'; }
+    document.getElementById('ovKeyDetail').classList.add('show');
+  }
+  function openKeyCreated() { cls('ovKey'); document.getElementById('ovKeyCreated').classList.add('show'); }
+  function openReauth() { document.getElementById('ovReauth').classList.add('show'); }
+  function openReveal() {
+    cls('ovReauth'); document.getElementById('ovReveal').classList.add('show');
+    var n = 30, el = document.getElementById('revealCount'); clearInterval(window._rv);
+    window._rv = setInterval(function () { n--; if (el) el.textContent = n; if (n <= 0) { clearInterval(window._rv); cls('ovReveal'); } }, 1000);
+  }
+  function openLock() { document.getElementById('ovLock').classList.add('show'); }
+  function openHistory() { document.getElementById('ovHistory').classList.add('show'); }
+  function openUnlock() { document.getElementById('ovUnlock').classList.add('show'); }
+  function openRevoke() { document.getElementById('ovRevoke').classList.add('show'); }
+  function openRotate() { resetRotate(); document.getElementById('ovRotate').classList.add('show'); }
+  function rotateDone() { document.getElementById('rotateConfirm').style.display = 'none'; document.getElementById('rotateDone').style.display = 'block'; }
+  function resetRotate() { var c = document.getElementById('rotateConfirm'), d = document.getElementById('rotateDone'); if (c) c.style.display = 'block'; if (d) d.style.display = 'none'; }
+  function expChange() {
+    var v = document.getElementById('expSel').value;
+    document.getElementById('expCustom').style.display = v === 'custom' ? 'block' : 'none';
+    document.getElementById('expNever').style.display = v === 'never' ? 'block' : 'none';
+  }
+  function cls(id) { document.getElementById(id).classList.remove('show'); }
+  document.querySelectorAll('.overlay').forEach(function (o) { o.addEventListener('click', function (e) { if (e.target === o) o.classList.remove('show'); }); });
+  document.querySelectorAll('.chk').forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); }); });
+  // endpoint group rows
+  var ep = [["Geocoding API", "Forward Geocoding", "/geocoding/v1/geocode", "GET", 288100, "99.6%"],
+  ["Search API", "Autocomplete", "/search/v1/suggest", "GET", 166457, "99.9%"],
+  ["Geocoding API", "Reverse Geocoding", "/geocoding/v1/reverse", "GET", 102435, "98.2%"],
+  ["Directions API", "Route", "/directions/v1/route", "POST", 57620, "99.1%"],
+  ["Search API", "Places", "/search/v1/places", "GET", 25609, "97.4%"],
+  ["Map Tiles API", "Vector Tile", "/tiles/v1/{z}/{x}/{y}", "GET", 18400, "99.8%"],
+  ["Directions API", "Distance Matrix", "/directions/v1/matrix", "POST", 9120, "98.9%"],
+  ["Weather API", "Current", "/weather/v1/current", "GET", 6300, "99.3%"],
+  ["Geocoding API", "Batch Geocode", "/geocoding/v1/batch", "POST", 4100, "96.5%"],
+  ["Admin Units API", "Lookup", "/admin-units/v1/lookup", "GET", 2050, "99.7%"]];
+  document.getElementById('epgroup').innerHTML = ep.map(function (r) {
+    return '<tr><td><b style="font-size:12.5px">' + r[0] + '</b></td>'
+      + '<td style="font-size:12.5px;color:var(--ink-soft)">' + r[1] + '</td>'
+      + '<td style="font-family:var(--mono);font-size:12px;color:var(--ink-soft)">' + r[2] + '</td>'
+      + '<td><span class="code" style="background:var(--panel-2)">' + r[3] + '</span></td>'
+      + '<td class="num">' + r[4].toLocaleString() + '</td></tr>';
+  }).join('');
+</script>
