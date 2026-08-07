@@ -1326,14 +1326,14 @@
             <tr onclick="openCustomer('vinhome')" style="cursor:pointer">
               <td><b>Vinhome</b></td>
               <td style="font-family:var(--mono);font-size:12px">vinhome</td>
-              <td><span class="st act">🟢 Active</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">10/06/2026</td>
               <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openCustomer('vinhome')" title="Xem chi tiết">ℹ️</span></span></td>
             </tr>
             <tr onclick="openCustomer('vinfast')" style="cursor:pointer">
               <td><b>Vinfast</b></td>
               <td style="font-family:var(--mono);font-size:12px">vinfast</td>
-              <td><span class="st act">🟢 Active</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">10/06/2026</td>
               <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openCustomer('vinfast')" title="Xem chi tiết">ℹ️</span></span></td>
             </tr>
@@ -1374,34 +1374,34 @@
             <tr data-cust="vinhome" data-member="y">
               <td><b>VinHome Smart City</b></td>
               <td>Vinhome</td>
-              <td><span class="st act">🟢 Active</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openProjectMembers('VinHome Smart City')" title="Thành viên Dự án">👥</span>
                   <span class="icoact no-member" title="Sửa Project">✏️</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project" onclick="if(confirm('Xoá Project này? Không thể khôi phục.')) this.closest('tr').remove()">🗑</span>
                 </span></td>
             </tr>
             <tr data-cust="vinhome" data-member="n">
               <td><b>VinHome Grand Park</b></td>
               <td>Vinhome</td>
-              <td><span class="st act">🟢 Active</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">10/07/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openProjectMembers('VinHome Grand Park')" title="Thành viên Dự án">👥</span>
                   <span class="icoact no-member" title="Sửa Project">✏️</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project" onclick="if(confirm('Xoá Project này? Không thể khôi phục.')) this.closest('tr').remove()">🗑</span>
                 </span></td>
             </tr>
             <tr data-cust="vinfast" data-member="n">
               <td><b>VinFast Dealer Portal</b></td>
               <td>Vinfast</td>
-              <td><span class="st act">🟢 Active</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">15/07/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openProjectMembers('VinFast Dealer Portal')" title="Thành viên Dự án">👥</span>
                   <span class="icoact no-member" title="Sửa Project">✏️</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project" onclick="if(confirm('Xoá Project này? Không thể khôi phục.')) this.closest('tr').remove()">🗑</span>
                 </span></td>
             </tr>
             <tr data-cust="vinfast" data-member="n">
@@ -1412,18 +1412,18 @@
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openProjectMembers('VinFast EV Charging Map')" title="Thành viên Dự án">👥</span>
                   <span class="icoact no-member" title="Sửa Project">✏️</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project" onclick="if(confirm('Xoá Project này? Không thể khôi phục.')) this.closest('tr').remove()">🗑</span>
                 </span></td>
             </tr>
             <tr data-cust="org" data-member="n">
               <td><b>Vingroup Corporate GIS</b></td>
               <td><span style="color:var(--ink-faint)">— (thuộc thẳng Tổ chức)</span></td>
-              <td><span class="st act">🟢 Active</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">01/06/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openProjectMembers('Vingroup Corporate GIS')" title="Thành viên Dự án">👥</span>
                   <span class="icoact no-member" title="Sửa Project">✏️</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project">🗑</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Xoá Project" onclick="if(confirm('Xoá Project này? Không thể khôi phục.')) this.closest('tr').remove()">🗑</span>
                 </span></td>
             </tr>
           </tbody>
@@ -1471,8 +1471,8 @@
               <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openKeyDetail('VHSC_Web_Prod')" title="Xem chi tiết">ℹ️</span>
-                  <span class="icoact no-member" title="Khóa key">🔒</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                  <span class="icoact no-member" title="Khóa key" onclick="lockKeyRow(this)">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key" onclick="revokeKeyRow(this)">🚫</span>
                 </span></td>
             </tr>
             <tr data-cust="vinhome" data-member="n">
@@ -1484,8 +1484,8 @@
               <td style="font-family:var(--mono);font-size:12px">05/07/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openKeyDetail('VHSC_Mobile_Dev')" title="Xem chi tiết">ℹ️</span>
-                  <span class="icoact no-member" title="Khóa key">🔒</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                  <span class="icoact no-member" title="Khóa key" onclick="lockKeyRow(this)">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key" onclick="revokeKeyRow(this)">🚫</span>
                 </span></td>
             </tr>
             <tr data-cust="vinhome" data-member="n">
@@ -1498,7 +1498,7 @@
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openKeyDetail('VHGP_Web_Staging')" title="Xem chi tiết">ℹ️</span>
                   <span class="icoact no-member" title="Mở khóa">🔓</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key" onclick="revokeKeyRow(this)">🚫</span>
                 </span></td>
             </tr>
             <tr data-cust="vinfast" data-member="n">
@@ -1510,8 +1510,8 @@
               <td style="font-family:var(--mono);font-size:12px">16/07/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openKeyDetail('VFDealer_API_Prod')" title="Xem chi tiết">ℹ️</span>
-                  <span class="icoact no-member" title="Khóa key">🔒</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                  <span class="icoact no-member" title="Khóa key" onclick="lockKeyRow(this)">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key" onclick="revokeKeyRow(this)">🚫</span>
                 </span></td>
             </tr>
             <tr data-cust="vinfast" data-member="n">
@@ -1534,8 +1534,8 @@
               <td style="font-family:var(--mono);font-size:12px">02/06/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openKeyDetail('Vingroup_Corp_GIS_Backend')" title="Xem chi tiết">ℹ️</span>
-                  <span class="icoact no-member" title="Khóa key">🔒</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                  <span class="icoact no-member" title="Khóa key" onclick="lockKeyRow(this)">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key" onclick="revokeKeyRow(this)">🚫</span>
                 </span></td>
             </tr>
             <tr data-cust="org" data-member="n">
@@ -1547,8 +1547,8 @@
               <td style="font-family:var(--mono);font-size:12px">28/07/2026</td>
               <td style="text-align:center"><span class="actbar">
                   <span class="icoact" onclick="openKeyDetail('Vingroup_Corp_GIS_Pending')" title="Xem chi tiết">ℹ️</span>
-                  <span class="icoact no-member" title="Khóa key">🔒</span>
-                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key">🚫</span>
+                  <span class="icoact no-member" title="Khóa key" onclick="lockKeyRow(this)">🔒</span>
+                  <span class="icoact no-member" style="color:var(--red)" title="Thu hồi key" onclick="revokeKeyRow(this)">🚫</span>
                 </span></td>
             </tr>
           </tbody>
@@ -1722,7 +1722,7 @@
     <div class="modal-body">
       <div class="sect" style="background:var(--panel-2);display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;padding:10px 14px;align-items:center">
         <span>Mã: <b id="cdCode" style="font-family:var(--mono)">vinhome</b></span>
-        <span>Trạng thái: <span class="st act" id="cdStatus">🟢 Active</span></span>
+        <span>Trạng thái: <span class="st act" id="cdStatus">🟢 Hoạt động</span></span>
         <span>Tổ chức cha: <b>Vingroup</b> <span style="color:var(--ink-faint)">(bất biến)</span></span>
         <span style="color:var(--ink-faint)">Tạo <span id="cdCreated">10/06/2026</span></span>
       </div>
@@ -1773,6 +1773,31 @@
   </div>
 </div>
 
+<!-- ============ MODAL: THÊM THÀNH VIÊN VÀO KHÁCH HÀNG (gán vai trò, kể cả Khách hàng Admin) ============ -->
+<div class="overlay" id="ovAddMember">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>＋ Thêm thành viên vào Khách hàng <span id="amCustName" style="font-weight:400;color:var(--ink-soft);font-size:13px"></span></h2><button class="mclose" onclick="cls('ovAddMember')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--panel-2)">
+        <div style="font-size:12.5px;line-height:1.5">ℹ️ Chỉ chọn được tài khoản <b>đã có sẵn</b> trong Tổ chức Vingroup — không tạo tài khoản mới ở đây (tạo tài khoản mới do GTEL Admin làm).</div>
+      </div>
+      <div class="fld"><label>Tài khoản có sẵn trong Tổ chức <span style="color:var(--red)">*</span></label>
+        <select class="inp" id="amAccountSelect">
+          <option value="">— Chọn tài khoản —</option>
+        </select>
+        <span class="vh">Danh sách lọc sẵn — chỉ hiện tài khoản Console CHƯA thuộc Khách hàng này</span>
+      </div>
+      <div class="fld"><label>Vai trò trong Khách hàng <span style="color:var(--red)">*</span></label>
+        <div id="amRoleMember" class="radio on" onclick="selectAmRole('member')"><span class="rc"></span> Thành viên thường — chỉ thấy Project được gán</div>
+        <div id="amRoleAdmin" class="radio" onclick="selectAmRole('admin')"><span class="rc"></span> Khách hàng Admin — quản lý mọi Project trong Khách hàng này</div>
+      </div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovAddMember')">Hủy</button><button class="btn" onclick="confirmAddMember()">Thêm vào Khách hàng</button></div>
+    </div>
+  </div>
+</div>
+
 <!-- ============ MODAL: CREATE CUSTOMER ============ -->
 <div class="overlay" id="ovCustomerCreate">
   <div class="modal sm">
@@ -1788,7 +1813,7 @@
         <input class="inp" placeholder="VD: Vinpearl" />
         <span class="vh">2–150 ký tự. Mã (slug) sẽ tự sinh từ tên.</span>
       </div>
-      <div class="mfoot"><button class="btn ghost" onclick="cls('ovCustomerCreate')">Hủy</button><button class="btn" onclick="alert('Demo: đã tạo Khách hàng (giả lập)');cls('ovCustomerCreate')">Tạo Khách hàng</button></div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovCustomerCreate')">Hủy</button><button class="btn" onclick="submitCreateCustomer()">Tạo Khách hàng</button></div>
     </div>
   </div>
 </div>
@@ -1812,7 +1837,7 @@
         </select>
         <span class="vh">Chỉ chọn <b>đúng 1 cấp cha</b> — Khách hàng cụ thể, hoặc để trống nghĩa là Project thuộc thẳng Tổ chức.</span>
       </div>
-      <div class="mfoot"><button class="btn ghost" onclick="cls('ovProjectCreate')">Hủy</button><button class="btn" onclick="alert('Demo: đã tạo Project (giả lập)');cls('ovProjectCreate')">Tạo Project</button></div>
+      <div class="mfoot"><button class="btn ghost" onclick="cls('ovProjectCreate')">Hủy</button><button class="btn" onclick="submitCreateProject()">Tạo Project</button></div>
     </div>
   </div>
 </div>
@@ -1824,10 +1849,11 @@
       <h2>👥 Thành viên Dự án — <span id="pmName">VinHome Smart City</span></h2><button class="mclose" onclick="cls('ovProjectMembers')">✕</button>
     </div>
     <div class="modal-body">
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <div class="zlabel" style="margin:0">Danh sách thành viên</div>
         <div class="spacer" style="flex:1"></div>
-        <button class="btn no-member" onclick="alert('Demo: đã gán thành viên (giả lập)')">＋ Gán thành viên</button>
+        <select id="pmAddSelect" class="inp no-member" style="width:220px"></select>
+        <button class="btn no-member" onclick="addProjectMember()">＋ Gán thành viên</button>
       </div>
       <div class="tbl-wrap">
         <table>
@@ -1842,12 +1868,12 @@
             <tr>
               <td>lan.pham@vinhome.vn</td>
               <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
-              <td style="text-align:center"><span class="icoact no-member" style="color:var(--red)" title="Gỡ khỏi Project">✕</span></td>
+              <td style="text-align:center"><span class="icoact no-member" style="color:var(--red)" title="Gỡ khỏi Project" onclick="this.closest('tr').remove()">✕</span></td>
             </tr>
             <tr>
               <td>minh.tran@vinhome.vn</td>
               <td style="font-family:var(--mono);font-size:12px">06/07/2026</td>
-              <td style="text-align:center"><span class="icoact no-member" style="color:var(--red)" title="Gỡ khỏi Project">✕</span></td>
+              <td style="text-align:center"><span class="icoact no-member" style="color:var(--red)" title="Gỡ khỏi Project" onclick="this.closest('tr').remove()">✕</span></td>
             </tr>
           </tbody>
         </table>
@@ -1996,29 +2022,71 @@
   // ===== Customer data (dùng cho modal Khách hàng) =====
   var CUSTOMERS = {
     vinhome: {
-      name: 'Vinhome', code: 'vinhome', status: '🟢 Active', created: '10/06/2026',
+      name: 'Vinhome', code: 'vinhome', status: '🟢 Hoạt động', created: '10/06/2026',
       members: [
         { account: 'lan.pham@vinhome.vn', role: 'Khách hàng Admin', date: '10/06/2026' },
         { account: 'minh.tran@vinhome.vn', role: 'Thành viên thường', date: '12/06/2026' },
         { account: 'hoa.nguyen@vinhome.vn', role: 'Thành viên thường', date: '15/06/2026' }
       ],
       projects: [
-        { name: 'VinHome Smart City', status: '🟢 Active', created: '04/07/2026' },
-        { name: 'VinHome Grand Park', status: '🟢 Active', created: '10/07/2026' }
+        { name: 'VinHome Smart City', status: '🟢 Hoạt động', created: '04/07/2026' },
+        { name: 'VinHome Grand Park', status: '🟢 Hoạt động', created: '10/07/2026' }
       ]
     },
     vinfast: {
-      name: 'Vinfast', code: 'vinfast', status: '🟢 Active', created: '10/06/2026',
+      name: 'Vinfast', code: 'vinfast', status: '🟢 Hoạt động', created: '10/06/2026',
       members: [
         { account: 'duc.le@vinfast.vn', role: 'Khách hàng Admin', date: '11/06/2026' },
         { account: 'an.vu@vinfast.vn', role: 'Thành viên thường', date: '14/06/2026' }
       ],
       projects: [
-        { name: 'VinFast Dealer Portal', status: '🟢 Active', created: '15/07/2026' },
+        { name: 'VinFast Dealer Portal', status: '🟢 Hoạt động', created: '15/07/2026' },
         { name: 'VinFast EV Charging Map', status: '🟡 Tạm dừng', created: '20/07/2026' }
       ]
     }
   };
+
+  // Tài khoản khác trong cùng Tổ chức Vingroup, dùng để demo "Thêm thành viên" (chỉ tài khoản có sẵn, không tạo mới ở Console)
+  var ORG_ACCOUNTS = ['quan.le@vinhome.vn', 'thao.pham@vinfast.vn', 'khanh.vo@vingroup.vn', 'huy.dang@vinfast.vn'];
+  var currentCustomerCode = null;
+
+  function renderMembers() {
+    var d = CUSTOMERS[currentCustomerCode];
+    document.getElementById('cdMembers').innerHTML = d.members.map(function (m) {
+      return '<tr><td>' + m.account + '</td><td class="mrole">' + m.role + '</td><td style="font-family:var(--mono);font-size:12px">' + m.date + '</td>'
+        + '<td class="memberrow-actions" style="text-align:center"><select onchange="this.closest(\'tr\').querySelector(\'.mrole\').textContent=this.value">'
+        + '<option' + (m.role === 'Khách hàng Admin' ? ' selected' : '') + '>Khách hàng Admin</option>'
+        + '<option' + (m.role === 'Thành viên thường' ? ' selected' : '') + '>Thành viên thường</option>'
+        + '</select> <span class="icoact" style="color:var(--red)" title="Gỡ khỏi Khách hàng" onclick="this.closest(\'tr\').remove()">✕</span></td></tr>';
+    }).join('');
+  }
+
+  function addMember() {
+    var d = CUSTOMERS[currentCustomerCode];
+    document.getElementById('amCustName').textContent = '— ' + d.name;
+    var existing = d.members.map(function (m) { return m.account; });
+    var available = ORG_ACCOUNTS.filter(function (a) { return existing.indexOf(a) === -1; });
+    var sel = document.getElementById('amAccountSelect');
+    sel.innerHTML = '<option value="">— Chọn tài khoản —</option>' + available.map(function (a) { return '<option>' + a + '</option>'; }).join('');
+    selectAmRole('member');
+    document.getElementById('ovAddMember').classList.add('show');
+  }
+
+  function selectAmRole(type) {
+    document.getElementById('amRoleMember').classList.toggle('on', type === 'member');
+    document.getElementById('amRoleAdmin').classList.toggle('on', type === 'admin');
+  }
+
+  function confirmAddMember() {
+    var email = document.getElementById('amAccountSelect').value;
+    if (!email) { alert('Chọn 1 tài khoản trước.'); return; }
+    var role = document.getElementById('amRoleAdmin').classList.contains('on') ? 'Khách hàng Admin' : 'Thành viên thường';
+    var today = new Date();
+    var dateStr = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+    CUSTOMERS[currentCustomerCode].members.push({ account: email, role: role, date: dateStr });
+    renderMembers();
+    cls('ovAddMember');
+  }
 
   var KEY_DATA = {
     'VHSC_Web_Prod': { status: '<span class="st act">🟢 Hoạt động</span>', proj: 'VinHome Smart City', owner: 'lan.pham@vinhome.vn', svcs: ['Geocoding API', 'Search API'] },
@@ -2103,19 +2171,14 @@
   // ===== Customer modal =====
   function openCustomer(code) {
     var d = CUSTOMERS[code]; if (!d) return;
+    currentCustomerCode = code;
     document.getElementById('cdName').textContent = d.name;
     document.getElementById('cdCode').textContent = d.code;
     document.getElementById('cdStatus').textContent = d.status;
     document.getElementById('cdCreated').textContent = d.created;
-    document.getElementById('cdMembers').innerHTML = d.members.map(function (m) {
-      return '<tr><td>' + m.account + '</td><td class="mrole">' + m.role + '</td><td style="font-family:var(--mono);font-size:12px">' + m.date + '</td>'
-        + '<td class="memberrow-actions" style="text-align:center"><select onchange="this.closest(\'tr\').querySelector(\'.mrole\').textContent=this.value">'
-        + '<option' + (m.role === 'Khách hàng Admin' ? ' selected' : '') + '>Khách hàng Admin</option>'
-        + '<option' + (m.role === 'Thành viên thường' ? ' selected' : '') + '>Thành viên thường</option>'
-        + '</select> <span class="icoact" style="color:var(--red)" title="Gỡ khỏi Khách hàng" onclick="this.closest(\'tr\').remove()">✕</span></td></tr>';
-    }).join('');
+    renderMembers();
     document.getElementById('cdProjects').innerHTML = d.projects.map(function (p) {
-      return '<tr><td>' + p.name + '</td><td><span class="st ' + (p.status.indexOf('Active') > -1 ? 'act' : 'susp') + '">' + p.status + '</span></td><td style="font-family:var(--mono);font-size:12px">' + p.created + '</td></tr>';
+      return '<tr><td>' + p.name + '</td><td><span class="st ' + (p.status.indexOf('Hoạt động') > -1 ? 'act' : 'susp') + '">' + p.status + '</span></td><td style="font-family:var(--mono);font-size:12px">' + p.created + '</td></tr>';
     }).join('');
     setCustTab('members');
     document.getElementById('ovCustomer').classList.add('show');
@@ -2125,14 +2188,102 @@
     document.getElementById('custTab-members').style.display = tab === 'members' ? '' : 'none';
     document.getElementById('custTab-projects').style.display = tab === 'projects' ? '' : 'none';
   }
-  function addMember() { alert('Demo: đã thêm thành viên vào Khách hàng (giả lập)'); }
   function openCustomerCreate() { document.getElementById('ovCustomerCreate').classList.add('show'); }
 
   // ===== Project modals =====
   function openProjectCreate() { document.getElementById('ovProjectCreate').classList.add('show'); }
   function openProjectMembers(name) {
     document.getElementById('pmName').textContent = name;
+    refreshPmAddSelect();
     document.getElementById('ovProjectMembers').classList.add('show');
+  }
+
+  function refreshPmAddSelect() {
+    var existing = Array.prototype.map.call(document.querySelectorAll('#pmMembers tr td:first-child'), function (td) { return td.textContent.trim(); });
+    var available = ORG_ACCOUNTS.filter(function (a) { return existing.indexOf(a) === -1; });
+    var sel = document.getElementById('pmAddSelect');
+    sel.innerHTML = '<option value="">— Chọn tài khoản —</option>' + available.map(function (a) { return '<option>' + a + '</option>'; }).join('');
+  }
+
+  function addProjectMember() {
+    var email = document.getElementById('pmAddSelect').value;
+    if (!email) { alert('Chọn 1 tài khoản trước.'); return; }
+    var today = new Date();
+    var dateStr = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + email + '</td><td style="font-family:var(--mono);font-size:12px">' + dateStr + '</td>'
+      + '<td style="text-align:center"><span class="icoact no-member" style="color:var(--red)" title="Gỡ khỏi Project" onclick="this.closest(\'tr\').remove()">✕</span></td>';
+    document.getElementById('pmMembers').appendChild(tr);
+    refreshPmAddSelect();
+  }
+
+  function submitCreateCustomer() {
+    var input = document.querySelector('#ovCustomerCreate input.inp');
+    var name = input.value.trim();
+    if (!name) { alert('Nhập Tên Khách hàng.'); return; }
+    var code = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    var today = new Date();
+    var dateStr = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+    CUSTOMERS[code] = { name: name, code: code, status: '🟢 Hoạt động', created: dateStr, members: [], projects: [] };
+    var tbody = document.querySelector('#view-customers tbody');
+    var tr = document.createElement('tr');
+    tr.setAttribute('onclick', "openCustomer('" + code + "')");
+    tr.style.cursor = 'pointer';
+    tr.innerHTML = '<td><b>' + name + '</b></td><td style="font-family:var(--mono);font-size:12px">' + code + '</td>'
+      + '<td><span class="st act">🟢 Hoạt động</span></td><td style="font-family:var(--mono);font-size:12px">' + dateStr + '</td>'
+      + '<td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openCustomer(\'' + code + '\')" title="Xem chi tiết">ℹ️</span></span></td>';
+    tbody.appendChild(tr);
+    var projOption = document.createElement('option');
+    projOption.value = code; projOption.textContent = name;
+    document.querySelector('#ovProjectCreate select.inp').appendChild(projOption);
+    input.value = '';
+    cls('ovCustomerCreate');
+  }
+
+  function revokeKeyRow(el) {
+    if (!confirm('Thu hồi API Key này? Không thể khôi phục, mọi request dùng key sẽ bị chặn ngay.')) return;
+    var tr = el.closest('tr');
+    tr.children[4].innerHTML = '<span class="st rev">🔴 Đã thu hồi</span>';
+    tr.querySelectorAll('.icoact.no-member').forEach(function (i) { i.style.pointerEvents = 'none'; i.style.opacity = '0.4'; });
+  }
+
+  function lockKeyRow(el) {
+    var tr = el.closest('tr');
+    var statusCell = tr.children[4];
+    var locked = statusCell.textContent.indexOf('Tạm khoá') > -1;
+    if (locked) {
+      statusCell.innerHTML = '<span class="st act">🟢 Hoạt động</span>';
+      el.title = 'Khóa key';
+    } else {
+      if (!confirm('Tạm khoá API Key này?')) return;
+      statusCell.innerHTML = '<span class="st susp">🟡 Tạm khoá</span>';
+      el.title = 'Mở khoá key';
+    }
+  }
+
+  function submitCreateProject() {
+    var input = document.querySelector('#ovProjectCreate input.inp');
+    var name = input.value.trim();
+    if (!name) { alert('Nhập Tên Project.'); return; }
+    var select = document.querySelector('#ovProjectCreate select.inp');
+    var custCode = select.value;
+    var custLabel = custCode ? select.options[select.selectedIndex].textContent : '— (thuộc thẳng Tổ chức)';
+    var today = new Date();
+    var dateStr = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+    var tr = document.createElement('tr');
+    tr.dataset.cust = custCode || 'org';
+    tr.dataset.member = 'n';
+    tr.innerHTML = '<td><b>' + name + '</b></td><td>' + (custCode ? custLabel : '<span style="color:var(--ink-faint)">— (thuộc thẳng Tổ chức)</span>') + '</td>'
+      + '<td><span class="st act">🟢 Hoạt động</span></td><td style="font-family:var(--mono);font-size:12px">' + dateStr + '</td>'
+      + '<td style="text-align:center"><span class="actbar">'
+      + '<span class="icoact" onclick="openProjectMembers(\'' + name + '\')" title="Thành viên Dự án">👥</span>'
+      + '<span class="icoact no-member" title="Sửa Project">✏️</span>'
+      + '<span class="icoact no-member" style="color:var(--red)" title="Xoá Project" onclick="this.closest(\'tr\').remove()">🗑</span>'
+      + '</span></td>';
+    document.getElementById('projTable').querySelector('tbody').appendChild(tr);
+    applyRoleFilter();
+    input.value = ''; select.value = '';
+    cls('ovProjectCreate');
   }
 
   // ===== Key modals =====
