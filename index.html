@@ -7,93 +7,89 @@
     <link rel="stylesheet" href="shared.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: var(--bg-main); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .launchpad-container { max-width: 1000px; width: 90%; padding: 40px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+        body { background: var(--bg-main, #0f172a); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .launchpad-container { max-width: 1050px; width: 92%; padding: 40px 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
         .module-card { 
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; 
-            text-decoration: none; color: var(--text-main); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--bg-card, #1e293b); border: 1px solid var(--border, #334155); border-radius: 12px; padding: 24px; 
+            text-decoration: none; color: var(--text-main, #f8fafc); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; flex-direction: column; gap: 12px; position: relative; overflow: hidden;
         }
-        .module-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(56, 189, 248, 0.1); }
-        .module-card i { font-size: 2rem; color: var(--primary); }
-        .module-card h3 { margin: 0; font-size: 1.25rem; }
-        .module-card p { margin: 0; color: var(--text-dim); font-size: 0.9rem; line-height: 1.4; }
-        .module-card .status { position: absolute; top: 15px; right: 15px; font-size: 0.7rem; padding: 4px 8px; border-radius: 20px; background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); }
-        .header-section { text-align: center; margin-bottom: 40px; }
-        .header-section h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, var(--primary), #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .footer { text-align: center; margin-top: 50px; color: var(--text-dim); font-size: 0.8rem; }
+        .module-card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15); }
+        .module-card i { font-size: 2rem; color: #38bdf8; }
+        .module-card h3 { margin: 0; font-size: 1.25rem; color: #f8fafc; }
+        .module-card p { margin: 0; color: #94a3b8; font-size: 0.9rem; line-height: 1.4; }
+        .module-card .status { position: absolute; top: 15px; right: 15px; font-size: 0.7rem; padding: 4px 8px; border-radius: 20px; background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); font-weight: 600; }
+        
+        .master-card {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(99, 102, 241, 0.15));
+            border: 2px solid #38bdf8;
+            grid-column: 1 / -1;
+            padding: 28px;
+        }
+        .master-card:hover { box-shadow: 0 12px 35px rgba(56, 189, 248, 0.25); }
+        
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .header-section h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .footer { text-align: center; margin-top: 40px; color: #64748b; font-size: 0.85rem; }
     </style>
 </head>
 <body>
     <div class="launchpad-container">
         <div class="header-section">
             <h1>GTEL Maps Admin</h1>
-            <p style="color: var(--text-dim)">Hệ thống Prototype UI/UX Final dành cho Development Handoff</p>
+            <p style="color: #94a3b8; font-size: 1.05rem;">Hệ thống Prototype UI/UX Final dành cho Development Handoff</p>
         </div>
 
         <div class="grid">
-            <a href="us01-login.html" class="module-card">
-                <span class="status">Final</span>
-                <i class="fas fa-lock"></i>
-                <h3>US-01: Authentication</h3>
-                <p>Giao diện Đăng nhập & Xác thực 2 lớp (2FA) bảo mật.</p>
+            <!-- MASTER ALL-IN-ONE CARD -->
+            <a href="admin.html" class="module-card master-card">
+                <span class="status" style="background:#22c55e; color:#fff; font-size:0.8rem; padding:5px 12px">⭐ BẢN CHÍNH THỨC SPRINT 21/8</span>
+                <i class="fas fa-desktop" style="font-size: 2.5rem; color: #38bdf8;"></i>
+                <h3 style="font-size: 1.5rem; color: #38bdf8;">🚀 MAP ADMIN ALL-IN-ONE (admin.html)</h3>
+                <p style="color: #cbd5e1; font-size: 1rem;">Màn hình quản trị hợp nhất đầy đủ 8 phân hệ: Khách hàng, Dự án, Dịch vụ Catalog, Quản trị Tính năng (Endpoints), Quản lý Người dùng 3 Tab (Multi-select Group), Phân quyền RBAC 4 Tab, Cấu hình hệ thống và Dashboard Analytics.</p>
             </a>
 
-            <a href="us02-rbac.html" class="module-card">
+            <a href="admin.html#view-users" class="module-card">
+                <span class="status">Cập nhật 20/08</span>
+                <i class="fas fa-users-cog"></i>
+                <h3>Quản lý Người dùng (3 Tab)</h3>
+                <p>Quản lý tài khoản Admin nội bộ (Multi-select Nhóm quyền), Console B2B và Map Viewer.</p>
+            </a>
+
+            <a href="admin.html#view-services" class="module-card">
+                <span class="status">Cập nhật 20/08</span>
+                <i class="fas fa-cubes"></i>
+                <h3>Quản trị Dịch vụ (Catalog)</h3>
+                <p>Catalog Dịch vụ gốc, Base URL, Base RPS và danh sách Tính năng con (Read-only view).</p>
+            </a>
+
+            <a href="admin.html#view-features" class="module-card">
+                <span class="status">Cập nhật 20/08</span>
+                <i class="fas fa-code-branch"></i>
+                <h3>Quản trị Tính năng (Endpoints)</h3>
+                <p>CRUD tập trung các Endpoint API, đường dẫn tham số động /{z}/{x}/{y} và nhãn Beta.</p>
+            </a>
+
+            <a href="admin.html#view-rbac" class="module-card">
                 <span class="status">Final</span>
                 <i class="fas fa-shield-alt"></i>
-                <h3>US-02: IAM & RBAC</h3>
-                <p>Trung tâm quản trị Ma trận quyền, Nhóm người dùng và Resource Groups.</p>
+                <h3>Phân quyền RBAC (4 Tab)</h3>
+                <p>Nhóm quyền, Danh mục quyền cơ sở, Nhóm người dùng và Ma trận phân quyền 2 tầng.</p>
             </a>
 
-            <a href="dashboard_v6.html" class="module-card">
+            <a href="admin.html#view-customers" class="module-card">
                 <span class="status">Final</span>
-                <i class="fas fa-th-large"></i>
-                <h3>US-00: Dashboard</h3>
-                <p>Tổng quan hệ thống, thống kê số liệu và biểu đồ điều hành.</p>
+                <i class="fas fa-building"></i>
+                <h3>Quản trị Khách hàng</h3>
+                <p>Quản lý pháp nhân ký hợp đồng, MST, Email liên hệ và trạng thái vòng đời.</p>
             </a>
 
-            <a href="us07-users.html" class="module-card">
-                <span class="status">Final</span>
-                <i class="fas fa-users-cog"></i>
-                <h3>US-07: User Management</h3>
-                <p>Quản lý vòng đời người dùng, trạng thái và hồ sơ nhân sự.</p>
-            </a>
-
-            <a href="us04-projects.html" class="module-card">
+            <a href="admin.html#view-projects" class="module-card">
                 <span class="status">Final</span>
                 <i class="fas fa-folder-open"></i>
-                <h3>US-04: Project Manager</h3>
-                <p>Khởi tạo và quản lý trạng thái dự án Maps.</p>
-            </a>
-
-            <a href="us05-apikey.html" class="module-card">
-                <span class="status">Final</span>
-                <i class="fas fa-key"></i>
-                <h3>US-05: API Keys</h3>
-                <p>Quản trị vòng đời API Key, hiển thị mã Secret và Whitelist IP.</p>
-            </a>
-
-            <a href="us06-statistics.html" class="module-card">
-                <span class="status">Final</span>
-                <i class="fas fa-chart-line"></i>
-                <h3>US-06: API Statistics</h3>
-                <p>Thống kê chi tiết lưu lượng sử dụng API theo thời gian thực.</p>
-            </a>
-
-            <a href="us09-audit.html" class="module-card">
-                <span class="status">Final</span>
-                <i class="fas fa-history"></i>
-                <h3>US-09: Audit History</h3>
-                <p>Truy vết mọi hành động thay đổi dữ liệu của quản trị viên.</p>
-            </a>
-
-            <a href="us08-config.html" class="module-card">
-                <span class="status">Final</span>
-                <i class="fas fa-cog"></i>
-                <h3>US-08: System Config</h3>
-                <p>Cấu hình các tham số vận hành hệ thống.</p>
+                <h3>Quản trị Dự án</h3>
+                <p>Dự án trực thuộc Khách hàng cha, quản lý liên kết API Key.</p>
             </a>
         </div>
 
