@@ -2034,19 +2034,39 @@
       <div class="fld">
         <label>Vai trò trong Tổ chức <span style="color:var(--red)">*</span></label>
         <div style="display:flex;flex-direction:column;gap:8px">
+          <!-- 1. Dev / Member -->
           <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;background:var(--panel-2,#f8fafc)">
             <input type="radio" name="invRole" value="member" checked style="margin-top:2px;cursor:pointer" />
             <div>
-              <div style="font-weight:700;font-size:13px">Thành viên / Lập trình viên (Member)</div>
+              <div style="font-weight:700;font-size:13px">💻 Thành viên / Lập trình viên (Member / Developer)</div>
               <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem và thao tác trên các Dự án được phân công, không thể xóa tổ chức hoặc mời người khác.</div>
             </div>
           </label>
 
+          <!-- 2. Org Manager -->
           <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer">
             <input type="radio" name="invRole" value="admin" style="margin-top:2px;cursor:pointer" />
             <div>
-              <div style="font-weight:700;font-size:13px;color:var(--brand)">Quản trị viên Tổ chức (Console Admin)</div>
-              <div style="font-size:11.5px;color:var(--ink-soft)">Toàn quyền tạo dự án, quản trị toàn bộ API Key, mời/gỡ thành viên và cấu hình thanh toán.</div>
+              <div style="font-weight:700;font-size:13px;color:var(--brand)">👑 Quản trị viên Tổ chức (Org Manager)</div>
+              <div style="font-size:11.5px;color:var(--ink-soft)">Toàn quyền tạo dự án, quản trị toàn bộ API Key, mời/gỡ thành viên và cấu hình thông tin pháp lý.</div>
+            </div>
+          </label>
+
+          <!-- 3. Billing Manager -->
+          <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer">
+            <input type="radio" name="invRole" value="billing" style="margin-top:2px;cursor:pointer" />
+            <div>
+              <div style="font-weight:700;font-size:13px;color:var(--purple)">💳 Quản trị Chi phí / Kế toán (Billing Manager)</div>
+              <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem số lượng request, lưu lượng gọi API, hạn ngạch Quota và gói cước/hóa đơn doanh nghiệp.</div>
+            </div>
+          </label>
+
+          <!-- 4. Viewer / Read-only -->
+          <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer">
+            <input type="radio" name="invRole" value="viewer" style="margin-top:2px;cursor:pointer" />
+            <div>
+              <div style="font-weight:700;font-size:13px;color:var(--teal)">👁️ Người xem (Viewer / Read-only)</div>
+              <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem danh sách Dự án &amp; API Key ở chế độ Read-only, không thể chỉnh sửa hay tạo mới.</div>
             </div>
           </label>
         </div>

@@ -3000,78 +3000,153 @@
         </div>
       </div>
 
-      <!-- TAB 3: NHÓM NGƯỜI DÙNG -->
+      <!-- TAB 3: NHÓM NGƯỜI DÙNG (ROLES & TEMPLATES) -->
       <div class="rbac-subview" id="rbtab-roles" style="display:none">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-          <div class="zlabel" style="margin:0">Danh sách Nhóm người dùng (Vai trò hệ thống)</div>
+          <div>
+            <div class="zlabel" style="margin:0">Danh sách Nhóm người dùng (Vai trò hệ thống)</div>
+            <div style="font-size:12.5px;color:var(--ink-soft);margin-top:2px">Định nghĩa tập trung các vai trò quản trị nội bộ GTEL và các mẫu vai trò cấp phát cho không gian Console B2B.</div>
+          </div>
           <div class="spacer" style="flex:1"></div>
           <button class="btn" onclick="openRbacRoleModal('create')">＋ Tạo Nhóm người dùng</button>
         </div>
+
+        <div class="filters">
+          <div class="sel" style="min-width:200px">
+            <span class="lbl">Phạm vi áp dụng</span>
+            <select class="v" id="roleScopeFilter" onchange="filterRoleTable()" style="border:none;background:transparent;font-weight:600;font-size:13px;font-family:inherit;color:var(--ink);cursor:pointer;outline:none">
+              <option value="all">📌 Tất cả phạm vi</option>
+              <option value="admin">🏛️ Admin Portal (Nội bộ GTEL)</option>
+              <option value="console">⚡ Console Portal (Khách hàng B2B)</option>
+            </select>
+          </div>
+          <div class="sel" style="min-width:260px"><span class="lbl">🔍</span><input type="text" id="roleSearchInput" onkeyup="filterRoleTable()" placeholder="Tìm theo mã, tên vai trò…" style="border:none;background:transparent;font-size:13px;color:var(--ink);width:100%;outline:none" /></div>
+          <div class="rld" title="Xóa lọc" onclick="document.getElementById('roleScopeFilter').value='all';document.getElementById('roleSearchInput').value='';filterRoleTable()">⟳</div>
+        </div>
+
         <div class="tbl-wrap">
-          <table>
+          <table id="roleTable">
             <thead>
-              <tr><th>Mã nhóm</th><th>Tên nhóm người dùng</th><th>Mô tả</th><th>Danh sách nhóm quyền</th><th>Ngày tạo</th></tr>
+              <tr><th>Phạm vi (Scope)</th><th>Mã nhóm</th><th>Tên nhóm người dùng</th><th>Mô tả chức năng</th><th>Nhóm quyền gán sẵn</th><th style="text-align:center">Hành động</th></tr>
             </thead>
             <tbody>
-              <tr>
+              <!-- NHÓM 1: ADMIN PORTAL -->
+              <tr data-scope="admin">
+                <td><span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:700">🏛️ Admin Portal</span></td>
                 <td><code class="code ok">SUPER_ADMIN</code></td>
                 <td><b>Quản trị viên tối cao</b></td>
-                <td>Toàn quyền quản trị hệ thống, không giới hạn</td>
-                <td><span class="chip" style="background:var(--purple-soft);color:var(--purple)">Toàn bộ nhóm quyền (All)</span></td>
-                <td style="font-family:var(--mono);font-size:12px">10/01/2026</td>
+                <td>Toàn quyền quản trị nền tảng GTEL Map, không giới hạn</td>
+                <td><span class="chip" style="background:var(--purple-soft);color:var(--purple);font-weight:700">Toàn bộ quyền hệ thống (All)</span></td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'SUPER_ADMIN', name:'Quản trị viên tối cao', desc:'Toàn quyền quản trị hệ thống'})" title="Xem">👁️</span>
-                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'SUPER_ADMIN', name:'Quản trị viên tối cao', desc:'Toàn quyền quản trị hệ thống'})" title="Sửa">✏️</span>
-                    <span class="icoact" style="opacity:.4;cursor:not-allowed" title="Nhóm mặc định của hệ thống không thể xoá">🗑️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'SUPER_ADMIN', name:'Quản trị viên tối cao', desc:'Toàn quyền quản trị hệ thống'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" style="opacity:.4;cursor:not-allowed" title="Vai trò hệ thống mặc định">🔒</span>
                   </span>
                 </td>
               </tr>
-              <tr>
+              <tr data-scope="admin">
+                <td><span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:700">🏛️ Admin Portal</span></td>
                 <td><code class="code ok">OPERATOR</code></td>
                 <td><b>Nhân viên vận hành</b></td>
-                <td>Quản lý khách hàng, dự án, dịch vụ và cấp phát tài nguyên</td>
+                <td>Quản lý tổ chức, dự án, dịch vụ và cấp phát tài nguyên</td>
                 <td><span class="chip">GRP_CUSTOMER</span> <span class="chip">GRP_PROJECT</span> <span class="chip">GRP_SERVICE</span> <span class="chip">GRP_APIKEY</span></td>
-                <td style="font-family:var(--mono);font-size:12px">10/01/2026</td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'OPERATOR', name:'Nhân viên vận hành', desc:'Quản lý khách hàng, dự án, dịch vụ'})" title="Xem">👁️</span>
-                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'OPERATOR', name:'Nhân viên vận hành', desc:'Quản lý khách hàng, dự án, dịch vụ'})" title="Sửa">✏️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'OPERATOR', name:'Nhân viên vận hành', desc:'Quản lý tổ chức, dự án, dịch vụ'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'OPERATOR', name:'Nhân viên vận hành', desc:'Quản lý tổ chức, dự án, dịch vụ'})" title="Sửa">✏️</span>
                     <span class="icoact" style="opacity:.4;cursor:not-allowed" title="Còn 5 người dùng đang gán nhóm này">🗑️</span>
                   </span>
                 </td>
               </tr>
-              <tr>
+              <tr data-scope="admin">
+                <td><span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:700">🏛️ Admin Portal</span></td>
                 <td><code class="code ok">AUDITOR</code></td>
                 <td><b>Kiểm toán viên</b></td>
-                <td>Chỉ xem và giám sát nhật ký audit, không có quyền ghi</td>
-                <td><span class="chip">Xem toàn bộ module</span></td>
-                <td style="font-family:var(--mono);font-size:12px">10/01/2026</td>
+                <td>Chỉ tra cứu và giám sát nhật ký Audit Log, không có quyền ghi</td>
+                <td><span class="chip">Xem toàn bộ log hệ thống</span></td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'AUDITOR', name:'Kiểm toán viên', desc:'Chỉ xem và giám sát nhật ký audit'})" title="Xem">👁️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'AUDITOR', name:'Kiểm toán viên', desc:'Chỉ xem và giám sát nhật ký audit'})" title="Xem chi tiết">👁️</span>
                     <span class="icoact" onclick="openRbacRoleModal('edit', {code:'AUDITOR', name:'Kiểm toán viên', desc:'Chỉ xem và giám sát nhật ký audit'})" title="Sửa">✏️</span>
                     <span class="icoact" style="opacity:.4;cursor:not-allowed" title="Còn 2 người dùng đang gán nhóm này">🗑️</span>
                   </span>
                 </td>
               </tr>
-              <tr>
-                <td><code class="code ok">DEVELOPER</code></td>
-                <td><b>Kỹ thuật viên</b></td>
-                <td>Quản lý API Key và dịch vụ trong phạm vi kỹ thuật</td>
-                <td><span class="chip">GRP_SERVICE</span> <span class="chip">GRP_APIKEY</span></td>
-                <td style="font-family:var(--mono);font-size:12px">10/01/2026</td>
+              <tr data-scope="admin">
+                <td><span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:700">🏛️ Admin Portal</span></td>
+                <td><code class="code ok">SUPPORT_ADMIN</code></td>
+                <td><b>Hỗ trợ Kỹ thuật &amp; CSKH</b></td>
+                <td>Tra cứu thông tin tài khoản, hỗ trợ khách hàng và xem thống kê</td>
+                <td><span class="chip">Xem Tổ chức</span> <span class="chip">Xem Key</span> <span class="chip">Xem Thống kê</span></td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'DEVELOPER', name:'Kỹ thuật viên', desc:'Quản lý API Key và dịch vụ'})" title="Xem">👁️</span>
-                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'DEVELOPER', name:'Kỹ thuật viên', desc:'Quản lý API Key và dịch vụ'})" title="Sửa">✏️</span>
-                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá Nhóm người dùng DEVELOPER?', 'Đã xoá nhóm người dùng.')" title="Xoá">🗑️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'SUPPORT_ADMIN', name:'Hỗ trợ Kỹ thuật & CSKH', desc:'Hỗ trợ khách hàng và tra cứu'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'SUPPORT_ADMIN', name:'Hỗ trợ Kỹ thuật & CSKH', desc:'Hỗ trợ khách hàng và tra cứu'})" title="Sửa">✏️</span>
+                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá Nhóm SUPPORT_ADMIN?', 'Đã xoá nhóm người dùng.')" title="Xoá">🗑️</span>
+                  </span>
+                </td>
+              </tr>
+
+              <!-- NHÓM 2: CONSOLE PORTAL TEMPLATES -->
+              <tr data-scope="console">
+                <td><span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:700">⚡ Console Portal</span></td>
+                <td><code class="code ok">ORG_ADMIN</code></td>
+                <td><b>👑 Quản lý Tổ chức (Template)</b></td>
+                <td>Toàn quyền quản trị Dự án, API Key, Mời nhân sự và Cài đặt tổ chức</td>
+                <td><span class="chip s">Full Console Access</span></td>
+                <td style="text-align:center">
+                  <span class="actbar">
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'ORG_ADMIN', name:'Quản lý Tổ chức', desc:'Toàn quyền quản trị không gian Console'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'ORG_ADMIN', name:'Quản lý Tổ chức', desc:'Toàn quyền quản trị không gian Console'})" title="Sửa">✏️</span>
+                    <span class="icoact" style="opacity:.4;cursor:not-allowed" title="Vai trò Console mặc định">🔒</span>
+                  </span>
+                </td>
+              </tr>
+              <tr data-scope="console">
+                <td><span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:700">⚡ Console Portal</span></td>
+                <td><code class="code ok">ORG_DEVELOPER</code></td>
+                <td><b>💻 Thành viên / Dev (Template)</b></td>
+                <td>Xem &amp; tạo API Key trong Dự án được phân công, xem thống kê kỹ thuật</td>
+                <td><span class="chip s">Project Scoped Access</span></td>
+                <td style="text-align:center">
+                  <span class="actbar">
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'ORG_DEVELOPER', name:'Thành viên / Dev', desc:'Thao tác trong phạm vi dự án được phân công'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'ORG_DEVELOPER', name:'Thành viên / Dev', desc:'Thao tác trong phạm vi dự án được phân công'})" title="Sửa">✏️</span>
+                    <span class="icoact" style="opacity:.4;cursor:not-allowed" title="Vai trò Console mặc định">🔒</span>
+                  </span>
+                </td>
+              </tr>
+              <tr data-scope="console">
+                <td><span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:700">⚡ Console Portal</span></td>
+                <td><code class="code ok">ORG_BILLING</code></td>
+                <td><b>💳 Quản trị Chi phí / Kế toán (Template)</b></td>
+                <td>Theo dõi số lượng request, lưu lượng gọi API, hạn ngạch Quota và gói cước</td>
+                <td><span class="chip s">Stats &amp; Plan View</span></td>
+                <td style="text-align:center">
+                  <span class="actbar">
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'ORG_BILLING', name:'Quản trị Chi phí / Kế toán', desc:'Xem thống kê lưu lượng và gói cước'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'ORG_BILLING', name:'Quản trị Chi phí / Kế toán', desc:'Xem thống kê lưu lượng và gói cước'})" title="Sửa">✏️</span>
+                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá Nhóm ORG_BILLING?', 'Đã xoá nhóm vai trò.')" title="Xoá">🗑️</span>
+                  </span>
+                </td>
+              </tr>
+              <tr data-scope="console">
+                <td><span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:700">⚡ Console Portal</span></td>
+                <td><code class="code ok">ORG_VIEWER</code></td>
+                <td><b>👁️ Người xem / Viewer (Template)</b></td>
+                <td>Chỉ xem tổng quan danh sách Dự án &amp; API Key ở chế độ Read-only, không thể chỉnh sửa</td>
+                <td><span class="chip s">Read-only Access</span></td>
+                <td style="text-align:center">
+                  <span class="actbar">
+                    <span class="icoact" onclick="openRbacRoleModal('view', {code:'ORG_VIEWER', name:'Người xem / Viewer', desc:'Chỉ xem tài nguyên ở chế độ Read-only'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openRbacRoleModal('edit', {code:'ORG_VIEWER', name:'Người xem / Viewer', desc:'Chỉ xem tài nguyên ở chế độ Read-only'})" title="Sửa">✏️</span>
+                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá Nhóm ORG_VIEWER?', 'Đã xoá nhóm vai trò.')" title="Xoá">🗑️</span>
                   </span>
                 </td>
               </tr>
             </tbody>
           </table>
-          <div class="tbl-foot">4 Nhóm người dùng · Đồng bộ phân quyền với Ma trận</div>
+          <div class="tbl-foot">8 Nhóm người dùng (4 Vai trò Admin Nội bộ + 4 Khung Vai trò Cổng Console)</div>
         </div>
       </div>
 
@@ -6382,6 +6457,18 @@
 
   function toggleGroupRow(group, chk) {
     // Demo group checkbox interaction
+  }
+
+  function filterRoleTable() {
+    var scope = document.getElementById('roleScopeFilter').value;
+    var q = (document.getElementById('roleSearchInput').value || '').toLowerCase().trim();
+    document.querySelectorAll('#roleTable tbody tr').forEach(function(r) {
+      var rowScope = r.getAttribute('data-scope');
+      var rowText = r.textContent.toLowerCase();
+      var matchScope = (scope === 'all' || rowScope === scope);
+      var matchSearch = (!q || rowText.indexOf(q) !== -1);
+      r.style.display = (matchScope && matchSearch) ? '' : 'none';
+    });
   }
 
 
