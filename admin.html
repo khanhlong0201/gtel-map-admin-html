@@ -3955,6 +3955,28 @@
       <h2 id="ovRbacRoleTitle">Tạo Nhóm người dùng</h2><button class="mclose" onclick="cls('ovRbacRoleModal')">✕</button>
     </div>
     <div class="modal-body" style="gap:14px;overflow-y:auto;padding-right:8px;flex:1">
+      
+      <!-- PHẠM VI ÁP DỤNG: ADMIN HOẶC CONSOLE -->
+      <div class="fld">
+        <label style="font-weight:700">Phân loại Cổng áp dụng <span style="color:var(--red)">*</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px">
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2,#f8fafc);cursor:pointer">
+            <input type="radio" name="rbRoleScope" value="admin" checked style="cursor:pointer" />
+            <div>
+              <div style="font-weight:700;font-size:12.5px;color:var(--brand)">🏛️ Admin Nội bộ GTEL</div>
+              <div style="font-size:11px;color:var(--ink-soft)">Áp dụng cho cán bộ vận hành GTEL</div>
+            </div>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2,#f8fafc);cursor:pointer">
+            <input type="radio" name="rbRoleScope" value="console" style="cursor:pointer" />
+            <div>
+              <div style="font-weight:700;font-size:12.5px;color:var(--teal)">⚡ Console Khách hàng</div>
+              <div style="font-size:11px;color:var(--ink-soft)">Áp dụng cho Doanh nghiệp B2B / Tổ chức</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
       <div class="row2">
         <div class="fld"><label>Mã nhóm (Group Code) <span style="color:var(--red)">*</span></label>
           <input class="inp" id="rbRoleCode" placeholder="vd: ORG_ANALYST, AUDITOR_L2" style="text-transform:uppercase;font-family:var(--mono);font-weight:600" />
@@ -6405,6 +6427,12 @@
     document.getElementById('rbRoleName').value = data ? data.name : '';
     document.getElementById('rbRoleDesc').value = data ? data.desc : '';
 
+    var targetScope = (data && data.scope) ? data.scope : 'admin';
+    document.querySelectorAll('input[name="rbRoleScope"]').forEach(function(r) {
+      r.checked = (r.value === targetScope);
+      r.disabled = isView;
+    });
+
     document.getElementById('rbRoleCode').disabled = (isEdit || isView);
     document.getElementById('rbRoleName').disabled = isView;
     document.getElementById('rbRoleDesc').disabled = isView;
@@ -6424,6 +6452,8 @@
   function saveRbacRole() {
     var code = document.getElementById('rbRoleCode').value.trim();
     var name = document.getElementById('rbRoleName').value.trim();
+    var scope = document.querySelector('input[name="rbRoleScope"]:checked').value;
+    var scopeLabel = (scope === 'admin') ? '🏛️ Admin Nội bộ GTEL' : '⚡ Console Khách hàng';
 
     if (!code || !name) {
       alert('Vui lòng nhập đầy đủ Mã nhóm và Tên nhóm người dùng!');
@@ -6431,7 +6461,7 @@
     }
 
     cls('ovRbacRoleModal');
-    alert('✅ Đã lưu Nhóm người dùng «' + name + '» (' + code + ') thành công! Đã ghi Audit Log.');
+    alert('✅ ĐÃ LƯU NHÓM NGƯỜI DÙNG THÀNH CÔNG!\n• Mã nhóm: ' + code + '\n• Tên nhóm: ' + name + '\n• Phân loại: ' + scopeLabel + '\n• Hệ thống đã ghi nhận vào Audit Log.');
   }
 
   // ================= UNIFIED PERMISSION MATRIX HANDLERS =================
