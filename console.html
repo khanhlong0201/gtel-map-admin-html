@@ -1327,6 +1327,8 @@
     <div class="grp">Giám sát &amp; Đội ngũ</div>
     <div class="nav" id="nav-stats" onclick="show('stats')"><span>📊</span> Thống kê &amp; Quota</div>
     <div class="nav" id="nav-team" onclick="show('team')"><span>👥</span> Đội ngũ &amp; Thành viên</div>
+    <div class="grp">Quản trị Tổ chức</div>
+    <div class="nav" id="nav-orgs" onclick="show('orgs')"><span>🏢</span> Quản lý Tổ chức</div>
     <div class="grp">Công cụ</div>
     <div class="nav" onclick="alert('Mở ứng dụng Gtel Map Viewer để kiểm thử trực quan dữ liệu bản đồ...')"><span>🗺️</span> Mở Map Viewer ↗</div>
   </aside>
@@ -1380,14 +1382,7 @@
               <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-size:10px;font-weight:600">Thành viên</span>
             </div>
 
-            <div class="org-menu-foot" style="display:flex;flex-direction:column;gap:8px">
-              <div class="org-menu-add" onclick="openOrgSettingsModal()">
-                <span>⚙️</span> <span>Cài đặt &amp; Thông tin Tổ chức hiện tại</span>
-              </div>
-              <div class="org-menu-add" onclick="openCreateOrgModal()" style="color:var(--brand)">
-                <span>＋</span> <span>Khởi tạo Tổ chức mới...</span>
-              </div>
-            </div>
+
           </div>
         </div>
 
@@ -1401,8 +1396,9 @@
 
       <div class="spacer"></div>
       <div class="rolebar" id="rolebar">
-        <button class="rolebtn on" data-role="org" onclick="setRole('org')">🔵 Quản lý Tổ chức</button>
-        <button class="rolebtn" data-role="member" onclick="setRole('member')">⚪ Thành viên / Dev</button>
+        <button class="rolebtn on" data-role="owner" onclick="setRole('owner')">👑 Chủ sở hữu (Owner)</button>
+        <button class="rolebtn" data-role="org" onclick="setRole('org')">🧑‍💼 Quản lý Tổ chức (Admin)</button>
+        <button class="rolebtn" data-role="member" onclick="setRole('member')">💻 Thành viên (Member)</button>
       </div>
       <span class="badge"><span class="dot"></span> realtime</span>
     </div>
@@ -1903,8 +1899,8 @@
               <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
               <td style="text-align:center">
                 <span class="actbar">
-                  <span class="icoact" onclick="alert('Chỉnh sửa quyền hạn của Trần Văn Minh')" title="Chỉnh sửa">✏️</span>
-                  <span class="icoact" style="color:var(--red)" onclick="if(confirm('Xóa thành viên Trần Văn Minh khỏi tổ chức?')) this.closest('tr').remove()" title="Gỡ khỏi tổ chức">🗑</span>
+                  <span class="icoact" onclick="editTeamMember('Trần Văn Minh', 'admin')" title="Chỉnh sửa vai trò">✏️</span>
+                  <span class="icoact" style="color:var(--red)" onclick="if(confirm('Xóa Quản lý Trần Văn Minh khỏi tổ chức?')) this.closest('tr').remove()" title="Gỡ khỏi tổ chức">🗑</span>
                 </span>
               </td>
             </tr>
@@ -1924,7 +1920,7 @@
               <td style="font-family:var(--mono);font-size:12px">10/07/2026</td>
               <td style="text-align:center">
                 <span class="actbar">
-                  <span class="icoact" onclick="alert('Chỉnh sửa dự án gán cho Nguyễn Thu Hòa')" title="Chỉnh sửa">✏️</span>
+                  <span class="icoact" onclick="editTeamMember('Nguyễn Thu Hòa', 'member')" title="Chỉnh sửa vai trò">✏️</span>
                   <span class="icoact" style="color:var(--red)" onclick="if(confirm('Xóa thành viên Nguyễn Thu Hòa khỏi tổ chức?')) this.closest('tr').remove()" title="Gỡ khỏi tổ chức">🗑</span>
                 </span>
               </td>
@@ -1945,7 +1941,7 @@
               <td style="font-family:var(--mono);font-size:12px">15/07/2026</td>
               <td style="text-align:center">
                 <span class="actbar">
-                  <span class="icoact" onclick="alert('Chỉnh sửa quyền Lê Đức Dũng')" title="Chỉnh sửa">✏️</span>
+                  <span class="icoact" onclick="editTeamMember('Lê Đức Dũng', 'member')" title="Chỉnh sửa vai trò">✏️</span>
                   <span class="icoact" style="color:var(--red)" onclick="if(confirm('Xóa thành viên Lê Đức Dũng khỏi tổ chức?')) this.closest('tr').remove()" title="Gỡ khỏi tổ chức">🗑</span>
                 </span>
               </td>
@@ -1999,10 +1995,242 @@
         <div class="tbl-foot">Hiển thị <b>6</b> thành viên &amp; lời mời trong Tổ chức Vingroup</div>
       </div>
     </div>
+
+    <!-- ============ VIEW: QUẢN LÝ TỔ CHỨC (BÊ NGUYÊN CRUD TỔ CHỨC TỪ ADMIN CHO CHỦ SỞ HỮU) ============ -->
+    <div class="content view" id="view-orgs">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="zlabel" style="margin:0">Danh sách &amp; Quản trị Tổ chức</div>
+          <div id="orgScopeSubtitle" style="font-size:13px;color:var(--ink-soft);margin-top:2px">Quản trị các Tổ chức doanh nghiệp. <b>Quản lý Tổ chức chỉ được quản lý trong phạm vi Tổ chức của chính nó</b>; chỉ 👑 Chủ sở hữu mới có toàn quyền CRUD và tạo tổ chức mới.</div>
+        </div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn owner-only" onclick="openOrgCrudModal('create')">＋ Tạo Tổ chức mới</button>
+      </div>
+
+      <!-- Scope Notice Banner -->
+      <div id="orgScopeNotice" style="background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12.5px;line-height:1.5">
+        👑 <b>Góc nhìn Chủ sở hữu (Owner):</b> Bạn đang quản lý các Tổ chức bạn sáng lập và sở hữu. Bạn có toàn quyền CRUD, Tạm khoá, Chuyển nhượng và Xoá Tổ chức.
+      </div>
+
+      <!-- Filter Controls & States -->
+      <div class="filters" style="margin-top:12px">
+        <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="min-width:auto"><span class="lbl">Vai trò của bạn</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="flex:1;min-width:240px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo tên tổ chức, mã, MST, người đại diện, email…</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+
+      <!-- State switcher (Admin Standard) -->
+      <div id="orgConsoleStateBar" style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--ink-faint);margin:2px 0 6px">
+        <span style="opacity:.75">Xem trạng thái màn:</span>
+        <span style="cursor:pointer;font-weight:700;color:var(--brand)">🟢 Có dữ liệu (3)</span>
+        <span onclick="alert('Mô phỏng trạng thái Đang tải dữ liệu...')" style="cursor:pointer;opacity:.65">⏳ Đang tải</span>
+        <span onclick="alert('Mô phỏng trạng thái Lọc không ra kết quả...')" style="cursor:pointer;opacity:.65">🔍 Lọc không ra</span>
+      </div>
+
+      <!-- Organizations Table (Full Admin Spec) -->
+      <div class="tbl-wrap" id="orgConsoleTableWrap">
+        <div class="tbl-tools">
+          <strong style="font-size:13px">Danh sách Tổ chức &amp; Quyền hạn của bạn</strong>
+          <span style="font-size:12px;color:var(--ink-faint)">Single Sign-On Multi-Tenant Architecture</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Tổ chức / Doanh nghiệp</th>
+              <th>Mã số thuế</th>
+              <th>Người đại diện pháp lý</th>
+              <th>Số điện thoại</th>
+              <th style="text-align:center">Dự án trực thuộc</th>
+              <th>Vai trò của bạn</th>
+              <th>Trạng thái</th>
+              <th style="text-align:center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: Vingroup (Owner) -->
+            <tr data-org-scope="owner" id="orgRow-vingroup">
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:18px">🏢</span>
+                  <div>
+                    <b>Tập đoàn Vingroup - Công ty CP</b>
+                    <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">ORG_VINGROUP_001</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">0101245486</td>
+              <td>Phạm Thu Lan</td>
+              <td style="font-family:var(--mono);font-size:12px">1900 232389</td>
+              <td style="text-align:center"><b>5</b></td>
+              <td><span class="chip" style="background:var(--purple-soft);color:var(--purple);font-weight:700">👑 Chủ sở hữu (Owner)</span></td>
+              <td><span class="st act" id="stBadge-vingroup">🟢 Hoạt động</span></td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <button class="btn sm" style="padding:3px 7px;font-size:11px" onclick="switchOrg('vingroup');show('home')" title="Vào làm việc">🚀 Vào làm việc</button>
+                  <span class="icoact" onclick="openOrgCrudModal('view', 'vingroup')" title="Xem chi tiết">👁️</span>
+                  <span class="icoact" onclick="openOrgCrudModal('edit', 'vingroup')" title="Sửa thông tin Tổ chức (Owner CRUD)">✏️</span>
+                  <span class="icoact" onclick="toggleLockOrg('vingroup')" id="lockIco-vingroup" title="Tạm khoá Tổ chức (Owner CRUD)">🔒</span>
+                  <span class="icoact" onclick="transferOrgOwnership('vingroup')" title="Chuyển nhượng quyền Owner">👑</span>
+                  <span class="icoact" style="color:var(--red)" onclick="deleteOrg('vingroup')" title="Xoá Tổ chức">🗑️</span>
+                </span>
+              </td>
+            </tr>
+
+            <!-- Row 2: Ahamove (Admin - Quản lý chỉ quản lý tổ chức này) -->
+            <tr data-org-scope="org" id="orgRow-ahamove">
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:18px">🛵</span>
+                  <div>
+                    <b>Công ty CP Dịch vụ Tức Thời Ahamove</b>
+                    <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">ORG_AHAMOVE_002</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">0313506123</td>
+              <td>Trần Minh Hoàng</td>
+              <td style="font-family:var(--mono);font-size:12px">0909 123 456</td>
+              <td style="text-align:center"><b>3</b></td>
+              <td><span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:700">🧑‍💼 Quản lý (Admin)</span></td>
+              <td><span class="st act" id="stBadge-ahamove">🟢 Hoạt động</span></td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <button class="btn sm ghost" style="padding:3px 7px;font-size:11px" onclick="switchOrg('ahamove');show('home')" title="Vào làm việc">🚀 Vào làm việc</button>
+                  <span class="icoact" onclick="openOrgCrudModal('view', 'ahamove')" title="Xem chi tiết">👁️</span>
+                  <span class="icoact" onclick="openOrgCrudModal('edit', 'ahamove')" title="Xem &amp; Cập nhật liên hệ nội bộ">✏️</span>
+                  <span class="icoact" style="opacity:.35;cursor:not-allowed" title="Chỉ Chủ sở hữu (Owner) mới có quyền khoá">🔒</span>
+                  <span class="icoact" style="opacity:.35;cursor:not-allowed" title="Chỉ Chủ sở hữu (Owner) mới có quyền chuyển nhượng">🔒</span>
+                  <span class="icoact" style="opacity:.35;cursor:not-allowed" title="Chỉ Chủ sở hữu (Owner) mới có quyền xoá">🔒</span>
+                </span>
+              </td>
+            </tr>
+
+            <!-- Row 3: FPT Software (Member) -->
+            <tr data-org-scope="member" id="orgRow-fpt">
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:18px">💻</span>
+                  <div>
+                    <b>Công ty TNHH Phần mềm FPT (FPT Software)</b>
+                    <div style="font-size:11px;color:var(--ink-faint);font-family:var(--mono)">ORG_FPTSOFT_003</div>
+                  </div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">0101778163</td>
+              <td>Nguyễn Văn Khoa</td>
+              <td style="font-family:var(--mono);font-size:12px">0247 300 7300</td>
+              <td style="text-align:center"><b>2</b></td>
+              <td><span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:600">💻 Thành viên (Member)</span></td>
+              <td><span class="st act" id="stBadge-fpt">🟢 Hoạt động</span></td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <button class="btn sm ghost" style="padding:3px 7px;font-size:11px" onclick="switchOrg('fpt');show('home')" title="Vào làm việc">🚀 Vào làm việc</button>
+                  <span class="icoact" onclick="openOrgCrudModal('view', 'fpt')" title="Xem chi tiết">👁️</span>
+                  <span class="icoact" style="opacity:.35;cursor:not-allowed" title="Chỉ Chủ sở hữu (Owner) mới có quyền sửa">🔒</span>
+                  <span class="icoact" style="opacity:.35;cursor:not-allowed" title="Chỉ Chủ sở hữu (Owner) mới có quyền khoá">🔒</span>
+                  <span class="icoact" style="opacity:.35;cursor:not-allowed" title="Chỉ Chủ sở hữu (Owner) mới có quyền chuyển nhượng">🔒</span>
+                  <span class="icoact" style="opacity:.35;cursor:not-allowed" title="Chỉ Chủ sở hữu (Owner) mới có quyền xoá">🔒</span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Hiển thị <b>3</b> trong tổng số 3 Tổ chức của tài khoản</span>
+          <span style="font-size:11.5px;color:var(--ink-soft)">💡 Chuyển đổi không gian làm việc nhanh ở góc trên bên trái Topbar</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- FLOATING DEMO BUTTONS -->
+    <!-- ============ MODAL: CHI TIẾT / TẠO / SỬA TỔ CHỨC (CHUẨN ADMIN ĐƯỢC CHUYỂN QUA CONSOLE) ============ -->
+    <div class="overlay" id="ovOrgCrudModal">
+      <div class="modal md" style="max-width:620px">
+        <div class="modal-head">
+          <h2 id="ovOrgCrudTitle">Tạo Tổ chức mới</h2>
+          <button class="mclose" onclick="cls('ovOrgCrudModal')">✕</button>
+        </div>
+        <div class="modal-body" style="gap:12px">
+          <div class="note" id="orgCrudNote" style="text-align:left;margin-bottom:4px">
+            🏢 Thông tin pháp lý của Tổ chức. <b>Chỉ 👑 Chủ sở hữu (ORG_OWNER) mới có quyền chỉnh sửa và quản lý</b>.
+          </div>
+
+          <div class="row2">
+            <div class="fld">
+              <label>Tên Tổ chức / Doanh nghiệp <span style="color:var(--red)">*</span></label>
+              <input class="inp" id="orgCrudName" placeholder="VD: Tập đoàn Vingroup - Công ty CP" />
+            </div>
+            <div class="fld">
+              <label>Mã định danh (Tenant Slug) <span style="color:var(--red)">*</span></label>
+              <input class="inp" id="orgCrudSlug" placeholder="ORG_VINGROUP_001" style="font-family:var(--mono)" />
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="fld">
+              <label>Mã số thuế / Giấy phép ĐKKD <span style="color:var(--red)">*</span></label>
+              <input class="inp" id="orgCrudTax" placeholder="0101245486" style="font-family:var(--mono)" />
+            </div>
+            <div class="fld">
+              <label>Người đại diện pháp lý <span style="color:var(--red)">*</span></label>
+              <input class="inp" id="orgCrudRep" placeholder="Phạm Thu Lan" />
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="fld">
+              <label>Số điện thoại liên hệ <span style="color:var(--red)">*</span></label>
+              <input class="inp" id="orgCrudPhone" placeholder="1900 232389" />
+            </div>
+            <div class="fld">
+              <label>Email liên hệ / Đại diện <span style="color:var(--red)">*</span></label>
+              <input class="inp" id="orgCrudEmail" placeholder="lan.pham@vinhome.vn" />
+            </div>
+          </div>
+
+          <div class="fld">
+            <label>Địa chỉ trụ sở chính</label>
+            <input class="inp" id="orgCrudAddr" placeholder="Số 7, Đường Bằng Lăng 1, KĐT Sinh thái Vinhomes Riverside, Long Biên, Hà Nội" />
+          </div>
+
+          <div class="row2">
+            <div class="fld">
+              <label>Gói dịch vụ &amp; Quota</label>
+              <select class="inp" id="orgCrudPlan">
+                <option value="enterprise">💎 Gói Enterprise B2B (Không giới hạn)</option>
+                <option value="business">🚀 Gói Business Pro (5,000,000 req/tháng)</option>
+                <option value="starter">⚡ Gói Standard Developer (500,000 req/tháng)</option>
+              </select>
+            </div>
+            <div class="fld">
+              <label>Trạng thái</label>
+              <div id="orgCrudStatusBadge" style="margin-top:6px"><span class="st act">🟢 Đang hoạt động</span></div>
+            </div>
+          </div>
+
+          <!-- Danger Zone cho Chủ sở hữu -->
+          <div id="orgCrudOwnerZone" style="border:1px solid var(--red-soft);background:rgba(220,38,38,.03);border-radius:8px;padding:10px 14px;margin-top:4px">
+            <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">⚠️ Vùng Quản trị Đặc quyền Chủ sở hữu (Owner Exclusive)</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+              <span style="font-size:11.5px;color:var(--ink-soft)">Chuyển giao quyền kiểm soát tối cao hoặc đóng vĩnh viễn không gian làm việc này.</span>
+              <div style="display:flex;gap:6px">
+                <button type="button" class="btn ghost sm" onclick="transferOrgOwnership()" style="color:var(--purple);border-color:var(--purple)">👑 Chuyển Owner</button>
+                <button type="button" class="btn ghost sm" onclick="deleteCurrentOrganization()" style="color:var(--red);border-color:var(--red)">🗑️ Xoá Tổ chức</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mfoot" id="orgCrudFoot" style="margin-top:10px">
+            <button class="btn ghost" onclick="cls('ovOrgCrudModal')">Đóng</button>
+            <button class="btn" id="orgCrudSaveBtn" onclick="saveOrgCrudModal()">💾 Lưu Tổ chức</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- FLOATING DEMO BUTTONS -->
 <div style="position:fixed;right:18px;bottom:18px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
   <button class="demofab" style="position:static" onclick="openOnboardingWizard(1)">✨ Demo Luồng Đăng nhập lần đầu (Onboarding)</button>
   <button class="demofab" style="position:static" onclick="openEmailPreview('dev.lead@vinhome.vn', 'Thành viên / Dev')">📨 Xem Email Mời Thành viên</button>
@@ -2011,79 +2239,90 @@
 
 <!-- ============ MODAL: MỜI THÀNH VIÊN VÀO TỔ CHỨC ============ -->
 <div class="overlay" id="ovInviteMember">
-  <div class="modal sm" style="max-width:500px">
+  <div class="modal sm" style="max-width:520px">
     <div class="modal-head">
       <div>
         <h2 style="font-size:16px">＋ Mời Thành viên vào Tổ chức</h2>
-        <div style="font-size:12px;color:var(--ink-soft)">Tổ chức: <b>Tập đoàn Vingroup</b></div>
+        <div style="font-size:12px;color:var(--ink-soft)" id="invModalSub">Cấp quyền tham gia làm việc trên Cổng Console</div>
       </div>
       <button class="mclose" onclick="cls('ovInviteMember')">✕</button>
     </div>
     <div class="modal-body" style="gap:14px">
-      <div class="fld">
-        <label>Email người nhận lời mời <span style="color:var(--red)">*</span></label>
-        <input class="inp" id="invEmail" placeholder="vd: dev.nam@vinhome.vn" />
-        <span class="vh">Hệ thống sẽ gửi link xác thực kích hoạt vào email này (Hạn 7 ngày).</span>
+      <!-- 1. CHỌN TỔ CHỨC (BẮT BUỘC ĐỐI VỚI CHỦ SỞ HỮU / CỐ ĐỊNH ĐỐI VỚI QUẢN LÝ) -->
+      <div class="fld" id="invOrgSelectorField">
+        <label style="font-weight:700">🏢 Tổ chức tiếp nhận thành viên <span style="color:var(--red)">*</span></label>
+        
+        <!-- Dành cho Chủ sở hữu: Được chọn tổ chức -->
+        <div id="invOrgSelectWrap">
+          <select class="inp" id="invOrgSelect" onchange="onInvOrgChange()">
+            <option value="vingroup">🏢 Tập đoàn Vingroup (Chủ sở hữu)</option>
+            <option value="ahamove">🏢 Đối tác Ahamove</option>
+            <option value="fpt">🏢 FPT Software GIS</option>
+          </select>
+          <span class="vh">👑 <b>Đặc quyền Chủ sở hữu:</b> Chọn Tổ chức bạn muốn mời nhân sự vào làm việc.</span>
+        </div>
+
+        <!-- Dành cho Quản lý Tổ chức: Cố định 1 tổ chức duy nhất -->
+        <div id="invOrgFixedWrap" style="display:none">
+          <div class="inp" id="invOrgFixedName" style="background:var(--panel-2);color:var(--ink);font-weight:600;display:flex;align-items:center;justify-content:space-between">
+            <span id="invOrgFixedText">🏢 Đối tác Ahamove</span>
+            <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-size:10.5px">Tổ chức của bạn</span>
+          </div>
+          <span class="vh">🧑‍💼 <b>Phạm vi Quản lý:</b> Chỉ được mời thành viên vào đúng Tổ chức của chính mình.</span>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="fld">
+          <label>Email người nhận lời mời <span style="color:var(--red)">*</span></label>
+          <input class="inp" id="invEmail" placeholder="vd: dev.nam@vinhome.vn" />
+          <span class="vh">Gửi link xác thực kích hoạt (Hạn 7 ngày).</span>
+        </div>
+        <div class="fld">
+          <label>Họ và tên (Tùy chọn)</label>
+          <input class="inp" id="invName" placeholder="vd: Nguyễn Hoàng Nam" />
+        </div>
       </div>
 
       <div class="fld">
-        <label>Họ và tên (Tùy chọn)</label>
-        <input class="inp" id="invName" placeholder="vd: Nguyễn Hoàng Nam" />
-      </div>
-
-      <div class="fld">
-        <label>Vai trò trong Tổ chức <span style="color:var(--red)">*</span></label>
+        <label style="font-weight:700">👥 Nhóm người dùng trong Tổ chức <span style="color:var(--red)">*</span></label>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <!-- 1. Dev / Member -->
+          <!-- 1. Quản lý Tổ chức (Admin) -->
           <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;background:var(--panel-2,#f8fafc)">
-            <input type="radio" name="invRole" value="member" checked style="margin-top:2px;cursor:pointer" />
+            <input type="radio" name="invRole" value="admin" onchange="onInvRoleChange()" style="margin-top:2px;cursor:pointer" />
             <div>
-              <div style="font-weight:700;font-size:13px">💻 Thành viên / Lập trình viên (Member / Developer)</div>
-              <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem và thao tác trên các Dự án được phân công, không thể xóa tổ chức hoặc mời người khác.</div>
+              <div style="font-weight:700;font-size:13px;color:var(--brand)">🧑‍💼 Quản lý Tổ chức (ORG_ADMIN)</div>
+              <div style="font-size:11.5px;color:var(--ink-soft)">Toàn quyền quản trị Dự án, tạo/thu hồi API Key, Quota và phân quyền Đội ngũ trong tổ chức này.</div>
             </div>
           </label>
 
-          <!-- 2. Org Manager -->
+          <!-- 2. Thành viên / Developer -->
           <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer">
-            <input type="radio" name="invRole" value="admin" style="margin-top:2px;cursor:pointer" />
+            <input type="radio" name="invRole" value="member" checked onchange="onInvRoleChange()" style="margin-top:2px;cursor:pointer" />
             <div>
-              <div style="font-weight:700;font-size:13px;color:var(--brand)">👑 Quản trị viên Tổ chức (Org Manager)</div>
-              <div style="font-size:11.5px;color:var(--ink-soft)">Toàn quyền tạo dự án, quản trị toàn bộ API Key, mời/gỡ thành viên và cấu hình thông tin pháp lý.</div>
-            </div>
-          </label>
-
-          <!-- 3. Billing Manager -->
-          <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer">
-            <input type="radio" name="invRole" value="billing" style="margin-top:2px;cursor:pointer" />
-            <div>
-              <div style="font-weight:700;font-size:13px;color:var(--purple)">💳 Quản trị Chi phí / Kế toán (Billing Manager)</div>
-              <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem số lượng request, lưu lượng gọi API, hạn ngạch Quota và gói cước/hóa đơn doanh nghiệp.</div>
-            </div>
-          </label>
-
-          <!-- 4. Viewer / Read-only -->
-          <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer">
-            <input type="radio" name="invRole" value="viewer" style="margin-top:2px;cursor:pointer" />
-            <div>
-              <div style="font-weight:700;font-size:13px;color:var(--teal)">👁️ Người xem (Viewer / Read-only)</div>
-              <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem danh sách Dự án &amp; API Key ở chế độ Read-only, không thể chỉnh sửa hay tạo mới.</div>
+              <div style="font-weight:700;font-size:13px;color:var(--teal)">💻 Thành viên / Developer (ORG_MEMBER)</div>
+              <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem và thao tác kỹ thuật trên các Dự án được phân công trực tiếp bên dưới.</div>
             </div>
           </label>
         </div>
       </div>
 
-      <div class="fld">
-        <label>Phân quyền Dự án được phép truy cập:</label>
-        <div style="display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2)">
+      <!-- PHÂN QUYỀN DỰ ÁN (CHỈ DÀNH CHO THÀNH VIÊN / ADMIN MẶC ĐỊNH FULL) -->
+      <div class="fld" id="invProjectSection">
+        <label style="font-weight:700">📁 Phân quyền Dự án được phép truy cập:</label>
+        
+        <!-- Info note khi chọn Quản lý -->
+        <div id="invAdminProjNote" style="display:none;background:var(--brand-soft);color:var(--brand);padding:8px 12px;border-radius:6px;font-size:12px;margin-bottom:6px">
+          ⚡ <b>Quản lý Tổ chức</b> tự động có toàn quyền trên <b>TẤT CẢ các Dự án</b> hiện tại và tương lai trong tổ chức này.
+        </div>
+
+        <div id="invMemberProjWrap" style="display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2)">
           <label style="font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer">
             <input type="checkbox" id="invAllProj" checked onchange="toggleInvProjects(this)" />
-            <span>Cho phép truy cập Tất cả Dự án (Hiện tại &amp; Tương lai)</span>
+            <span>Cho phép truy cập Tất cả Dự án của tổ chức này</span>
           </label>
           <div id="invProjectList" style="padding-left:20px;display:flex;flex-direction:column;gap:4px;opacity:.6">
-            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinHome Smart City</label>
-            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinHome Grand Park</label>
-            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinFast Dealer Portal</label>
-            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinFast EV Charging Map</label>
+            <!-- Render động theo Tổ chức đang chọn -->
           </div>
         </div>
       </div>
@@ -2421,7 +2660,24 @@
           </div>
         </div>
       </div>
-      <div class="mfoot">
+
+      <!-- OWNER EXCLUSIVE ACTIONS (CRUD TỔ CHỨC CẤP CHỦ SỞ HỮU) -->
+      <div class="owner-only" id="setOrgOwnerSec" style="margin-top:14px;border:1px solid var(--red-soft);background:rgba(220,38,38,.03);border-radius:10px;padding:12px 16px">
+        <div style="font-weight:700;color:var(--red);font-size:13px;display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <span>⚠️</span> <span>Vùng thao tác Quyền Chủ sở hữu (Owner Controls)</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="font-size:12px;color:var(--ink-soft);line-height:1.4">
+            Chỉ <b>👑 Chủ sở hữu Tổ chức (ORG_OWNER)</b> mới có quyền chuyển giao quyền sở hữu hoặc xóa không gian làm việc này.
+          </div>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="btn ghost sm" onclick="transferOrgOwnership()" style="color:var(--purple);border-color:var(--purple)">👑 Chuyển nhượng Owner</button>
+            <button type="button" class="btn ghost sm" onclick="deleteCurrentOrganization()" style="color:var(--red);border-color:var(--red)">🗑️ Xoá Tổ chức</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mfoot" style="margin-top:14px">
         <button class="btn ghost" onclick="cls('ovOrgSettings')">Đóng</button>
         <button class="btn" id="setOrgSaveBtn" onclick="saveOrgSettings()">💾 Lưu thay đổi</button>
       </div>
@@ -2636,7 +2892,7 @@
 </div>
 
 <script>
-  var currentRole = 'org';
+  var currentRole = 'owner';
 
   // ===== Organizations Multi-Tenancy Data =====
   var ORGS_DATA = {
@@ -2644,11 +2900,11 @@
       id: 'vingroup',
       name: 'Tập đoàn Vingroup',
       icon: '🏢',
-      role: 'org',
-      roleLabel: '👑 Quản lý',
+      role: 'owner',
+      roleLabel: '👑 Chủ sở hữu',
       stats: '5 Dự án · 7 API Keys',
-      greet: 'Xin chào 👋 — Quản lý Tổ chức, Tập đoàn Vingroup',
-      sub: 'Toàn quyền quản trị Dự án, API Key và Đội ngũ nhân sự trong tổ chức của bạn.',
+      greet: 'Xin chào 👋 — Chủ sở hữu Tổ chức, Tập đoàn Vingroup',
+      sub: 'Toàn quyền quản trị pháp lý, gói cước, chuyển nhượng quyền sở hữu, quản lý Dự án, API Key và Đội ngũ.',
       projCount: 5,
       keyCount: 7
     },
@@ -2656,13 +2912,13 @@
       id: 'ahamove',
       name: 'Đối tác Ahamove',
       icon: '🛵',
-      role: 'member',
-      roleLabel: '💻 Thành viên',
-      stats: '1 Dự án (Được gán)',
-      greet: 'Xin chào 👋 — Thành viên, Đối tác Ahamove',
-      sub: 'Bạn chỉ xem và thao tác trên Dự án [Ahamove Driver Navigation API] được phân công.',
-      projCount: 1,
-      keyCount: 2
+      role: 'org',
+      roleLabel: '🧑‍💼 Quản lý',
+      stats: '3 Dự án · 4 API Keys',
+      greet: 'Xin chào 👋 — Quản lý Tổ chức, Đối tác Ahamove',
+      sub: 'Quản trị Dự án, API Key, Quota và phân quyền Đội ngũ nhân sự trong tổ chức.',
+      projCount: 3,
+      keyCount: 4
     },
     fpt: {
       id: 'fpt',
@@ -2671,8 +2927,8 @@
       role: 'member',
       roleLabel: '💻 Thành viên',
       stats: '2 Dự án (Được gán)',
-      greet: 'Xin chào 👋 — Thành viên, FPT Software GIS',
-      sub: 'Bạn quản lý và theo dõi các Dự án phần mềm GIS được doanh nghiệp gán quyền.',
+      greet: 'Xin chào 👋 — Thành viên / Developer, FPT Software GIS',
+      sub: 'Bạn chỉ xem và thao tác trên các Dự án & API Key được doanh nghiệp phân công.',
       projCount: 2,
       keyCount: 3
     }
@@ -2801,7 +3057,7 @@
     };
 
     // Thêm vào dropdown menu
-    var foot = document.querySelector('.org-menu-foot');
+    var menu = document.getElementById('orgMenu');
     var newItem = document.createElement('div');
     newItem.className = 'org-menu-item';
     newItem.id = 'orgItem-' + orgKey;
@@ -2810,8 +3066,8 @@
       + '<span style="font-size:16px">🏢</span>'
       + '<div><div style="font-weight:700;font-size:12.5px">' + name + '</div>'
       + '<div style="font-size:11px;color:var(--ink-faint)">0 Dự án · 0 Keys</div></div></div>'
-      + '<span class="chip" style="background:var(--purple-soft);color:var(--purple);font-size:10px;font-weight:700">Quản lý</span>';
-    foot.parentNode.insertBefore(newItem, foot);
+      + '<span class="chip" style="background:var(--purple-soft);color:var(--purple);font-size:10px;font-weight:700">👑 Chủ sở hữu</span>';
+    if (menu) menu.appendChild(newItem);
 
     cls('ovCreateOrg');
     switchOrg(orgKey);
@@ -2905,25 +3161,29 @@
     show('home');
   }
 
-  // ===== Role switch =====
+  // ===== Role switch (3 GÓC NHÌN CONSOLE: CHỦ SỞ HỮU, QUẢN LÝ TỔ CHỨC, THÀNH VIÊN) =====
   function setRole(role) {
     currentRole = role;
     document.querySelectorAll('.rolebtn').forEach(function (b) { b.classList.toggle('on', b.dataset.role === role); });
-    document.querySelectorAll('.org-only').forEach(function (e) { e.style.display = role === 'org' ? '' : 'none'; });
-    document.querySelectorAll('.no-member').forEach(function (e) { e.style.display = role === 'member' ? 'none' : ''; });
-    document.querySelectorAll('.member-only').forEach(function (e) { e.style.display = role === 'member' ? '' : 'none'; });
+    document.querySelectorAll('.owner-only').forEach(function (e) { e.style.display = (role === 'owner') ? '' : 'none'; });
+    document.querySelectorAll('.org-only').forEach(function (e) { e.style.display = (role === 'owner' || role === 'org') ? '' : 'none'; });
+    document.querySelectorAll('.no-member').forEach(function (e) { e.style.display = (role === 'member') ? 'none' : ''; });
+    document.querySelectorAll('.member-only').forEach(function (e) { e.style.display = (role === 'member') ? '' : 'none'; });
 
     var greet = document.getElementById('homeGreet');
     var sub = document.getElementById('homeSub');
     var org = ORGS_DATA[currentOrgKey];
     var orgName = org ? org.name : 'Tập đoàn Vingroup';
     
-    if (role === 'org') {
-      greet.textContent = 'Xin chào 👋 — Quản lý Tổ chức, ' + orgName;
-      sub.textContent = 'Toàn quyền quản trị Dự án, API Key và Đội ngũ nhân sự trong tổ chức.';
+    if (role === 'owner') {
+      if (greet) greet.textContent = 'Xin chào 👋 — 👑 Chủ sở hữu Tổ chức (Owner), ' + orgName;
+      if (sub) sub.textContent = 'Toàn quyền quản trị tối cao: Pháp lý doanh nghiệp, thanh toán gói cước, chuyển nhượng quyền sở hữu, quản trị Dự án, API Key và Đội ngũ.';
+    } else if (role === 'org') {
+      if (greet) greet.textContent = 'Xin chào 👋 — 🧑‍💼 Quản lý Tổ chức (Admin), ' + orgName;
+      if (sub) sub.textContent = 'Quản trị Dự án, API Key, hạn mức Quota và mời/phân quyền Đội ngũ nhân sự trong tổ chức.';
     } else {
-      greet.textContent = 'Xin chào 👋 — Thành viên / Developer, ' + orgName;
-      sub.textContent = 'Bạn chỉ xem và thao tác trên các Dự án & API Key được phân công.';
+      if (greet) greet.textContent = 'Xin chào 👋 — 💻 Thành viên / Developer (Member), ' + orgName;
+      if (sub) sub.textContent = 'Bạn chỉ xem và thao tác kỹ thuật trên các Dự án & API Key được phân công trực tiếp.';
     }
 
     applyRoleFilter();
@@ -2952,6 +3212,40 @@
     var stKeys = document.getElementById('stKpiKeys');
     if (stTotal) stTotal.textContent = (currentRole === 'member') ? '540,220' : '1,284,502';
     if (stKeys) stKeys.textContent = (currentRole === 'member') ? '1' : '5';
+
+    // ===== PHÂN QUYỀN TRANG QUẢN LÝ TỔ CHỨC THEO GÓC NHÌN =====
+    // 1. Chủ sở hữu (Owner): Thấy tất cả các tổ chức sở hữu / tham gia
+    // 2. Quản lý Tổ chức (Admin): CHỈ THẤY DUY NHẤT TỔ CHỨC CỦA CHÍNH NÓ (Ahamove)
+    // 3. Thành viên (Member): CHỈ THẤY TỔ CHỨC ĐƯỢC GÁN (FPT Software)
+    var noticeEl = document.getElementById('orgScopeNotice');
+    var subtitleEl = document.getElementById('orgScopeSubtitle');
+    
+    document.querySelectorAll('#orgConsoleTableWrap tbody tr').forEach(function (row) {
+      var scope = row.getAttribute('data-org-scope');
+      if (currentRole === 'owner') {
+        row.style.display = '';
+      } else if (currentRole === 'org') {
+        row.style.display = (scope === 'org') ? '' : 'none';
+      } else {
+        row.style.display = (scope === 'member') ? '' : 'none';
+      }
+    });
+
+    if (noticeEl) {
+      if (currentRole === 'owner') {
+        noticeEl.innerHTML = '👑 <b>Góc nhìn Chủ sở hữu (Owner):</b> Bạn có toàn quyền quản trị tối cao (CRUD, Tạm khoá, Chuyển nhượng, Xoá) trên tất cả các Tổ chức bạn sở hữu.';
+        noticeEl.style.borderColor = 'var(--purple)';
+        noticeEl.style.background = 'rgba(124,58,237,.04)';
+      } else if (currentRole === 'org') {
+        noticeEl.innerHTML = '🧑‍💼 <b>Góc nhìn Quản lý Tổ chức (Admin):</b> Bạn <b>chỉ được quản lý nội bộ trong phạm vi Tổ chức của chính bạn</b> (Đối tác Ahamove). Bạn không có quyền can thiệp vào các tổ chức khác hoặc tạo tổ chức mới cấp hệ thống.';
+        noticeEl.style.borderColor = 'var(--brand)';
+        noticeEl.style.background = 'rgba(37,99,235,.04)';
+      } else {
+        noticeEl.innerHTML = '💻 <b>Góc nhìn Thành viên (Member):</b> Bạn chỉ xem thông tin Tổ chức ở chế độ <b>Chỉ xem (Read-only)</b> và thao tác kỹ thuật trên các Dự án được phân công trực tiếp.';
+        noticeEl.style.borderColor = 'var(--teal)';
+        noticeEl.style.background = 'rgba(13,148,136,.04)';
+      }
+    }
   }
 
   // ===== Views =====
@@ -2960,14 +3254,15 @@
     projects: 'Quản lý Dự án', 
     keys: 'Quản lý API Key', 
     stats: 'Thống kê & Quota sử dụng API',
-    team: 'Đội ngũ & Thành viên Tổ chức'
+    team: 'Đội ngũ & Thành viên Tổ chức',
+    orgs: 'Quản lý Không gian Tổ chức'
   };
 
   function show(v) {
     document.querySelectorAll('.view').forEach(function (e) { e.classList.remove('on'); });
     var targetView = document.getElementById('view-' + v);
     if (targetView) targetView.classList.add('on');
-    ['home', 'projects', 'keys', 'stats', 'team'].forEach(function (id) {
+    ['home', 'projects', 'keys', 'stats', 'team', 'orgs'].forEach(function (id) {
       var n = document.getElementById('nav-' + id);
       if (n) n.classList.toggle('active', v === id);
     });
@@ -2976,13 +3271,94 @@
     }
   }
 
-  // ===== Team & Invite handlers =====
+  // ===== Dynamic Projects per Organization =====
+  var ORG_PROJECTS_MAP = {
+    vingroup: [
+      'VinHome Smart City',
+      'VinHome Grand Park',
+      'VinFast Dealer Portal',
+      'VinFast EV Charging Map',
+      'Vingroup Corporate GIS'
+    ],
+    ahamove: [
+      'Ahamove Driver Navigation API',
+      'Ahamove Express Routing',
+      'Ahamove Delivery Optimizer'
+    ],
+    fpt: [
+      'FPT Software GIS Core',
+      'FPT Smart City Platform'
+    ]
+  };
+
+  // ===== Team & Invite handlers (HỖ TRỢ CHỌN TỔ CHỨC CHO CHỦ SỞ HỮU) =====
   function openInviteModal() {
     document.getElementById('invEmail').value = '';
     document.getElementById('invName').value = '';
-    document.getElementById('invAllProj').checked = true;
-    toggleInvProjects(document.getElementById('invAllProj'));
+    
+    // Set radio role = member by default
+    var radios = document.querySelectorAll('input[name="invRole"]');
+    radios.forEach(function(r) { r.checked = (r.value === 'member'); });
+
+    // 1. Phân biệt góc nhìn: Chủ sở hữu (được chọn Tổ chức) vs Quản lý (cố định 1 tổ chức)
+    var isOwner = (currentRole === 'owner');
+    var selectWrap = document.getElementById('invOrgSelectWrap');
+    var fixedWrap = document.getElementById('invOrgFixedWrap');
+
+    if (isOwner) {
+      if (selectWrap) selectWrap.style.display = 'block';
+      if (fixedWrap) fixedWrap.style.display = 'none';
+      var sel = document.getElementById('invOrgSelect');
+      if (sel) sel.value = currentOrgKey || 'vingroup';
+    } else {
+      if (selectWrap) selectWrap.style.display = 'none';
+      if (fixedWrap) fixedWrap.style.display = 'block';
+      var fixedText = document.getElementById('invOrgFixedText');
+      var orgData = ORGS_DATA[currentOrgKey] || { name: 'Đối tác Ahamove' };
+      if (fixedText) fixedText.textContent = '🏢 ' + orgData.name;
+    }
+
+    onInvOrgChange();
+    onInvRoleChange();
+
     document.getElementById('ovInviteMember').classList.add('show');
+  }
+
+  function onInvOrgChange() {
+    var isOwner = (currentRole === 'owner');
+    var targetOrgKey = isOwner ? document.getElementById('invOrgSelect').value : currentOrgKey;
+    var projs = ORG_PROJECTS_MAP[targetOrgKey] || ['Dự án mặc định'];
+    var container = document.getElementById('invProjectList');
+    
+    if (container) {
+      container.innerHTML = '';
+      projs.forEach(function(pName) {
+        var lbl = document.createElement('label');
+        lbl.style.cssText = 'font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer';
+        lbl.innerHTML = '<input type="checkbox" class="invProjChk" value="' + pName + '" checked disabled /> ' + pName;
+        container.appendChild(lbl);
+      });
+    }
+
+    var masterChk = document.getElementById('invAllProj');
+    if (masterChk) {
+      masterChk.checked = true;
+      toggleInvProjects(masterChk);
+    }
+  }
+
+  function onInvRoleChange() {
+    var role = document.querySelector('input[name="invRole"]:checked').value;
+    var adminNote = document.getElementById('invAdminProjNote');
+    var memberWrap = document.getElementById('invMemberProjWrap');
+
+    if (role === 'admin') {
+      if (adminNote) adminNote.style.display = 'block';
+      if (memberWrap) memberWrap.style.display = 'none';
+    } else {
+      if (adminNote) adminNote.style.display = 'none';
+      if (memberWrap) memberWrap.style.display = 'flex';
+    }
   }
 
   function toggleInvProjects(master) {
@@ -2996,13 +3372,33 @@
   }
 
   function submitInviteMember() {
+    var isOwner = (currentRole === 'owner');
+    var targetOrgKey = isOwner ? document.getElementById('invOrgSelect').value : currentOrgKey;
+    var targetOrgName = isOwner ? document.getElementById('invOrgSelect').selectedOptions[0].text : (ORGS_DATA[currentOrgKey] ? ORGS_DATA[currentOrgKey].name : 'Đối tác Ahamove');
+
     var email = document.getElementById('invEmail').value.trim();
     var name = document.getElementById('invName').value.trim() || 'Thành viên mới';
     var role = document.querySelector('input[name="invRole"]:checked').value;
-    var roleLabel = role === 'admin' ? '<span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:600">⚡ Console Admin</span>' : '<span class="chip">Thành viên / Dev</span>';
+    var roleLabel = (role === 'admin') 
+      ? '<span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:700">🧑‍💼 Quản lý Tổ chức</span>' 
+      : '<span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:600">💻 Thành viên</span>';
     
     if (!email) { alert('Vui lòng nhập Email người nhận lời mời.'); return; }
     
+    var projInfo = '';
+    if (role === 'admin') {
+      projInfo = '<span class="chip s" style="background:var(--brand-soft);color:var(--brand)">Toàn bộ Dự án (Full)</span>';
+    } else {
+      var allProj = document.getElementById('invAllProj').checked;
+      if (allProj) {
+        projInfo = '<span class="chip s">Toàn bộ Dự án</span>';
+      } else {
+        var selProjs = [];
+        document.querySelectorAll('.invProjChk:checked').forEach(function(c) { selProjs.push(c.value); });
+        projInfo = selProjs.length ? '<span class="chip g">' + selProjs.length + ' Dự án được gán</span>' : '<span class="chip" style="color:var(--ink-faint)">Chưa gán dự án</span>';
+      }
+    }
+
     var today = new Date();
     var dateStr = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
     
@@ -3011,23 +3407,24 @@
     tr.innerHTML = '<td><div style="display:flex;align-items:center;gap:9px"><div style="width:28px;height:28px;border-radius:50%;background:var(--amber-soft);color:var(--amber);font-weight:700;display:grid;place-items:center;font-size:11.5px">?</div><div><b>' + name + '</b> <i style="color:var(--ink-soft);font-size:11.5px">(Chờ xác nhận)</i></div></div></td>'
       + '<td style="font-family:var(--mono);font-size:12px">' + email + '</td>'
       + '<td>' + roleLabel + '</td>'
-      + '<td><span class="chip g">Dự án được gán</span></td>'
+      + '<td>' + projInfo + '</td>'
       + '<td><span class="st pending">⏳ Chờ chấp nhận (còn 7 ngày)</span></td>'
       + '<td style="font-family:var(--mono);font-size:12px">' + dateStr + '</td>'
       + '<td style="text-align:center"><span class="actbar">'
       + '<button class="btn sm ghost" style="padding:3px 7px;font-size:11px" onclick="resendInvite(\'' + email + '\')">✉️ Gửi lại</button>'
-      + '<span class="icoact" onclick="openEmailPreview(\'' + email + '\', \'' + (role === 'admin' ? 'Console Admin' : 'Thành viên / Dev') + '\')" title="Xem email mẫu mời">👁️</span>'
+      + '<span class="icoact" onclick="openEmailPreview(\'' + email + '\', \'' + (role === 'admin' ? 'Quản lý Tổ chức' : 'Thành viên / Dev') + '\')" title="Xem email mẫu mời">👁️</span>'
       + '<span class="icoact" style="color:var(--red)" onclick="if(confirm(\'Hủy lời mời?\')) this.closest(\'tr\').remove()" title="Hủy lời mời">✕</span>'
       + '</span></td>';
       
-    document.getElementById('teamTableBody').appendChild(tr);
+    var tbody = document.getElementById('teamTableBody');
+    if (tbody) tbody.appendChild(tr);
     var pendingEl = document.getElementById('teamPendingCount');
     if (pendingEl) pendingEl.textContent = parseInt(pendingEl.textContent || '0') + 1;
     var totalEl = document.getElementById('teamTotalCount');
     if (totalEl) totalEl.textContent = parseInt(totalEl.textContent || '0') + 1;
 
     cls('ovInviteMember');
-    alert('Đã gửi email lời mời kèm mã kích hoạt (hạn 7 ngày) đến ' + email + '!');
+    alert('✅ ĐÃ GỬI LỜI MỜI THÀNH CÔNG:\n• Người nhận: ' + name + ' (' + email + ')\n• Vào Tổ chức: ' + targetOrgName + '\n• Nhóm người dùng: ' + (role === 'admin' ? 'Quản lý Tổ chức (ORG_ADMIN)' : 'Thành viên (ORG_MEMBER)') + '\n• Link kích hoạt có hiệu lực trong 7 ngày.');
   }
 
   function resendInvite(email) {
@@ -3255,4 +3652,191 @@
 
   // init
   applyRoleFilter();
+
+  // ===== OWNER CRUD & ROLE MANAGEMENT HANDLERS =====
+  function transferOrgOwnership() {
+    var newOwner = prompt('👑 CHUYỂN NHƯỢNG QUYỀN CHỦ SỞ HỮU (ORG_OWNER)\n\nNhập email thành viên nhận quyền Chủ sở hữu:', 'minh.tran@vinhome.vn');
+    if (!newOwner) return;
+    if (confirm('XÁC NHẬN CHUYỂN NHƯỢNG QUYỀN CHỦ SỞ HỮU:\n\nBạn sắp chuyển toàn quyền sở hữu Tổ chức «' + (ORGS_DATA[currentOrgKey] ? ORGS_DATA[currentOrgKey].name : '') + '» cho tài khoản [' + newOwner + '].\n\nSau khi chuyển, tài khoản hiện tại của bạn sẽ chuyển thành [🧑‍💼 Quản lý Tổ chức]. Tiếp tục?')) {
+      cls('ovOrgSettings');
+      alert('🎉 ĐÃ CHUYỂN NHƯỢNG THÀNH CÔNG!\n\n• Chủ sở hữu mới: ' + newOwner + '\n• Vai trò của bạn hiện tại: 🧑‍💼 Quản lý Tổ chức (ORG_ADMIN).\n• Hệ thống đã ghi nhận vào Audit Log.');
+      setRole('org');
+    }
+  }
+
+  function deleteCurrentOrganization() {
+    var orgName = ORGS_DATA[currentOrgKey] ? ORGS_DATA[currentOrgKey].name : 'Tổ chức này';
+    var confirmText = prompt('⚠️ CẢNH BÁO XOÁ TỔ CHỨC:\n\nHành động này sẽ xoá vĩnh viễn không gian làm việc «' + orgName + '», thu hồi toàn bộ API Key và giải tán các dự án trực thuộc.\n\nVui lòng nhập chính xác tên tổ chức để xác nhận:', '');
+    if (!confirmText) return;
+    if (confirmText.trim().toLowerCase() === orgName.trim().toLowerCase()) {
+      cls('ovOrgSettings');
+      alert('🗑️ ĐÃ XOÁ TỔ CHỨC «' + orgName + '» THÀNH CÔNG!\n\nHệ thống đang chuyển bạn sang không gian làm việc tiếp theo.');
+      switchOrg('fpt');
+    } else {
+      alert('Tên tổ chức nhập không khớp. Đã huỷ thao tác xoá.');
+    }
+  }
+
+  function editTeamMember(name, currentRoleCode) {
+    var newRole = prompt('✏️ CHỈNH SỬA VAI TRÒ THÀNH VIÊN: ' + name + '\n\nChọn Nhóm người dùng mới:\n1. 🧑‍💼 Quản lý Tổ chức (ORG_ADMIN)\n2. 💻 Thành viên / Developer (ORG_MEMBER)', (currentRoleCode === 'admin' ? '1' : '2'));
+    if (!newRole) return;
+    var roleLabel = (newRole === '1') ? '🧑‍💼 Quản lý Tổ chức (ORG_ADMIN)' : '💻 Thành viên / Developer (ORG_MEMBER)';
+    alert('✅ ĐÃ CẬP NHẬT:\nThành viên «' + name + '» đã được đổi vai trò sang: ' + roleLabel);
+  }
+
+
+  // ===== FULL ADMIN-GRADE ORG CRUD HANDLERS CHO CHỦ SỞ HỮU TRÊN CONSOLE =====
+  var ORG_DETAILS_DB = {
+    vingroup: {
+      id: 'vingroup',
+      name: 'Tập đoàn Vingroup - Công ty CP',
+      slug: 'ORG_VINGROUP_001',
+      tax: '0101245486',
+      rep: 'Phạm Thu Lan',
+      phone: '1900 232389',
+      email: 'lan.pham@vinhome.vn',
+      addr: 'Số 7, Đường Bằng Lăng 1, KĐT Sinh thái Vinhomes Riverside, Long Biên, Hà Nội',
+      plan: 'enterprise',
+      status: 'act',
+      isOwner: true
+    },
+    ahamove: {
+      id: 'ahamove',
+      name: 'Công ty CP Dịch vụ Tức Thời Ahamove',
+      slug: 'ORG_AHAMOVE_002',
+      tax: '0313506123',
+      rep: 'Trần Minh Hoàng',
+      phone: '0909 123 456',
+      email: 'tech@ahamove.com',
+      addr: 'Tầng 1, Toà nhà Rivera Park, 7/28 Thành Thái, P.14, Q.10, TP.HCM',
+      plan: 'business',
+      status: 'act',
+      isOwner: false
+    },
+    fpt: {
+      id: 'fpt',
+      name: 'Công ty TNHH Phần mềm FPT (FPT Software)',
+      slug: 'ORG_FPTSOFT_003',
+      tax: '0101778163',
+      rep: 'Nguyễn Văn Khoa',
+      phone: '0247 300 7300',
+      email: 'contact@fpt.com',
+      addr: 'Tòa nhà FPT Cầu Giấy, Phố Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội',
+      plan: 'starter',
+      status: 'act',
+      isOwner: false
+    }
+  };
+
+  var curOrgEditKey = 'vingroup';
+
+  function openOrgCrudModal(mode, orgKey) {
+    curOrgEditKey = orgKey || 'vingroup';
+    var data = ORG_DETAILS_DB[curOrgEditKey] || ORG_DETAILS_DB.vingroup;
+    var isView = (mode === 'view');
+    var isEdit = (mode === 'edit');
+    var isCreate = (mode === 'create');
+
+    var titleEl = document.getElementById('ovOrgCrudTitle');
+    if (titleEl) {
+      titleEl.textContent = isCreate ? '＋ Khởi tạo Tổ chức Doanh nghiệp Mới' : (isEdit ? '✏️ Chỉnh sửa Pháp lý Tổ chức' : '👁️ Chi tiết Hồ sơ Tổ chức');
+    }
+
+    document.getElementById('orgCrudName').value = isCreate ? '' : data.name;
+    document.getElementById('orgCrudSlug').value = isCreate ? 'ORG_NEW_' + Math.floor(Math.random()*900+100) : data.slug;
+    document.getElementById('orgCrudTax').value = isCreate ? '' : data.tax;
+    document.getElementById('orgCrudRep').value = isCreate ? '' : data.rep;
+    document.getElementById('orgCrudPhone').value = isCreate ? '' : data.phone;
+    document.getElementById('orgCrudEmail').value = isCreate ? '' : data.email;
+    document.getElementById('orgCrudAddr').value = isCreate ? '' : data.addr;
+    document.getElementById('orgCrudPlan').value = isCreate ? 'business' : data.plan;
+
+    var stBadge = document.getElementById('orgCrudStatusBadge');
+    if (stBadge) {
+      stBadge.innerHTML = (data.status === 'act' || isCreate) ? '<span class="st act">🟢 Đang hoạt động</span>' : '<span class="st susp">🟠 Tạm khoá</span>';
+    }
+
+    // Readonly / Editable rules
+    ['orgCrudName', 'orgCrudSlug', 'orgCrudTax', 'orgCrudRep', 'orgCrudPhone', 'orgCrudEmail', 'orgCrudAddr', 'orgCrudPlan'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.disabled = isView;
+    });
+
+    var ownerZone = document.getElementById('orgCrudOwnerZone');
+    if (ownerZone) {
+      ownerZone.style.display = (data.isOwner && !isCreate && !isView) ? 'block' : 'none';
+    }
+
+    var saveBtn = document.getElementById('orgCrudSaveBtn');
+    if (saveBtn) saveBtn.style.display = isView ? 'none' : '';
+
+    var noteEl = document.getElementById('orgCrudNote');
+    if (noteEl) {
+      if (isCreate) {
+        noteEl.innerHTML = '🏢 Bạn đang tạo Tổ chức mới. Sau khi tạo, bạn sẽ tự động là <b>👑 Chủ sở hữu (ORG_OWNER)</b> của tổ chức này.';
+      } else if (data.isOwner) {
+        noteEl.innerHTML = '👑 <b>Đặc quyền Chủ sở hữu:</b> Bạn có toàn quyền cập nhật thông tin pháp lý, chuyển nhượng hoặc đóng tổ chức này.';
+      } else {
+        noteEl.innerHTML = 'ℹ️ Bạn đang xem tổ chức ở chế độ <b>Chỉ xem</b>. Chỉ <b>👑 Chủ sở hữu (ORG_OWNER)</b> mới có quyền chỉnh sửa thông tin này.';
+      }
+    }
+
+    openModal('ovOrgCrudModal');
+  }
+
+  function saveOrgCrudModal() {
+    var name = document.getElementById('orgCrudName').value.trim();
+    var tax = document.getElementById('orgCrudTax').value.trim();
+    var rep = document.getElementById('orgCrudRep').value.trim();
+    var phone = document.getElementById('orgCrudPhone').value.trim();
+    var email = document.getElementById('orgCrudEmail').value.trim();
+
+    if (!name || !tax || !rep || !phone || !email) {
+      alert('Vui lòng nhập đầy đủ các trường bắt buộc (*): Tên Tổ chức, MST, Người đại diện, SĐT và Email!');
+      return;
+    }
+
+    cls('ovOrgCrudModal');
+    alert('✅ ĐÃ LƯU THÀNH CÔNG:\n• Tổ chức: ' + name + '\n• Mã số thuế: ' + tax + '\n• Đại diện: ' + rep + '\n• Hệ thống đã ghi nhận cập nhật vào Audit Trail.');
+  }
+
+  function toggleLockOrg(orgKey) {
+    var data = ORG_DETAILS_DB[orgKey];
+    if (!data) return;
+    if (!data.isOwner) {
+      alert('🔒 BẠN KHÔNG CÓ QUYỀN:\n\nChỉ Chủ sở hữu (ORG_OWNER) của tổ chức này mới có quyền Tạm khoá hoặc Mở lại tổ chức!');
+      return;
+    }
+
+    var isCurrentlyAct = (data.status === 'act');
+    var promptMsg = isCurrentlyAct 
+      ? '⚠️ TẠM KHOÁ TỔ CHỨC «' + data.name + '»?\n\nToàn bộ 5 Dự án và 7 API Key thuộc tổ chức này sẽ NGỪNG PHỤC VỤ cho đến khi mở lại. Dữ liệu vẫn được giữ nguyên vẹn.\n\nXác nhận tạm khoá?'
+      : '🔓 MỞ LẠI TỔ CHỨC «' + data.name + '»?\n\nTổ chức sẽ trở lại trạng thái Hoạt động, toàn bộ API Key sẽ hoạt động bình thường trở lại.\n\nXác nhận mở lại?';
+
+    if (confirm(promptMsg)) {
+      data.status = isCurrentlyAct ? 'susp' : 'act';
+      var badge = document.getElementById('stBadge-' + orgKey);
+      var ico = document.getElementById('lockIco-' + orgKey);
+      if (badge) {
+        badge.className = (data.status === 'act') ? 'st act' : 'st susp';
+        badge.textContent = (data.status === 'act') ? '🟢 Hoạt động' : '🟠 Tạm khoá';
+      }
+      if (ico) {
+        ico.textContent = (data.status === 'act') ? '🔒' : '🔓';
+        ico.title = (data.status === 'act') ? 'Tạm khoá Tổ chức' : 'Mở lại Tổ chức';
+      }
+      alert('✅ ' + (data.status === 'act' ? 'Đã mở lại tổ chức thành công!' : 'Đã tạm khoá tổ chức thành công!'));
+    }
+  }
+
+  function deleteOrg(orgKey) {
+    var data = ORG_DETAILS_DB[orgKey];
+    if (!data) return;
+    if (!data.isOwner) {
+      alert('🔒 BẠN KHÔNG CÓ QUYỀN:\n\nChỉ Chủ sở hữu (ORG_OWNER) mới có quyền xoá tổ chức này!');
+      return;
+    }
+    deleteCurrentOrganization();
+  }
+
 </script>
