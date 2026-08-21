@@ -248,6 +248,85 @@
     background: var(--green);
   }
 
+  /* Org Switcher */
+  .org-switcher {
+    position: relative;
+    display: inline-block;
+  }
+  .org-switcher-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    padding: 5px 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    transition: all .15s ease;
+  }
+  .org-switcher-btn:hover {
+    background: var(--panel);
+    border-color: var(--brand);
+  }
+  .org-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 300px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    z-index: 1000;
+    overflow: hidden;
+  }
+  .org-menu.show {
+    display: block;
+  }
+  .org-menu-head {
+    padding: 10px 14px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .org-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .org-menu-item:hover {
+    background: var(--panel-2);
+  }
+  .org-menu-item.active {
+    background: var(--brand-soft);
+  }
+  .org-menu-foot {
+    border-top: 1px solid var(--line);
+    padding: 8px 14px;
+    background: var(--panel-2);
+  }
+  .org-menu-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--brand);
+    cursor: pointer;
+  }
+  .org-menu-add:hover {
+    text-decoration: underline;
+  }
+
   .content {
     padding: 20px 22px 60px;
     display: flex;
@@ -1242,25 +1321,88 @@
     <div class="logo"><span class="m">◗</span> Gtel Map Console</div>
     <div class="grp">Tổng quan</div>
     <div class="nav active" id="nav-home" onclick="show('home')"><span>🏠</span> Trang chủ</div>
-    <div class="grp">Tổ chức</div>
-    <div class="nav org-only" id="nav-customers" onclick="show('customers')"><span>👥</span> Quản lý Khách hàng</div>
+    <div class="grp">Tài nguyên API</div>
     <div class="nav" id="nav-projects" onclick="show('projects')"><span>📁</span> Quản lý Dự án</div>
-    <div class="grp">API</div>
     <div class="nav" id="nav-keys" onclick="show('keys')"><span>🔑</span> Quản lý API Key</div>
-    <div class="nav" id="nav-stats" onclick="show('stats')"><span>📊</span> Thống kê sử dụng</div>
+    <div class="grp">Giám sát &amp; Đội ngũ</div>
+    <div class="nav" id="nav-stats" onclick="show('stats')"><span>📊</span> Thống kê &amp; Quota</div>
+    <div class="nav" id="nav-team" onclick="show('team')"><span>👥</span> Đội ngũ &amp; Thành viên</div>
+    <div class="grp">Công cụ</div>
+    <div class="nav" onclick="alert('Mở ứng dụng Gtel Map Viewer để kiểm thử trực quan dữ liệu bản đồ...')"><span>🗺️</span> Mở Map Viewer ↗</div>
   </aside>
 
   <div class="main">
     <div class="topbar">
-      <div>
-        <div class="crumb"><b>Tập đoàn Vingroup</b> › Console</div>
-        <h1 id="ptitle">Trang chủ</h1>
+      <div style="display:flex;align-items:center;gap:12px">
+        <!-- Organization Switcher -->
+        <div class="org-switcher" id="orgSwitcher">
+          <div class="org-switcher-btn" onclick="toggleOrgMenu(event)" title="Click để chuyển đổi không gian làm việc Tổ chức">
+            <span id="currentOrgIcon" style="font-size:16px">🏢</span>
+            <span id="currentOrgName">Tập đoàn Vingroup</span>
+            <span class="chip" id="currentOrgBadge" style="background:var(--purple-soft);color:var(--purple);font-size:10.5px;padding:2px 6px;font-weight:700">👑 Quản lý</span>
+            <span style="font-size:11px;color:var(--ink-faint);margin-left:2px">▾</span>
+          </div>
+
+          <!-- Menu Dropdown -->
+          <div class="org-menu" id="orgMenu">
+            <div class="org-menu-head">Tổ chức của bạn (3)</div>
+            
+            <div class="org-menu-item active" id="orgItem-vingroup" onclick="switchOrg('vingroup')">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="font-size:16px">🏢</span>
+                <div>
+                  <div style="font-weight:700;font-size:12.5px">Tập đoàn Vingroup</div>
+                  <div style="font-size:11px;color:var(--ink-faint)">5 Dự án · 7 API Keys</div>
+                </div>
+              </div>
+              <span class="chip" style="background:var(--purple-soft);color:var(--purple);font-size:10px;font-weight:700">Quản lý</span>
+            </div>
+
+            <div class="org-menu-item" id="orgItem-ahamove" onclick="switchOrg('ahamove')">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="font-size:16px">🛵</span>
+                <div>
+                  <div style="font-weight:700;font-size:12.5px">Đối tác Ahamove</div>
+                  <div style="font-size:11px;color:var(--ink-faint)">1 Dự án (Được gán)</div>
+                </div>
+              </div>
+              <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-size:10px;font-weight:600">Thành viên</span>
+            </div>
+
+            <div class="org-menu-item" id="orgItem-fpt" onclick="switchOrg('fpt')">
+              <div style="display:flex;align-items:center;gap:9px">
+                <span style="font-size:16px">💻</span>
+                <div>
+                  <div style="font-weight:700;font-size:12.5px">FPT Software GIS</div>
+                  <div style="font-size:11px;color:var(--ink-faint)">2 Dự án (Được gán)</div>
+                </div>
+              </div>
+              <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-size:10px;font-weight:600">Thành viên</span>
+            </div>
+
+            <div class="org-menu-foot" style="display:flex;flex-direction:column;gap:8px">
+              <div class="org-menu-add" onclick="openOrgSettingsModal()">
+                <span>⚙️</span> <span>Cài đặt &amp; Thông tin Tổ chức hiện tại</span>
+              </div>
+              <div class="org-menu-add" onclick="openCreateOrgModal()" style="color:var(--brand)">
+                <span>＋</span> <span>Khởi tạo Tổ chức mới...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-left:1px solid var(--line);height:24px;margin:0 2px"></div>
+
+        <div>
+          <div class="crumb" style="font-size:11.5px;margin-bottom:0">Cổng Console › <span id="currentOrgCrumb">Tập đoàn Vingroup</span></div>
+          <h1 id="ptitle" style="font-size:16px">Trang chủ</h1>
+        </div>
       </div>
+
       <div class="spacer"></div>
       <div class="rolebar" id="rolebar">
-        <button class="rolebtn on" data-role="org" onclick="setRole('org')">🔵 Org Admin</button>
-        <button class="rolebtn" data-role="cust" onclick="setRole('cust')">🟢 Khách hàng Admin</button>
-        <button class="rolebtn" data-role="member" onclick="setRole('member')">⚪ Member</button>
+        <button class="rolebtn on" data-role="org" onclick="setRole('org')">🔵 Quản lý Tổ chức</button>
+        <button class="rolebtn" data-role="member" onclick="setRole('member')">⚪ Thành viên / Dev</button>
       </div>
       <span class="badge"><span class="dot"></span> realtime</span>
     </div>
@@ -1269,8 +1411,8 @@
     <div class="content view on" id="view-home">
       <div class="zlabel">Chào mừng trở lại</div>
       <div class="card">
-        <h3 id="homeGreet">Xin chào 👋 — Org Admin, Tổ chức Vingroup</h3>
-        <div class="sub" id="homeSub">Toàn bộ Khách hàng và Dự án trong tổ chức của bạn.</div>
+        <h3 id="homeGreet">Xin chào 👋 — Quản lý Tổ chức, Tập đoàn Vingroup</h3>
+        <div class="sub" id="homeSub">Toàn quyền quản trị Dự án, API Key và Đội ngũ nhân sự trong tổ chức của bạn.</div>
       </div>
       <div class="zlabel">Số liệu tóm tắt</div>
       <div class="kpis">
@@ -1295,53 +1437,7 @@
           <div class="k-delta flat">1,272,850 / 1,284,502 request</div>
         </div>
       </div>
-      <div class="note">Mockup Console — dùng nút vai trò ở góc trên để xem giao diện đổi theo 🔵 Org Admin / 🟢 Khách hàng Admin / ⚪ Member.</div>
-    </div>
-
-    <!-- ============ VIEW: CUSTOMERS (chỉ Org Admin) ============ -->
-    <div class="content view" id="view-customers">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="zlabel" style="margin:0">Danh sách Khách hàng</div>
-        <div class="spacer" style="flex:1"></div>
-        <button class="btn" onclick="openCustomerCreate()">＋ Tạo Khách hàng</button>
-      </div>
-      <div class="note" style="text-align:left;padding:10px 14px;background:var(--panel);border:1px solid var(--line);border-radius:10px">
-        🏢 Tổ chức <b>Vingroup</b> — tầng Khách hàng dùng để chia nhỏ team/quyền quản lý trong 1 tổ chức lớn. Ví dụ: 2 Khách hàng con <b>Vinhome</b> và <b>Vinfast</b>.
-      </div>
-      <div class="tbl-wrap">
-        <div class="tbl-tools"><strong style="font-size:13px">Khách hàng</strong>
-          <span class="search">🔍 Tìm theo tên khách hàng…</span>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Tên Khách hàng</th>
-              <th>Mã</th>
-              <th>Trạng thái</th>
-              <th>Ngày tạo</th>
-              <th style="text-align:center">Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr onclick="openCustomer('vinhome')" style="cursor:pointer">
-              <td><b>Vinhome</b></td>
-              <td style="font-family:var(--mono);font-size:12px">vinhome</td>
-              <td><span class="st act">🟢 Hoạt động</span></td>
-              <td style="font-family:var(--mono);font-size:12px">10/06/2026</td>
-              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openCustomer('vinhome')" title="Xem chi tiết">ℹ️</span></span></td>
-            </tr>
-            <tr onclick="openCustomer('vinfast')" style="cursor:pointer">
-              <td><b>Vinfast</b></td>
-              <td style="font-family:var(--mono);font-size:12px">vinfast</td>
-              <td><span class="st act">🟢 Hoạt động</span></td>
-              <td style="font-family:var(--mono);font-size:12px">10/06/2026</td>
-              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="event.stopPropagation();openCustomer('vinfast')" title="Xem chi tiết">ℹ️</span></span></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="tbl-foot">Hiển thị <b>1–2</b> trong 2 Khách hàng</div>
-      </div>
-      <div class="note">Click 1 dòng để mở chi tiết Khách hàng — tab "Thành viên" (thêm/gỡ tài khoản, phong Khách hàng Admin).</div>
+      <div class="note">Mockup Console — dùng nút vai trò ở góc trên để chuyển đổi giữa 🔵 Quản lý Tổ chức (toàn quyền) và ⚪ Thành viên / Developer (theo dự án).</div>
     </div>
 
     <!-- ============ VIEW: PROJECTS ============ -->
@@ -1352,19 +1448,19 @@
         <button class="btn no-member" onclick="openProjectCreate()">＋ Tạo Project</button>
       </div>
       <div class="filters">
-        <div class="sel"><span class="lbl">Khách hàng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Tổ chức</span><span class="v">Tập đoàn Vingroup</span></div>
         <div class="sel"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="rld" title="Xóa lọc">⟳</div>
       </div>
       <div class="tbl-wrap">
-        <div class="tbl-tools"><strong style="font-size:13px">Project</strong>
+        <div class="tbl-tools"><strong style="font-size:13px">Dự án</strong>
           <span class="search">🔍 Tìm theo tên project…</span>
         </div>
         <table id="projTable">
           <thead>
             <tr>
               <th>Tên Project</th>
-              <th>Khách hàng cha</th>
+              <th>Tổ chức trực thuộc</th>
               <th>Trạng thái</th>
               <th>Ngày tạo</th>
               <th style="text-align:center">Hành động</th>
@@ -1373,7 +1469,7 @@
           <tbody>
             <tr data-cust="vinhome" data-member="y">
               <td><b>VinHome Smart City</b></td>
-              <td>Vinhome</td>
+              <td>Tập đoàn Vingroup</td>
               <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
               <td style="text-align:center"><span class="actbar">
@@ -1384,7 +1480,7 @@
             </tr>
             <tr data-cust="vinhome" data-member="n">
               <td><b>VinHome Grand Park</b></td>
-              <td>Vinhome</td>
+              <td>Tập đoàn Vingroup</td>
               <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">10/07/2026</td>
               <td style="text-align:center"><span class="actbar">
@@ -1395,7 +1491,7 @@
             </tr>
             <tr data-cust="vinfast" data-member="n">
               <td><b>VinFast Dealer Portal</b></td>
-              <td>Vinfast</td>
+              <td>Tập đoàn Vingroup</td>
               <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">15/07/2026</td>
               <td style="text-align:center"><span class="actbar">
@@ -1406,7 +1502,7 @@
             </tr>
             <tr data-cust="vinfast" data-member="n">
               <td><b>VinFast EV Charging Map</b></td>
-              <td>Vinfast</td>
+              <td>Tập đoàn Vingroup</td>
               <td><span class="st susp">🟡 Tạm dừng</span></td>
               <td style="font-family:var(--mono);font-size:12px">20/07/2026</td>
               <td style="text-align:center"><span class="actbar">
@@ -1417,7 +1513,7 @@
             </tr>
             <tr data-cust="org" data-member="n">
               <td><b>Vingroup Corporate GIS</b></td>
-              <td><span style="color:var(--ink-faint)">— (thuộc thẳng Tổ chức)</span></td>
+              <td>Tập đoàn Vingroup</td>
               <td><span class="st act">🟢 Hoạt động</span></td>
               <td style="font-family:var(--mono);font-size:12px">01/06/2026</td>
               <td style="text-align:center"><span class="actbar">
@@ -1430,7 +1526,7 @@
         </table>
         <div class="tbl-foot" id="projFoot">Hiển thị <b>1–5</b> trong 5 Project</div>
       </div>
-      <div class="note">Phạm vi bảng co giãn theo vai trò đang chọn ở góc trên — Org Admin thấy tất cả, Khách hàng Admin chỉ thấy Project của Khách hàng "Vinhome", Member chỉ thấy Project được gán.</div>
+      <div class="note">Phạm vi bảng co giãn theo vai trò đang chọn ở góc trên — Quản lý Tổ chức thấy tất cả dự án, Thành viên / Developer chỉ thấy Dự án được gán quyền.</div>
     </div>
 
     <!-- ============ VIEW: KEYS ============ -->
@@ -1562,14 +1658,20 @@
     <div class="content view" id="view-stats">
       <div class="zlabel">Vùng 1 · Bộ lọc</div>
       <div class="filters">
-        <div class="sel org-only"><span class="lbl">Khách hàng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Tổ chức</span><span class="v">Tập đoàn Vingroup</span></div>
         <div class="sel"><span class="lbl">Dự án</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="sel"><span class="lbl">Dịch vụ</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="tpreset"><span>1 ngày</span><span class="on">7 ngày</span><span>14 ngày</span><span>30 ngày</span></div>
         <div class="sel" style="min-width:auto"><span class="lbl">Từ→Đến</span><span class="v" style="font-family:var(--mono);font-size:11.5px">15/07 – 21/07</span><span class="cx">📅</span></div>
         <div class="rld">⟳</div>
       </div>
-      <div class="rolehint">Bộ lọc "Khách hàng" chỉ hiện với 🔵 Org Admin — 🟢 Khách hàng Admin/⚪ Member chỉ xem trong phạm vi của mình.</div>
+      <div class="rolehint">🔵 Quản lý Tổ chức xem toàn bộ lưu lượng — ⚪ Thành viên / Developer chỉ xem số liệu trong phạm vi dự án của mình.</div>
+
+      <!-- Banner Cảnh báo Quota (Chỉ Quản lý thấy) -->
+      <div class="org-only" style="background:var(--amber-soft);border:1px solid rgba(217,119,6,.3);border-radius:8px;padding:10px 14px;margin:10px 0;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:12.5px;color:var(--amber);font-weight:600">⚠️ Cảnh báo Hạn ngạch (Quota Limit): Tổ chức đã sử dụng 85% hạn mức Geocoding API trong tháng này.</div>
+        <button class="btn sm" style="background:var(--amber);color:#fff" onclick="openOrgSettingsModal()">Nâng gói cước</button>
+      </div>
 
       <div class="zlabel">Vùng 2 · Chỉ số</div>
       <div class="kpis">
@@ -1708,10 +1810,434 @@
         <div class="tbl-foot">Hiển thị theo phạm vi vai trò đang chọn</div>
       </div>
     </div>
+
+    <!-- ============ VIEW: TEAM & MEMBERS ============ -->
+    <div class="content view" id="view-team">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="zlabel" style="margin:0">Đội ngũ &amp; Thành viên Tổ chức</div>
+          <div style="font-size:13px;color:var(--ink-soft);margin-top:2px">Quản lý nhân sự, phân vai trò và kiểm soát quyền truy cập Dự án cho các thành viên trong tổ chức <b>Tập đoàn Vingroup</b>.</div>
+        </div>
+        <div class="spacer" style="flex:1"></div>
+        <button class="btn no-member" onclick="openInviteModal()">＋ Mời thành viên mới</button>
+      </div>
+
+      <!-- Thông báo Read-only cho Thành viên -->
+      <div class="member-only" style="display:none;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12.5px;color:var(--ink-soft)">
+        ℹ️ Bạn đang xem danh sách thành viên trong tổ chức ở chế độ <b>Chỉ xem (Read-only)</b>. Chỉ 👑 Quản lý Tổ chức mới có quyền mời thành viên hoặc phân quyền dự án.
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpis" style="margin-top:4px">
+        <div class="kpi">
+          <div class="k-top">Tổng nhân sự <span>👥</span></div>
+          <div class="k-val" id="teamTotalCount">6</div>
+          <div class="k-delta flat">Bao gồm cả lời mời đang chờ</div>
+        </div>
+        <div class="kpi g">
+          <div class="k-top">Đang hoạt động <span>🟢</span></div>
+          <div class="k-val" id="teamActiveCount">4</div>
+          <div class="k-delta flat">Đã xác thực &amp; đăng nhập</div>
+        </div>
+        <div class="kpi" style="background:var(--amber-soft);border-color:rgba(217,119,6,.2)">
+          <div class="k-top" style="color:var(--amber)">Chờ chấp nhận lời mời <span>⏳</span></div>
+          <div class="k-val" style="color:var(--amber)" id="teamPendingCount">2</div>
+          <div class="k-delta flat" style="color:var(--amber)">Link mời có hiệu lực trong 7 ngày</div>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filters">
+        <div class="sel"><span class="lbl">Vai trò</span><span class="v">Tất cả vai trò</span><span class="cx">▾</span></div>
+        <div class="sel"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+        <div class="sel" style="flex:1;min-width:240px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo tên, email thành viên…</span></div>
+        <div class="rld" title="Xóa lọc">⟳</div>
+      </div>
+
+      <!-- Team Members Table -->
+      <div class="tbl-wrap">
+        <div class="tbl-tools"><strong style="font-size:13px">Danh sách Thành viên</strong>
+          <span style="font-size:12px;color:var(--ink-faint)">Tổ chức Vingroup (Tenant ID: ORG_VIN_001)</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Thành viên</th>
+              <th>Email</th>
+              <th>Vai trò trong Tổ chức</th>
+              <th>Dự án được gán quyền</th>
+              <th>Trạng thái</th>
+              <th>Ngày tham gia / Mời</th>
+              <th style="text-align:center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="teamTableBody">
+            <!-- Row 1: Owner / Org Admin -->
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--purple-soft);color:var(--purple);font-weight:700;display:grid;place-items:center;font-size:11.5px">LP</div>
+                  <div><b>Lê Anh Phương</b> <span style="font-size:11px;color:var(--ink-faint)">(Bạn)</span></div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">lan.pham@vinhome.vn</td>
+              <td><span class="chip" style="background:var(--purple-soft);color:var(--purple);font-weight:700">👑 Chủ sở hữu (Owner)</span></td>
+              <td><span class="chip s">Toàn bộ Dự án (5/5)</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">01/06/2026</td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" style="opacity:.4;cursor:not-allowed" title="Không thể gỡ Chủ sở hữu">🔒</span></span></td>
+            </tr>
+
+            <!-- Row 2: Console Admin -->
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--brand-soft);color:var(--brand);font-weight:700;display:grid;place-items:center;font-size:11.5px">TM</div>
+                  <div><b>Trần Văn Minh</b></div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">minh.tran@vinhome.vn</td>
+              <td><span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:600">⚡ Console Admin</span></td>
+              <td><span class="chip s">Toàn bộ Dự án (5/5)</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">04/07/2026</td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <span class="icoact" onclick="alert('Chỉnh sửa quyền hạn của Trần Văn Minh')" title="Chỉnh sửa">✏️</span>
+                  <span class="icoact" style="color:var(--red)" onclick="if(confirm('Xóa thành viên Trần Văn Minh khỏi tổ chức?')) this.closest('tr').remove()" title="Gỡ khỏi tổ chức">🗑</span>
+                </span>
+              </td>
+            </tr>
+
+            <!-- Row 3: Member Developer -->
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--teal-soft);color:var(--teal);font-weight:700;display:grid;place-items:center;font-size:11.5px">NH</div>
+                  <div><b>Nguyễn Thu Hòa</b></div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">hoa.nguyen@vinhome.vn</td>
+              <td><span class="chip">Thành viên / Dev</span></td>
+              <td><span class="chip g">VinHome Smart City</span> <span class="chip g">VinHome Grand Park</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">10/07/2026</td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <span class="icoact" onclick="alert('Chỉnh sửa dự án gán cho Nguyễn Thu Hòa')" title="Chỉnh sửa">✏️</span>
+                  <span class="icoact" style="color:var(--red)" onclick="if(confirm('Xóa thành viên Nguyễn Thu Hòa khỏi tổ chức?')) this.closest('tr').remove()" title="Gỡ khỏi tổ chức">🗑</span>
+                </span>
+              </td>
+            </tr>
+
+            <!-- Row 4: Member Developer (VinFast) -->
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--teal-soft);color:var(--teal);font-weight:700;display:grid;place-items:center;font-size:11.5px">LD</div>
+                  <div><b>Lê Đức Dũng</b></div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">duc.le@vinfast.vn</td>
+              <td><span class="chip">Thành viên / Dev</span></td>
+              <td><span class="chip g">VinFast Dealer Portal</span></td>
+              <td><span class="st act">🟢 Hoạt động</span></td>
+              <td style="font-family:var(--mono);font-size:12px">15/07/2026</td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <span class="icoact" onclick="alert('Chỉnh sửa quyền Lê Đức Dũng')" title="Chỉnh sửa">✏️</span>
+                  <span class="icoact" style="color:var(--red)" onclick="if(confirm('Xóa thành viên Lê Đức Dũng khỏi tổ chức?')) this.closest('tr').remove()" title="Gỡ khỏi tổ chức">🗑</span>
+                </span>
+              </td>
+            </tr>
+
+            <!-- Row 5: Pending Invite 1 -->
+            <tr style="background:rgba(217,119,6,.03)">
+              <td>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-soft);color:var(--amber);font-weight:700;display:grid;place-items:center;font-size:11.5px">?</div>
+                  <div><i style="color:var(--ink-soft)">Chờ xác nhận</i></div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">dev.lead@vinhome.vn</td>
+              <td><span class="chip">Thành viên / Dev</span></td>
+              <td><span class="chip g">VinHome Smart City</span></td>
+              <td><span class="st pending">⏳ Chờ chấp nhận (còn 5 ngày)</span></td>
+              <td style="font-family:var(--mono);font-size:12px">19/08/2026</td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <button class="btn sm ghost" style="padding:3px 7px;font-size:11px" onclick="resendInvite('dev.lead@vinhome.vn')">✉️ Gửi lại</button>
+                  <span class="icoact" onclick="openEmailPreview('dev.lead@vinhome.vn', 'Thành viên / Dev')" title="Xem email mẫu mời">👁️</span>
+                  <span class="icoact" style="color:var(--red)" onclick="if(confirm('Hủy lời mời tới dev.lead@vinhome.vn?')) this.closest('tr').remove()" title="Hủy lời mời">✕</span>
+                </span>
+              </td>
+            </tr>
+
+            <!-- Row 6: Pending Invite 2 -->
+            <tr style="background:rgba(217,119,6,.03)">
+              <td>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--amber-soft);color:var(--amber);font-weight:700;display:grid;place-items:center;font-size:11.5px">?</div>
+                  <div><i style="color:var(--ink-soft)">Chờ xác nhận</i></div>
+                </div>
+              </td>
+              <td style="font-family:var(--mono);font-size:12px">gis.expert@partner.vn</td>
+              <td><span class="chip">Thành viên / Dev</span></td>
+              <td><span class="chip g">VinFast EV Charging Map</span></td>
+              <td><span class="st pending">⏳ Chờ chấp nhận (còn 6 ngày)</span></td>
+              <td style="font-family:var(--mono);font-size:12px">20/08/2026</td>
+              <td style="text-align:center">
+                <span class="actbar">
+                  <button class="btn sm ghost" style="padding:3px 7px;font-size:11px" onclick="resendInvite('gis.expert@partner.vn')">✉️ Gửi lại</button>
+                  <span class="icoact" onclick="openEmailPreview('gis.expert@partner.vn', 'Thành viên / Dev')" title="Xem email mẫu mời">👁️</span>
+                  <span class="icoact" style="color:var(--red)" onclick="if(confirm('Hủy lời mời tới gis.expert@partner.vn?')) this.closest('tr').remove()" title="Hủy lời mời">✕</span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">Hiển thị <b>6</b> thành viên &amp; lời mời trong Tổ chức Vingroup</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<button class="demofab" onclick="toggleLogin()">👁 Xem màn Đăng nhập</button>
+<!-- FLOATING DEMO BUTTONS -->
+<div style="position:fixed;right:18px;bottom:18px;z-index:90;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+  <button class="demofab" style="position:static" onclick="openOnboardingWizard(1)">✨ Demo Luồng Đăng nhập lần đầu (Onboarding)</button>
+  <button class="demofab" style="position:static" onclick="openEmailPreview('dev.lead@vinhome.vn', 'Thành viên / Dev')">📨 Xem Email Mời Thành viên</button>
+  <button class="demofab" style="position:static" onclick="toggleLogin()">👁 Xem màn Đăng nhập</button>
+</div>
+
+<!-- ============ MODAL: MỜI THÀNH VIÊN VÀO TỔ CHỨC ============ -->
+<div class="overlay" id="ovInviteMember">
+  <div class="modal sm" style="max-width:500px">
+    <div class="modal-head">
+      <div>
+        <h2 style="font-size:16px">＋ Mời Thành viên vào Tổ chức</h2>
+        <div style="font-size:12px;color:var(--ink-soft)">Tổ chức: <b>Tập đoàn Vingroup</b></div>
+      </div>
+      <button class="mclose" onclick="cls('ovInviteMember')">✕</button>
+    </div>
+    <div class="modal-body" style="gap:14px">
+      <div class="fld">
+        <label>Email người nhận lời mời <span style="color:var(--red)">*</span></label>
+        <input class="inp" id="invEmail" placeholder="vd: dev.nam@vinhome.vn" />
+        <span class="vh">Hệ thống sẽ gửi link xác thực kích hoạt vào email này (Hạn 7 ngày).</span>
+      </div>
+
+      <div class="fld">
+        <label>Họ và tên (Tùy chọn)</label>
+        <input class="inp" id="invName" placeholder="vd: Nguyễn Hoàng Nam" />
+      </div>
+
+      <div class="fld">
+        <label>Vai trò trong Tổ chức <span style="color:var(--red)">*</span></label>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;background:var(--panel-2,#f8fafc)">
+            <input type="radio" name="invRole" value="member" checked style="margin-top:2px;cursor:pointer" />
+            <div>
+              <div style="font-weight:700;font-size:13px">Thành viên / Lập trình viên (Member)</div>
+              <div style="font-size:11.5px;color:var(--ink-soft)">Chỉ xem và thao tác trên các Dự án được phân công, không thể xóa tổ chức hoặc mời người khác.</div>
+            </div>
+          </label>
+
+          <label style="display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer">
+            <input type="radio" name="invRole" value="admin" style="margin-top:2px;cursor:pointer" />
+            <div>
+              <div style="font-weight:700;font-size:13px;color:var(--brand)">Quản trị viên Tổ chức (Console Admin)</div>
+              <div style="font-size:11.5px;color:var(--ink-soft)">Toàn quyền tạo dự án, quản trị toàn bộ API Key, mời/gỡ thành viên và cấu hình thanh toán.</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="fld">
+        <label>Phân quyền Dự án được phép truy cập:</label>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2)">
+          <label style="font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="invAllProj" checked onchange="toggleInvProjects(this)" />
+            <span>Cho phép truy cập Tất cả Dự án (Hiện tại &amp; Tương lai)</span>
+          </label>
+          <div id="invProjectList" style="padding-left:20px;display:flex;flex-direction:column;gap:4px;opacity:.6">
+            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinHome Smart City</label>
+            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinHome Grand Park</label>
+            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinFast Dealer Portal</label>
+            <label style="font-size:12px;display:flex;align-items:center;gap:6px"><input type="checkbox" class="invProjChk" checked disabled /> VinFast EV Charging Map</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mfoot" style="margin-top:6px">
+        <button class="btn ghost" onclick="cls('ovInviteMember')">Hủy</button>
+        <button class="btn" onclick="submitInviteMember()">Gửi lời mời tham gia</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: LUỒNG ONBOARDING ĐĂNG NHẬP LẦN ĐẦU (3 BƯỚC) ============ -->
+<div class="overlay" id="ovOnboardingWizard">
+  <div class="modal" style="max-width:620px">
+    <div class="modal-head">
+      <div>
+        <h2 style="font-size:16px">✨ Chào mừng đến với Gtel Map Console</h2>
+        <div style="font-size:12px;color:var(--ink-soft)">Quy trình Khởi tạo Không gian &amp; Nhận API Key đầu tiên</div>
+      </div>
+      <button class="mclose" onclick="cls('ovOnboardingWizard')">✕</button>
+    </div>
+    <div class="modal-body" style="gap:16px">
+      <!-- Wizard Step Indicators -->
+      <div style="display:flex;gap:8px;border-bottom:1px solid var(--line);padding-bottom:12px">
+        <div id="wzStep1Tab" style="flex:1;text-align:center;padding:6px;border-radius:6px;background:var(--brand-soft);color:var(--brand);font-weight:700;font-size:12px">1. Thông tin Tổ chức</div>
+        <div id="wzStep2Tab" style="flex:1;text-align:center;padding:6px;border-radius:6px;background:var(--panel-2);color:var(--ink-faint);font-weight:600;font-size:12px">2. Tự sinh API Key</div>
+        <div id="wzStep3Tab" style="flex:1;text-align:center;padding:6px;border-radius:6px;background:var(--panel-2);color:var(--ink-faint);font-weight:600;font-size:12px">3. Quickstart &amp; Code</div>
+      </div>
+
+      <!-- STEP 1: KHỞI TẠO TỔ CHỨC -->
+      <div id="wzStep1Content" style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:13px;color:var(--ink-soft)">Tài khoản của bạn đã được xác thực danh tính qua Central SSO. Vui lòng hoàn tất thông tin tổ chức để kích hoạt Developer Portal:</div>
+        
+        <div class="row2">
+          <div class="fld"><label>Loại hình sử dụng <span style="color:var(--red)">*</span></label>
+            <select class="inp" id="wzOrgType">
+              <option value="business">Doanh nghiệp / Tổ chức B2B</option>
+              <option value="individual">Lập trình viên Cá nhân (Developer)</option>
+            </select>
+          </div>
+          <div class="fld"><label>Tên Doanh nghiệp / Dự án <span style="color:var(--red)">*</span></label>
+            <input class="inp" id="wzOrgName" value="Công ty TNHH Công nghệ Alpha" placeholder="Nhập tên công ty..." />
+          </div>
+        </div>
+
+        <div class="row2">
+          <div class="fld"><label>Mã số thuế / Giấy phép</label>
+            <input class="inp" id="wzTaxCode" value="0109887766" placeholder="010xxxxxxx" />
+          </div>
+          <div class="fld"><label>Số điện thoại liên hệ <span style="color:var(--red)">*</span></label>
+            <input class="inp" id="wzPhone" value="0988 777 666" placeholder="09xx xxx xxx" />
+          </div>
+        </div>
+
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;margin-top:4px">
+          <input type="checkbox" id="wzTermsChk" checked style="cursor:pointer" />
+          <span>Tôi đồng ý với <a href="#" style="color:var(--brand)">Điều khoản Dịch vụ &amp; Chính sách Sử dụng API</a> của Gtel Map.</span>
+        </label>
+
+        <div class="mfoot" style="margin-top:10px">
+          <button class="btn ghost" onclick="cls('ovOnboardingWizard')">Hủy</button>
+          <button class="btn" onclick="nextOnboardingStep(2)">Tiếp tục: Khởi tạo Môi trường →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: TỰ ĐỘNG KHỞI TẠO MÔI TRƯỜNG & KEY -->
+      <div id="wzStep2Content" style="display:none;flex-direction:column;gap:14px">
+        <div style="background:var(--green-soft);border:1px solid rgba(22,163,74,.2);border-radius:8px;padding:12px 14px;color:var(--green)">
+          <div style="font-weight:700;font-size:13.5px">🎉 Khởi tạo môi trường thành công!</div>
+          <div style="font-size:12px;margin-top:2px">Hệ thống đã tự động cấu hình các tài nguyên khởi đầu cho tổ chức của bạn.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel-2);border-radius:6px">
+            <span>✅</span> <span>Không gian làm việc: <b id="wzCreatedOrgName">Công ty TNHH Công nghệ Alpha</b></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel-2);border-radius:6px">
+            <span>✅</span> <span>Dự án mặc định: <b>Alpha Main Project (PROJ_001)</b></span>
+          </div>
+        </div>
+
+        <div class="fld" style="margin-top:4px">
+          <label style="font-weight:700;color:var(--ink)">🔑 API Key Đầu Tiên Của Bạn:</label>
+          <div style="display:flex;gap:8px">
+            <input class="inp" id="wzGeneratedKey" value="gtel_live_key_99fa88b201a4e5c89912bc78" readonly style="font-family:var(--mono);background:var(--panel-2);font-weight:600;color:var(--brand)" />
+            <button class="btn ghost" onclick="copyWzKey()">📋 Copy Key</button>
+          </div>
+          <span class="vh">Đã kích hoạt sẵn toàn bộ dịch vụ: Geocoding API, Directions API, Vector Map Tiles, Search API.</span>
+        </div>
+
+        <div class="mfoot" style="margin-top:10px">
+          <button class="btn ghost" onclick="nextOnboardingStep(1)">← Quay lại</button>
+          <button class="btn" onclick="nextOnboardingStep(3)">Tiếp tục: Xem Code Mẫu Nhúng →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: QUICKSTART CODE GENERATOR -->
+      <div id="wzStep3Content" style="display:none;flex-direction:column;gap:14px">
+        <div style="font-size:13px;color:var(--ink-soft)">Sao chép đoạn code dưới đây để nhúng bản đồ Gtel Map vào ứng dụng của bạn trong 60 giây:</div>
+
+        <div class="viewtabs" style="width:fit-content" id="wzLangTabs">
+          <span class="on" onclick="switchWzCode('js')">JavaScript Web SDK</span>
+          <span onclick="switchWzCode('react')">React / Next.js</span>
+          <span onclick="switchWzCode('flutter')">Flutter Mobile</span>
+          <span onclick="switchWzCode('curl')">REST API (cURL)</span>
+        </div>
+
+        <div style="position:relative">
+          <pre id="wzCodeBlock" style="background:#0F172A;color:#E2E8F0;padding:14px;border-radius:8px;font-family:var(--mono);font-size:12px;overflow-x:auto;line-height:1.5">&lt;!-- Nhúng Gtel Map JavaScript SDK --&gt;
+&lt;script src="https://cdn.gtelmaps.vn/sdk/v2/gtelmap.js"&gt;&lt;/script&gt;
+&lt;div id="map" style="width: 100%; height: 500px;"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  const map = new GtelMap.Map({
+    container: 'map',
+    apiKey: 'gtel_live_key_99fa88b201a4e5c89912bc78',
+    center: [105.8542, 21.0285], // Hà Nội
+    zoom: 14
+  });
+&lt;/script&gt;</pre>
+          <button class="btn sm" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.15);border:none;color:#fff" onclick="copyWzSnippet()">📋 Copy Code</button>
+        </div>
+
+        <div class="mfoot" style="margin-top:10px">
+          <button class="btn ghost" onclick="alert('Đang mở ứng dụng Gtel Map Viewer để kiểm thử trực quan...')">🗺️ Thử trên Map Viewer</button>
+          <button class="btn" onclick="finishOnboarding()">🚀 Hoàn tất &amp; Vào Dashboard Console</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: XEM TRƯỚC EMAIL LỜI MỜI THAM GIA ============ -->
+<div class="overlay" id="ovEmailPreview">
+  <div class="modal sm" style="max-width:520px;padding:0;overflow:hidden">
+    <div style="background:#2563EB;color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:18px">✉️</span>
+        <strong>Xem trước Email gửi cho Thành viên</strong>
+      </div>
+      <button class="mclose" style="color:#fff" onclick="cls('ovEmailPreview')">✕</button>
+    </div>
+    <div style="padding:22px;background:#FAFBFD;display:flex;flex-direction:column;gap:14px;font-size:13px;line-height:1.6">
+      <div style="border-bottom:1px solid var(--line);padding-bottom:10px;font-size:12px;color:var(--ink-soft)">
+        <div><b>Người gửi:</b> Gtel Map Platform &lt;no-reply@gtelmaps.vn&gt;</div>
+        <div><b>Người nhận:</b> <span id="emPreviewTo" style="font-family:var(--mono);color:var(--brand)">dev.lead@vinhome.vn</span></div>
+        <div><b>Tiêu đề:</b> [Gtel Map] Lời mời tham gia Tổ chức Tập đoàn Vingroup trên Console</div>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg, #2563EB, #7C3AED);color:#fff;display:grid;place-items:center;font-weight:800">G</div>
+          <div>
+            <div style="font-weight:700;font-size:14px">Gtel Map Developer Platform</div>
+            <div style="font-size:11px;color:var(--ink-faint)">Cổng dịch vụ Bản đồ số &amp; Định danh Việt Nam</div>
+          </div>
+        </div>
+
+        <p>Xin chào bạn,</p>
+        <p>Quản trị viên <b>Lê Anh Phương</b> đã mời bạn tham gia vào tổ chức <b>Tập đoàn Vingroup</b> trên Gtel Map Console với vai trò: <strong id="emPreviewRole" style="color:var(--brand)">Thành viên / Developer</strong>.</p>
+        
+        <div style="text-align:center;margin:10px 0">
+          <button class="btn" style="padding:10px 22px;font-size:13.5px;box-shadow:0 2px 6px rgba(37,99,235,.3)" onclick="cls('ovEmailPreview');alert('Đã mô phỏng bấm link mời: Chuyển hướng sang màn hình Đăng nhập xác thực và kích hoạt quyền Console.')">👉 Chấp nhận Lời mời &amp; Bắt đầu</button>
+        </div>
+
+        <div style="font-size:11.5px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:10px">
+          * Link mời này có hiệu lực trong vòng <b>7 ngày</b>. Nếu bạn đã có sẵn tài khoản Gtel Identity (Map Viewer), bạn chỉ cần đăng nhập bằng mật khẩu hiện tại.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ============ MODAL: CUSTOMER DETAIL ============ -->
 <div class="overlay" id="ovCustomer">
@@ -1829,15 +2355,88 @@
         <input class="inp" placeholder="VD: VinHome Ocean Park" />
         <span class="vh">Tên hiển thị, dùng để tra cứu/audit.</span>
       </div>
-      <div class="fld"><label>Cấp cha</label>
-        <select class="inp">
-          <option value="" selected>Chọn Khách hàng (để trống nếu Tổ chức không dùng Khách hàng)</option>
-          <option value="vinhome">Vinhome</option>
-          <option value="vinfast">Vinfast</option>
-        </select>
-        <span class="vh">Chỉ chọn <b>đúng 1 cấp cha</b> — Khách hàng cụ thể, hoặc để trống nghĩa là Project thuộc thẳng Tổ chức.</span>
+      <div class="fld"><label>Tổ chức trực thuộc</label>
+        <div class="inp" id="projCreateOrgLabel" style="background:var(--panel-2);color:var(--ink-faint)">Tập đoàn Vingroup</div>
+        <span class="vh">Dự án được tạo dưới không gian làm việc của Tổ chức đang chọn.</span>
       </div>
       <div class="mfoot"><button class="btn ghost" onclick="cls('ovProjectCreate')">Hủy</button><button class="btn" onclick="submitCreateProject()">Tạo Project</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: THÔNG TIN & CÀI ĐẶT TỔ CHỨC ============ -->
+<div class="overlay" id="ovOrgSettings">
+  <div class="modal md">
+    <div class="modal-head">
+      <h2>🏢 Thông tin &amp; Cài đặt Tổ chức — <span id="setOrgTitle">Tập đoàn Vingroup</span></h2><button class="mclose" onclick="cls('ovOrgSettings')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="note" id="setOrgNote" style="text-align:left;padding:10px 14px;margin-bottom:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px">
+        🏢 Thông tin pháp lý &amp; Gói cước của Tổ chức hiện tại. Chỉ <b>👑 Quản lý Tổ chức</b> mới có quyền cập nhật.
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Tên Tổ chức / Doanh nghiệp <span style="color:var(--red)">*</span></label>
+          <input class="inp" id="setOrgInputName" value="Tập đoàn Vingroup - Công ty CP" />
+        </div>
+        <div class="fld"><label>Mã định danh (Tenant ID / Slug)</label>
+          <input class="inp" id="setOrgInputSlug" value="ORG_VINGROUP_001" readonly style="font-family:var(--mono);background:var(--panel-2);color:var(--ink-faint)" />
+        </div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Mã số thuế / Giấy phép</label>
+          <input class="inp" id="setOrgInputTax" value="0101245486" />
+        </div>
+        <div class="fld"><label>Số điện thoại liên hệ</label>
+          <input class="inp" id="setOrgInputPhone" value="1900 232389" />
+        </div>
+      </div>
+      <div class="row2">
+        <div class="fld"><label>Email người đại diện pháp lý</label>
+          <input class="inp" id="setOrgInputEmail" value="lan.pham@vinhome.vn" />
+        </div>
+        <div class="fld"><label>Gói dịch vụ &amp; Hạn ngạch (Plan)</label>
+          <div class="inp" style="background:var(--panel-2);font-weight:700;color:var(--purple);display:flex;align-items:center;justify-content:space-between">
+            <span>💎 Gói Enterprise B2B</span>
+            <span class="st act">🟢 Không giới hạn Quota</span>
+          </div>
+        </div>
+      </div>
+      <div class="mfoot">
+        <button class="btn ghost" onclick="cls('ovOrgSettings')">Đóng</button>
+        <button class="btn" id="setOrgSaveBtn" onclick="saveOrgSettings()">💾 Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: KHỞI TẠO TỔ CHỨC MỚI ============ -->
+<div class="overlay" id="ovCreateOrg">
+  <div class="modal sm">
+    <div class="modal-head">
+      <h2>＋ Khởi tạo Tổ chức mới</h2><button class="mclose" onclick="cls('ovCreateOrg')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="sect" style="background:var(--panel-2)">
+        <div style="font-size:12.5px;line-height:1.5">🏢 Khi bạn tạo Tổ chức mới, bạn sẽ tự động là <b>👑 Quản lý Tổ chức (Owner)</b> của không gian làm việc này.</div>
+      </div>
+      <div class="fld"><label>Tên Tổ chức / Doanh nghiệp <span style="color:var(--red)">*</span></label>
+        <input class="inp" id="newOrgName" placeholder="VD: Công ty Công nghệ ABC" />
+        <span class="vh">Tên hiển thị của tổ chức hoặc dự án startup của bạn.</span>
+      </div>
+      <div class="fld"><label>Mã số thuế / Giấy phép (tuỳ chọn)</label>
+        <input class="inp" id="newOrgTax" placeholder="VD: 0109988776" />
+      </div>
+      <div class="fld"><label>Loại hình tổ chức</label>
+        <select class="inp" id="newOrgType">
+          <option value="b2b">Doanh nghiệp / Công ty (B2B)</option>
+          <option value="startup">Dự án Khởi nghiệp (Startup)</option>
+          <option value="personal">Dự án Cá nhân / Nhóm phát triển</option>
+        </select>
+      </div>
+      <div class="mfoot">
+        <button class="btn ghost" onclick="cls('ovCreateOrg')">Hủy</button>
+        <button class="btn" onclick="submitCreateOrg()">Khởi tạo &amp; Chuyển sang Tổ chức này</button>
+      </div>
     </div>
   </div>
 </div>
@@ -2019,6 +2618,185 @@
 <script>
   var currentRole = 'org';
 
+  // ===== Organizations Multi-Tenancy Data =====
+  var ORGS_DATA = {
+    vingroup: {
+      id: 'vingroup',
+      name: 'Tập đoàn Vingroup',
+      icon: '🏢',
+      role: 'org',
+      roleLabel: '👑 Quản lý',
+      stats: '5 Dự án · 7 API Keys',
+      greet: 'Xin chào 👋 — Quản lý Tổ chức, Tập đoàn Vingroup',
+      sub: 'Toàn quyền quản trị Dự án, API Key và Đội ngũ nhân sự trong tổ chức của bạn.',
+      projCount: 5,
+      keyCount: 7
+    },
+    ahamove: {
+      id: 'ahamove',
+      name: 'Đối tác Ahamove',
+      icon: '🛵',
+      role: 'member',
+      roleLabel: '💻 Thành viên',
+      stats: '1 Dự án (Được gán)',
+      greet: 'Xin chào 👋 — Thành viên, Đối tác Ahamove',
+      sub: 'Bạn chỉ xem và thao tác trên Dự án [Ahamove Driver Navigation API] được phân công.',
+      projCount: 1,
+      keyCount: 2
+    },
+    fpt: {
+      id: 'fpt',
+      name: 'FPT Software GIS',
+      icon: '💻',
+      role: 'member',
+      roleLabel: '💻 Thành viên',
+      stats: '2 Dự án (Được gán)',
+      greet: 'Xin chào 👋 — Thành viên, FPT Software GIS',
+      sub: 'Bạn quản lý và theo dõi các Dự án phần mềm GIS được doanh nghiệp gán quyền.',
+      projCount: 2,
+      keyCount: 3
+    }
+  };
+
+  var currentOrgKey = 'vingroup';
+
+  function toggleOrgMenu(e) {
+    if (e) e.stopPropagation();
+    var menu = document.getElementById('orgMenu');
+    if (menu) menu.classList.toggle('show');
+  }
+
+  // Đóng menu khi click ngoài
+  document.addEventListener('click', function (e) {
+    var switcher = document.getElementById('orgSwitcher');
+    var menu = document.getElementById('orgMenu');
+    if (menu && switcher && !switcher.contains(e.target)) {
+      menu.classList.remove('show');
+    }
+  });
+
+  function switchOrg(orgKey) {
+    var org = ORGS_DATA[orgKey];
+    if (!org) return;
+    currentOrgKey = orgKey;
+
+    // Cập nhật giao diện Switcher
+    document.getElementById('currentOrgIcon').textContent = org.icon;
+    document.getElementById('currentOrgName').textContent = org.name;
+    var badge = document.getElementById('currentOrgBadge');
+    badge.textContent = org.roleLabel;
+    badge.style.background = org.role === 'org' ? 'var(--purple-soft)' : 'var(--brand-soft)';
+    badge.style.color = org.role === 'org' ? 'var(--purple)' : 'var(--brand)';
+
+    var crumb = document.getElementById('currentOrgCrumb');
+    if (crumb) crumb.textContent = org.name;
+
+    // Highlight item trong menu
+    document.querySelectorAll('.org-menu-item').forEach(function (item) {
+      item.classList.toggle('active', item.id === 'orgItem-' + orgKey);
+    });
+
+    // Ẩn menu
+    var menu = document.getElementById('orgMenu');
+    if (menu) menu.classList.remove('show');
+
+    // Chuyển role tương ứng của user trong Tổ chức đó
+    setRole(org.role);
+
+    // Cập nhật KPIs
+    var hp = document.getElementById('homeProj'); if (hp) hp.textContent = org.projCount;
+    var hk = document.getElementById('homeKeys'); if (hk) hk.textContent = org.keyCount;
+
+    var greet = document.getElementById('homeGreet');
+    var sub = document.getElementById('homeSub');
+    if (greet) greet.textContent = org.greet;
+    if (sub) sub.textContent = org.sub;
+
+    alert('🏢 Đã chuyển sang không gian làm việc: «' + org.name + '» (' + org.roleLabel + ')');
+  }
+
+  function openOrgSettingsModal() {
+    var menu = document.getElementById('orgMenu');
+    if (menu) menu.classList.remove('show');
+    var org = ORGS_DATA[currentOrgKey];
+    if (!org) return;
+    document.getElementById('setOrgTitle').textContent = org.name;
+    document.getElementById('setOrgInputName').value = org.name;
+
+    var isOrgManager = (currentRole === 'org');
+    ['setOrgInputName', 'setOrgInputTax', 'setOrgInputPhone', 'setOrgInputEmail'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.disabled = !isOrgManager;
+    });
+
+    var saveBtn = document.getElementById('setOrgSaveBtn');
+    if (saveBtn) saveBtn.style.display = isOrgManager ? '' : 'none';
+
+    var noteEl = document.getElementById('setOrgNote');
+    if (noteEl) {
+      noteEl.innerHTML = isOrgManager
+        ? '🏢 Thông tin pháp lý & Gói cước của Tổ chức hiện tại. Bạn đang có quyền <b>👑 Quản lý Tổ chức</b>.'
+        : 'ℹ️ Bạn đang xem thông tin Tổ chức ở chế độ <b>Chỉ xem (Read-only)</b>. Chỉ <b>👑 Quản lý Tổ chức</b> mới có quyền cập nhật.';
+    }
+
+    document.getElementById('ovOrgSettings').classList.add('show');
+  }
+
+  function saveOrgSettings() {
+    var name = document.getElementById('setOrgInputName').value.trim();
+    if (!name) { alert('Vui lòng nhập Tên Tổ chức'); return; }
+    if (ORGS_DATA[currentOrgKey]) {
+      ORGS_DATA[currentOrgKey].name = name;
+    }
+    document.getElementById('currentOrgName').textContent = name;
+    var crumb = document.getElementById('currentOrgCrumb');
+    if (crumb) crumb.textContent = name;
+    cls('ovOrgSettings');
+    alert('💾 Đã cập nhật thông tin Tổ chức «' + name + '» thành công!');
+  }
+
+  function openCreateOrgModal() {
+    var menu = document.getElementById('orgMenu');
+    if (menu) menu.classList.remove('show');
+    document.getElementById('newOrgName').value = '';
+    document.getElementById('newOrgTax').value = '';
+    document.getElementById('ovCreateOrg').classList.add('show');
+  }
+
+  function submitCreateOrg() {
+    var name = document.getElementById('newOrgName').value.trim();
+    if (!name) { alert('Vui lòng nhập Tên Tổ chức!'); return; }
+    var orgKey = 'org_' + Date.now();
+    ORGS_DATA[orgKey] = {
+      id: orgKey,
+      name: name,
+      icon: '🏢',
+      role: 'org',
+      roleLabel: '👑 Quản lý',
+      stats: '0 Dự án · 0 API Keys',
+      greet: 'Xin chào 👋 — Quản lý Tổ chức, ' + name,
+      sub: 'Không gian làm việc mới được tạo. Bắt đầu bằng cách tạo Dự án & API Key.',
+      projCount: 0,
+      keyCount: 0
+    };
+
+    // Thêm vào dropdown menu
+    var foot = document.querySelector('.org-menu-foot');
+    var newItem = document.createElement('div');
+    newItem.className = 'org-menu-item';
+    newItem.id = 'orgItem-' + orgKey;
+    newItem.onclick = function () { switchOrg(orgKey); };
+    newItem.innerHTML = '<div style="display:flex;align-items:center;gap:9px">'
+      + '<span style="font-size:16px">🏢</span>'
+      + '<div><div style="font-weight:700;font-size:12.5px">' + name + '</div>'
+      + '<div style="font-size:11px;color:var(--ink-faint)">0 Dự án · 0 Keys</div></div></div>'
+      + '<span class="chip" style="background:var(--purple-soft);color:var(--purple);font-size:10px;font-weight:700">Quản lý</span>';
+    foot.parentNode.insertBefore(newItem, foot);
+
+    cls('ovCreateOrg');
+    switchOrg(orgKey);
+  }
+
   // ===== Customer data (dùng cho modal Khách hàng) =====
   var CUSTOMERS = {
     vinhome: {
@@ -2113,23 +2891,19 @@
     document.querySelectorAll('.rolebtn').forEach(function (b) { b.classList.toggle('on', b.dataset.role === role); });
     document.querySelectorAll('.org-only').forEach(function (e) { e.style.display = role === 'org' ? '' : 'none'; });
     document.querySelectorAll('.no-member').forEach(function (e) { e.style.display = role === 'member' ? 'none' : ''; });
+    document.querySelectorAll('.member-only').forEach(function (e) { e.style.display = role === 'member' ? '' : 'none'; });
 
     var greet = document.getElementById('homeGreet');
     var sub = document.getElementById('homeSub');
+    var org = ORGS_DATA[currentOrgKey];
+    var orgName = org ? org.name : 'Tập đoàn Vingroup';
+    
     if (role === 'org') {
-      greet.textContent = 'Xin chào 👋 — Org Admin, Tổ chức Vingroup';
-      sub.textContent = 'Toàn bộ Khách hàng và Dự án trong tổ chức của bạn.';
-    } else if (role === 'cust') {
-      greet.textContent = 'Xin chào 👋 — Khách hàng Admin, Khách hàng Vinhome';
-      sub.textContent = 'Bạn quản lý Project trong đúng Khách hàng Vinhome.';
+      greet.textContent = 'Xin chào 👋 — Quản lý Tổ chức, ' + orgName;
+      sub.textContent = 'Toàn quyền quản trị Dự án, API Key và Đội ngũ nhân sự trong tổ chức.';
     } else {
-      greet.textContent = 'Xin chào 👋 — Member';
-      sub.textContent = 'Bạn chỉ xem Project được gán, không có quyền tạo/sửa/xoá.';
-    }
-
-    // Nếu đang ở màn Khách hàng mà đổi sang vai trò không có quyền -> về Trang chủ
-    if (role !== 'org' && document.getElementById('view-customers').classList.contains('on')) {
-      show('home');
+      greet.textContent = 'Xin chào 👋 — Thành viên / Developer, ' + orgName;
+      sub.textContent = 'Bạn chỉ xem và thao tác trên các Dự án & API Key được phân công.';
     }
 
     applyRoleFilter();
@@ -2140,9 +2914,7 @@
     ['projTable', 'keyTable', 'statTable'].forEach(function (tid) {
       var shown = 0;
       document.querySelectorAll('#' + tid + ' tbody tr').forEach(function (r) {
-        var vis = true;
-        if (currentRole === 'cust') { vis = r.dataset.cust === 'vinhome'; }
-        else if (currentRole === 'member') { vis = r.dataset.member === 'y'; }
+        var vis = (currentRole === 'member') ? (r.dataset.member === 'y') : true;
         r.style.display = vis ? '' : 'none';
         if (vis) shown++;
       });
@@ -2154,18 +2926,165 @@
     if (kf) kf.innerHTML = 'Hiển thị <b>1–' + counts.keyTable + '</b> trong ' + counts.keyTable + ' API Key';
     var hp = document.getElementById('homeProj'); if (hp) hp.textContent = counts.projTable;
     var hk = document.getElementById('homeKeys'); if (hk) hk.textContent = counts.keyTable;
+
+    // Cập nhật chỉ số KPI Thống kê & Quota
+    var stTotal = document.getElementById('stKpiTotal');
+    var stKeys = document.getElementById('stKpiKeys');
+    if (stTotal) stTotal.textContent = (currentRole === 'member') ? '540,220' : '1,284,502';
+    if (stKeys) stKeys.textContent = (currentRole === 'member') ? '1' : '5';
   }
 
   // ===== Views =====
-  var VIEW_TITLE = { home: 'Trang chủ', customers: 'Quản lý Khách hàng', projects: 'Quản lý Dự án', keys: 'Quản lý API Key', stats: 'Thống kê sử dụng API Key' };
+  var VIEW_TITLE = { 
+    home: 'Trang chủ', 
+    projects: 'Quản lý Dự án', 
+    keys: 'Quản lý API Key', 
+    stats: 'Thống kê & Quota sử dụng API',
+    team: 'Đội ngũ & Thành viên Tổ chức'
+  };
+
   function show(v) {
     document.querySelectorAll('.view').forEach(function (e) { e.classList.remove('on'); });
-    document.getElementById('view-' + v).classList.add('on');
-    ['home', 'customers', 'projects', 'keys', 'stats'].forEach(function (id) {
+    var targetView = document.getElementById('view-' + v);
+    if (targetView) targetView.classList.add('on');
+    ['home', 'projects', 'keys', 'stats', 'team'].forEach(function (id) {
       var n = document.getElementById('nav-' + id);
       if (n) n.classList.toggle('active', v === id);
     });
-    document.getElementById('ptitle').textContent = VIEW_TITLE[v];
+    if (VIEW_TITLE[v]) {
+      document.getElementById('ptitle').textContent = VIEW_TITLE[v];
+    }
+  }
+
+  // ===== Team & Invite handlers =====
+  function openInviteModal() {
+    document.getElementById('invEmail').value = '';
+    document.getElementById('invName').value = '';
+    document.getElementById('invAllProj').checked = true;
+    toggleInvProjects(document.getElementById('invAllProj'));
+    document.getElementById('ovInviteMember').classList.add('show');
+  }
+
+  function toggleInvProjects(master) {
+    var list = document.getElementById('invProjectList');
+    var chks = document.querySelectorAll('.invProjChk');
+    if (list) list.style.opacity = master.checked ? '.6' : '1';
+    chks.forEach(function (c) {
+      c.disabled = master.checked;
+      if (master.checked) c.checked = true;
+    });
+  }
+
+  function submitInviteMember() {
+    var email = document.getElementById('invEmail').value.trim();
+    var name = document.getElementById('invName').value.trim() || 'Thành viên mới';
+    var role = document.querySelector('input[name="invRole"]:checked').value;
+    var roleLabel = role === 'admin' ? '<span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:600">⚡ Console Admin</span>' : '<span class="chip">Thành viên / Dev</span>';
+    
+    if (!email) { alert('Vui lòng nhập Email người nhận lời mời.'); return; }
+    
+    var today = new Date();
+    var dateStr = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+    
+    var tr = document.createElement('tr');
+    tr.style.background = 'rgba(217,119,6,.03)';
+    tr.innerHTML = '<td><div style="display:flex;align-items:center;gap:9px"><div style="width:28px;height:28px;border-radius:50%;background:var(--amber-soft);color:var(--amber);font-weight:700;display:grid;place-items:center;font-size:11.5px">?</div><div><b>' + name + '</b> <i style="color:var(--ink-soft);font-size:11.5px">(Chờ xác nhận)</i></div></div></td>'
+      + '<td style="font-family:var(--mono);font-size:12px">' + email + '</td>'
+      + '<td>' + roleLabel + '</td>'
+      + '<td><span class="chip g">Dự án được gán</span></td>'
+      + '<td><span class="st pending">⏳ Chờ chấp nhận (còn 7 ngày)</span></td>'
+      + '<td style="font-family:var(--mono);font-size:12px">' + dateStr + '</td>'
+      + '<td style="text-align:center"><span class="actbar">'
+      + '<button class="btn sm ghost" style="padding:3px 7px;font-size:11px" onclick="resendInvite(\'' + email + '\')">✉️ Gửi lại</button>'
+      + '<span class="icoact" onclick="openEmailPreview(\'' + email + '\', \'' + (role === 'admin' ? 'Console Admin' : 'Thành viên / Dev') + '\')" title="Xem email mẫu mời">👁️</span>'
+      + '<span class="icoact" style="color:var(--red)" onclick="if(confirm(\'Hủy lời mời?\')) this.closest(\'tr\').remove()" title="Hủy lời mời">✕</span>'
+      + '</span></td>';
+      
+    document.getElementById('teamTableBody').appendChild(tr);
+    var pendingEl = document.getElementById('teamPendingCount');
+    if (pendingEl) pendingEl.textContent = parseInt(pendingEl.textContent || '0') + 1;
+    var totalEl = document.getElementById('teamTotalCount');
+    if (totalEl) totalEl.textContent = parseInt(totalEl.textContent || '0') + 1;
+
+    cls('ovInviteMember');
+    alert('Đã gửi email lời mời kèm mã kích hoạt (hạn 7 ngày) đến ' + email + '!');
+  }
+
+  function resendInvite(email) {
+    alert('Đã tạo link kích hoạt mới và gửi lại email mời thành công đến: ' + email);
+  }
+
+  function openEmailPreview(toEmail, role) {
+    document.getElementById('emPreviewTo').textContent = toEmail;
+    document.getElementById('emPreviewRole').textContent = role || 'Thành viên / Developer';
+    document.getElementById('ovEmailPreview').classList.add('show');
+  }
+
+  // ===== Onboarding Wizard Handlers =====
+  function openOnboardingWizard(step) {
+    nextOnboardingStep(step || 1);
+    document.getElementById('ovOnboardingWizard').classList.add('show');
+  }
+
+  function nextOnboardingStep(step) {
+    [1, 2, 3].forEach(function (s) {
+      var tab = document.getElementById('wzStep' + s + 'Tab');
+      var content = document.getElementById('wzStep' + s + 'Content');
+      if (tab) {
+        tab.style.background = (s === step) ? 'var(--brand-soft)' : 'var(--panel-2)';
+        tab.style.color = (s === step) ? 'var(--brand)' : 'var(--ink-faint)';
+        tab.style.fontWeight = (s === step) ? '700' : '600';
+      }
+      if (content) {
+        content.style.display = (s === step) ? 'flex' : 'none';
+      }
+    });
+
+    if (step === 2) {
+      var orgName = document.getElementById('wzOrgName').value.trim() || 'Công ty TNHH Công nghệ Alpha';
+      document.getElementById('wzCreatedOrgName').textContent = orgName;
+    }
+  }
+
+  function copyWzKey() {
+    var keyInp = document.getElementById('wzGeneratedKey');
+    if (keyInp) {
+      keyInp.select();
+      navigator.clipboard ? navigator.clipboard.writeText(keyInp.value) : document.execCommand('copy');
+      alert('Đã sao chép API Key: ' + keyInp.value);
+    }
+  }
+
+  var WZ_CODE_SNIPPETS = {
+    js: '<!-- Nhúng Gtel Map JavaScript SDK -->\n<script src="https://cdn.gtelmaps.vn/sdk/v2/gtelmap.js"><\/script>\n<div id="map" style="width: 100%; height: 500px;"></div>\n\n<script>\n  const map = new GtelMap.Map({\n    container: "map",\n    apiKey: "gtel_live_key_99fa88b201a4e5c89912bc78",\n    center: [105.8542, 21.0285], // Hà Nội\n    zoom: 14\n  });\n<\/script>',
+    react: '// Cài đặt: npm install @gtelmaps/react-sdk\nimport React from "react";\nimport { GtelMapProvider, MapView } from "@gtelmaps/react-sdk";\n\nexport default function App() {\n  return (\n    <GtelMapProvider apiKey="gtel_live_key_99fa88b201a4e5c89912bc78">\n      <MapView center={[105.8542, 21.0285]} zoom={14} style={{ height: "500px" }} />\n    </GtelMapProvider>\n  );\n}',
+    flutter: '// Thêm gtel_maps_flutter vào pubspec.yaml\nimport "package:gtel_maps_flutter/gtel_maps_flutter.dart";\n\nGtelMapView(\n  apiKey: "gtel_live_key_99fa88b201a4e5c89912bc78",\n  initialCenter: LatLng(21.0285, 105.8542),\n  initialZoom: 14.0,\n)',
+    curl: '# Gọi Geocoding API tìm kiếm địa chỉ:\ncurl -X GET "https://api.gtelmaps.vn/v1/geocoding?address=Ha+Noi" \\\n  -H "X-GTEL-MAP-KEY: gtel_live_key_99fa88b201a4e5c89912bc78"'
+  };
+
+  function switchWzCode(lang) {
+    document.querySelectorAll('#wzLangTabs span').forEach(function(s, i) {
+      var active = (lang === 'js' && i === 0) || (lang === 'react' && i === 1) || (lang === 'flutter' && i === 2) || (lang === 'curl' && i === 3);
+      s.classList.toggle('on', active);
+    });
+    var block = document.getElementById('wzCodeBlock');
+    if (block && WZ_CODE_SNIPPETS[lang]) {
+      block.textContent = WZ_CODE_SNIPPETS[lang];
+    }
+  }
+
+  function copyWzSnippet() {
+    var block = document.getElementById('wzCodeBlock');
+    if (block) {
+      navigator.clipboard ? navigator.clipboard.writeText(block.textContent) : alert('Đã copy code snippet!');
+      alert('Đã sao chép đoạn mã mẫu tích hợp!');
+    }
+  }
+
+  function finishOnboarding() {
+    cls('ovOnboardingWizard');
+    show('home');
+    alert('Chào mừng bạn đến với Gtel Map Console! Không gian làm việc và API Key của bạn đã sẵn sàng hoạt động.');
   }
 
   // ===== Customer modal =====

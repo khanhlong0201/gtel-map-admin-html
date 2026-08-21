@@ -1446,7 +1446,7 @@
     <div class="nav active" id="nav-services" onclick="show('services')"><span>🧩</span> Quản lý Dịch vụ</div>
     <div class="nav" id="nav-features" onclick="show('features')"><span>⚡</span> Quản lý Tính năng</div>
     <div class="grp">Quản trị Tài nguyên</div>
-    <div class="nav" id="nav-customers" onclick="show('customers')"><span>👥</span> Quản lý Khách hàng</div>
+    <div class="nav" id="nav-customers" onclick="show('customers')"><span>🏢</span> Quản lý Tổ chức</div>
     <div class="nav" id="nav-projects" onclick="show('projects')"><span>📁</span> Quản lý Dự án</div>
     <div class="nav" id="nav-config" onclick="show('config')"><span>⚙️</span> Cấu hình hệ thống</div>
     <div class="grp">Danh tính &amp; Quyền</div>
@@ -1993,14 +1993,14 @@
       </div>
     </div>
 
-    <!-- ============ VIEW: QUẢN LÝ KHÁCH HÀNG (ADMIN OVERRIDE) ============ -->
+    <!-- ============ VIEW: QUẢN LÝ TỔ CHỨC (ORGANIZATIONS) ============ -->
     <div class="content view" id="view-customers">
       <div style="display:flex;align-items:center;gap:12px">
-        <div class="zlabel" style="margin:0">Danh sách Khách hàng</div>
+        <div class="zlabel" style="margin:0">Danh sách Tổ chức</div>
         <div class="spacer" style="flex:1"></div>
-        <button class="btn" onclick="openCustomerModal('create')">＋ Tạo Khách hàng</button>
+        <button class="btn" onclick="openCustomerModal('create')">＋ Tạo Tổ chức</button>
       </div>
-      <div class="note" style="text-align:left">ℹ️ Admin chỉ <b>override</b> khi cần can thiệp — <b>Console (Khách hàng Admin)</b> là nơi CRUD chính (xem US-CON-06). Màn này phục vụ hỗ trợ/khắc phục sự cố. <b>Mô hình 3 tầng: Khách hàng → Dự án → API Key</b> (tầng Tổ chức đã bỏ 12/08/2026). <b>Tạm khoá Khách hàng làm ngừng phục vụ toàn bộ Dự án và API Key thuộc Khách hàng đó</b> (BR-15 — chờ PO chốt Q8).</div>
+      <div class="note" style="text-align:left">ℹ️ Quản lý danh sách các <b>Tổ chức / Doanh nghiệp (Tenants)</b> sử dụng dịch vụ Gtel Map. <b>Mô hình 2 tầng: Tổ chức → Dự án → API Key</b>. <b>Tạm khoá Tổ chức làm ngừng phục vụ toàn bộ Dự án và API Key thuộc Tổ chức đó</b>.</div>
       <div class="filters">
         <div class="sel" style="min-width:auto"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
         <div class="rld" title="Xóa lọc">⟳</div>
@@ -2015,12 +2015,12 @@
       </div>
       <div id="custStateBox" style="display:none;border:1px solid var(--line);border-radius:12px"></div>
       <div class="tbl-wrap" id="custTableWrap">
-        <div class="tbl-tools"><strong style="font-size:13px">Khách hàng</strong>
-          <span class="search" style="min-width:320px">🔍 Tìm theo tên, mã, mã số thuế, email…</span>
+        <div class="tbl-tools"><strong style="font-size:13px">Tổ chức</strong>
+          <span class="search" style="min-width:320px">🔍 Tìm theo tên tổ chức, mã, mã số thuế, email…</span>
         </div>
         <table>
           <thead>
-            <tr><th>Khách hàng</th><th>Mã số thuế</th><th>Người đại diện</th><th>Số điện thoại</th><th style="text-align:center">Dự án con</th><th>Trạng thái</th></tr>
+            <tr><th>Tổ chức</th><th>Mã số thuế</th><th>Người đại diện</th><th>Số điện thoại</th><th style="text-align:center">Dự án trực thuộc</th><th>Trạng thái</th></tr>
           </thead>
           <tbody>
             <tr>
@@ -2029,7 +2029,7 @@
               <td>Nguyễn Văn A</td><td style="font-family:var(--mono);font-size:12px">0912 345 678</td>
               <td style="text-align:center">3</td>
               <td><span class="st act">🟢 Hoạt động</span></td>
-              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa khách hàng">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Khách hàng «Cty CP VinHome»? Toàn bộ Dự án và API Key thuộc Khách hàng này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.\n\n⚠️ Khách hàng này còn 3 Dự án đang hoạt động.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" style="opacity:.35;cursor:not-allowed" title="Không xoá được — Khách hàng còn 3 Dự án">🗑️</span></span></td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa tổ chức">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Tổ chức «Cty CP VinHome»? Toàn bộ Dự án và API Key thuộc Tổ chức này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.\n\n⚠️ Tổ chức này còn 3 Dự án đang hoạt động.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" style="opacity:.35;cursor:not-allowed" title="Không xoá được — Tổ chức còn 3 Dự án">🗑️</span></span></td>
             </tr>
             <tr>
               <td><b>VinFast</b></td>
@@ -2037,7 +2037,7 @@
               <td>Trần Thị B</td><td style="font-family:var(--mono);font-size:12px">0987 654 321</td>
               <td style="text-align:center"><span style="color:var(--ink-faint)">0</span></td>
               <td><span class="st act">🟢 Hoạt động</span></td>
-              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa khách hàng">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Khách hàng «VinFast»? Toàn bộ Dự án và API Key thuộc Khách hàng này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" title="Xoá Khách hàng — 0 Dự án con" onclick="demoConfirm('Xoá Khách hàng «VinFast»? Khách hàng sẽ biến mất khỏi mọi danh sách và ô chọn. Dữ liệu vẫn được giữ để truy vết, nhưng không khôi phục lại được từ giao diện.', 'Đã xoá (demo).')">🗑️</span></span></td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa tổ chức">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Tổ chức «VinFast»? Toàn bộ Dự án và API Key thuộc Tổ chức này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" title="Xoá Tổ chức — 0 Dự án con" onclick="demoConfirm('Xoá Tổ chức «VinFast»? Tổ chức sẽ biến mất khỏi mọi danh sách và ô chọn. Dữ liệu vẫn được giữ để truy vết, nhưng không khôi phục lại được từ giao diện.', 'Đã xoá (demo).')">🗑️</span></span></td>
             </tr>
             <tr>
               <td><b>Zalo</b></td>
@@ -2045,7 +2045,7 @@
               <td>Lê Văn C</td><td style="font-family:var(--mono);font-size:12px">0903 111 222</td>
               <td style="text-align:center">5</td>
               <td><span class="st act">🟢 Hoạt động</span></td>
-              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa khách hàng">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Khách hàng «Zalo»? Toàn bộ Dự án và API Key thuộc Khách hàng này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.\n\n⚠️ Khách hàng này còn 5 Dự án đang hoạt động.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" style="opacity:.35;cursor:not-allowed" title="Không xoá được — Khách hàng còn 5 Dự án">🗑️</span></span></td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa tổ chức">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Tổ chức «Zalo»? Toàn bộ Dự án và API Key thuộc Tổ chức này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.\n\n⚠️ Tổ chức này còn 5 Dự án đang hoạt động.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" style="opacity:.35;cursor:not-allowed" title="Không xoá được — Tổ chức còn 5 Dự án">🗑️</span></span></td>
             </tr>
             <tr>
               <td><b>Sở TN&amp;MT An Giang</b></td>
@@ -2053,7 +2053,7 @@
               <td>Phạm Thị D</td><td style="font-family:var(--mono);font-size:12px">0296 384 999</td>
               <td style="text-align:center">2</td>
               <td><span class="st act">🟢 Hoạt động</span></td>
-              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa khách hàng">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Khách hàng «Sở TN&amp;MT An Giang»? Toàn bộ Dự án và API Key thuộc Khách hàng này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.\n\n⚠️ Khách hàng này còn 2 Dự án đang hoạt động.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" style="opacity:.35;cursor:not-allowed" title="Không xoá được — Khách hàng còn 2 Dự án">🗑️</span></span></td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit')" title="Sửa tổ chức">✏️</span><span class="icoact" onclick="demoConfirm('Tạm khoá Tổ chức «Sở TN&amp;MT An Giang»? Toàn bộ Dự án và API Key thuộc Tổ chức này sẽ NGỪNG PHỤC VỤ cho tới khi mở lại. Dữ liệu giữ nguyên, mở lại bất cứ lúc nào.\n\n⚠️ Tổ chức này còn 2 Dự án đang hoạt động.', 'Đã tạm khoá (demo).')" title="Tạm khoá (override)">🔒</span><span class="icoact" style="opacity:.35;cursor:not-allowed" title="Không xoá được — Tổ chức còn 2 Dự án">🗑️</span></span></td>
             </tr>
             <tr>
               <td><b>FPT IS</b></td>
@@ -2061,12 +2061,12 @@
               <td>Hoàng Văn E</td><td style="font-family:var(--mono);font-size:12px">0243 562 000</td>
               <td style="text-align:center"><span style="color:var(--ink-faint)">0</span></td>
               <td><span class="st susp">🟠 Tạm khoá</span></td>
-              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view','susp')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit','susp')" title="Sửa khách hàng">✏️</span><span class="icoact" onclick="demoConfirm('Mở lại Khách hàng «FPT IS»? Khách hàng trở lại trạng thái Hoạt động, Dự án và API Key phục vụ lại như trước.', 'Đã mở lại (demo).')" title="Mở lại (override)">🔓</span><span class="icoact" title="Xoá Khách hàng — 0 Dự án con" onclick="demoConfirm('Xoá Khách hàng «FPT IS»? Khách hàng sẽ biến mất khỏi mọi danh sách và ô chọn. Dữ liệu vẫn được giữ để truy vết, nhưng không khôi phục lại được từ giao diện.', 'Đã xoá (demo).')">🗑️</span></span></td>
+              <td style="text-align:center"><span class="actbar"><span class="icoact" onclick="openCustomerModal('view','susp')" title="Xem chi tiết">👁️</span><span class="icoact" onclick="openCustomerModal('edit','susp')" title="Sửa tổ chức">✏️</span><span class="icoact" onclick="demoConfirm('Mở lại Tổ chức «FPT IS»? Tổ chức trở lại trạng thái Hoạt động, Dự án và API Key phục vụ lại như trước.', 'Đã mở lại (demo).')" title="Mở lại (override)">🔓</span><span class="icoact" title="Xoá Tổ chức — 0 Dự án con" onclick="demoConfirm('Xoá Tổ chức «FPT IS»? Tổ chức sẽ biến mất khỏi mọi danh sách và ô chọn. Dữ liệu vẫn được giữ để truy vết, nhưng không khôi phục lại được từ giao diện.', 'Đã xoá (demo).')">🗑️</span></span></td>
             </tr>
           </tbody>
         </table>
         <div class="tbl-foot" style="display:flex;align-items:center;gap:12px">
-          <span>Hiển thị <b>1–5</b> trong 17 Khách hàng</span>
+          <span>Hiển thị <b>1–5</b> trong 17 Tổ chức</span>
           <span class="spacer" style="flex:1"></span>
           <span style="font-size:12px;color:var(--ink-faint)">10 ▾ /trang</span>
           <span style="font-size:12px">‹ <b>1</b> 2 ›</span>
@@ -2074,15 +2074,14 @@
       </div>
     </div>
 
-        <!-- ============ VIEW: QUẢN LÝ NGƯỜI DÙNG (3 TAB: ADMIN / CONSOLE / MAP VIEWER) ============ -->
+        <!-- ============ VIEW: QUẢN LÝ NGƯỜI DÙNG (2 TAB: ADMIN / DEFAULT END-USERS) ============ -->
     <div class="content view" id="view-users">
       <div class="subtabs" style="margin-bottom:14px" id="usersSubtabs">
-        <span class="on" id="tabbtn-usr-admin" onclick="switchUserTab('admin')">🧑‍💼 Người dùng Admin</span>
-        <span id="tabbtn-usr-console" onclick="switchUserTab('console')">🏢 Người dùng Console</span>
-        <span id="tabbtn-usr-viewer" onclick="switchUserTab('viewer')">🌍 Người dùng Map Viewer</span>
+        <span class="on" id="tabbtn-usr-admin" onclick="switchUserTab('admin')">🧑‍💼 Quản trị viên (Admin Users)</span>
+        <span id="tabbtn-usr-default" onclick="switchUserTab('default')">👥 Người dùng hệ thống (End-Users)</span>
       </div>
 
-      <!-- TAB 1: NGƯỜI DÙNG ADMIN -->
+      <!-- TAB 1: QUẢN TRỊ VIÊN ADMIN -->
       <div class="users-subview on" id="usertab-admin">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
           <div class="zlabel" style="margin:0">Danh sách Người dùng Admin nội bộ</div>
@@ -2100,7 +2099,7 @@
             <thead>
               <tr>
                 <th style="width:30px"><input type="checkbox" id="uAdmSelAll" onchange="toggleAllCheckboxes(this, 'uAdmRowChk')"></th>
-                <th>Mã người dùng</th><th>Họ tên</th><th>Email</th><th>Thuộc nhóm người dùng</th><th>Trạng thái</th><th>Ngày tạo</th></tr>
+                <th>Mã người dùng</th><th>Họ tên</th><th>Email</th><th>Thuộc nhóm người dùng</th><th>Trạng thái</th><th>Ngày tạo</th><th style="text-align:center">Thao tác</th></tr>
             </thead>
             <tbody>
               <tr>
@@ -2160,166 +2159,160 @@
         </div>
       </div>
 
-      <!-- TAB 2: NGƯỜI DÙNG CONSOLE -->
-      <div class="users-subview" id="usertab-console" style="display:none">
+      <!-- TAB 2: NGƯỜI DÙNG HỆ THỐNG (DEFAULT / END-USERS) -->
+      <div class="users-subview" id="usertab-default" style="display:none">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-          <div class="zlabel" style="margin:0">Danh sách Người dùng Console (Khách hàng B2B)</div>
+          <div class="zlabel" style="margin:0">Danh sách Người dùng hệ thống (Khách hàng Doanh nghiệp, Developer &amp; Map Viewer)</div>
           <div class="spacer" style="flex:1"></div>
-          <button class="btn" onclick="openConsoleUserModal('create')">＋ Tạo Người dùng Console</button>
+          <button class="btn" onclick="openEndUserModal('create')">＋ Tạo Người dùng</button>
         </div>
         <div class="filters">
+          <div class="sel" style="min-width:180px"><span class="lbl">Ứng dụng</span><span class="v" id="fltAppVal">Tất cả</span><span class="cx">▾</span></div>
           <div class="sel" style="min-width:180px"><span class="lbl">Khách hàng</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-          <div class="sel" style="min-width:140px"><span class="lbl">Vai trò</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-          <div class="sel" style="min-width:140px"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-          <div class="sel" style="min-width:260px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo mã, tên, email…</span></div>
+          <div class="sel" style="min-width:160px"><span class="lbl">Nguồn tạo</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+          <div class="sel" style="min-width:130px"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
+          <div class="sel" style="min-width:240px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo mã, tên, email, tổ chức…</span></div>
           <div class="rld" title="Xóa lọc">⟳</div>
         </div>
         <div class="tbl-wrap">
           <table>
             <thead>
               <tr>
-                <th style="width:30px"><input type="checkbox" id="uConSelAll" onchange="toggleAllCheckboxes(this, 'uConRowChk')"></th>
-                <th>Mã người dùng</th><th>Họ tên</th><th>Email</th><th>Loại tài khoản</th><th>Thuộc khách hàng</th><th>Vai trò trong KH</th><th>Trạng thái</th><th>Ngày tạo</th></tr>
+                <th style="width:30px"><input type="checkbox" id="uDefSelAll" onchange="toggleAllCheckboxes(this, 'uDefRowChk')"></th>
+                <th>Mã người dùng</th>
+                <th>Họ tên</th>
+                <th>Email / SĐT</th>
+                <th>Tổ chức / Khách hàng</th>
+                <th>Ứng dụng &amp; Nhóm quyền</th>
+                <th>Nguồn tạo</th>
+                <th>Trạng thái</th>
+                <th>Ngày tạo</th>
+                <th style="text-align:center">Thao tác</th>
+              </tr>
             </thead>
             <tbody>
+              <!-- User 1: Đa ứng dụng Console Quản lý tổ chức + Map Viewer -->
               <tr>
-                <td><input type="checkbox" class="uConRowChk"></td>
-                <td><code class="code ok">CON_00001</code></td>
+                <td><input type="checkbox" class="uDefRowChk"></td>
+                <td><code class="code ok">USR_00001</code></td>
                 <td><b>Nguyễn Văn A</b></td>
                 <td style="font-family:var(--mono);font-size:12px">a.nguyen@vinhome.vn</td>
-                <td><span class="chip s">Console B2B</span></td>
-                <td>Cty CP VinHome</td>
-                <td><span class="chip g">Admin tổ chức</span></td>
+                <td>
+                  <span class="chip" style="background:var(--purple-soft);color:var(--purple);font-weight:700">🏢 Cty CP VinHome (👑 Quản lý)</span>
+                </td>
+                <td>
+                  <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:600">⚡ Console + 🗺️ Map Viewer</span>
+                </td>
+                <td><span class="chip s">Đăng ký Console</span></td>
                 <td><span class="st act">🟢 Hoạt động</span></td>
                 <td style="font-family:var(--mono);font-size:12px">18/03/2026</td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openConsoleUserModal('view', {code:'CON_00001', name:'Nguyễn Văn A', email:'a.nguyen@vinhome.vn', type:'Console B2B', cust:'Cty CP VinHome', role:'Admin tổ chức', status:'act'})" title="Xem chi tiết">👁️</span>
-                    <span class="icoact" onclick="openConsoleUserModal('edit', {code:'CON_00001', name:'Nguyễn Văn A', email:'a.nguyen@vinhome.vn', type:'Console B2B', cust:'Cty CP VinHome', role:'Admin tổ chức', status:'act'})" title="Sửa">✏️</span>
-                    <span class="icoact" onclick="demoConfirm('Tạm khoá tài khoản Nguyễn Văn A?', 'Đã khoá tài khoản Console.')" title="Tạm khoá">🔒</span>
-                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Console Nguyễn Văn A?', 'Đã xoá mềm access.')" title="Xoá mềm">🗑️</span>
+                    <span class="icoact" onclick="openEndUserModal('view', {code:'USR_00001', name:'Nguyễn Văn A', email:'a.nguyen@vinhome.vn', phone:'0912 345 678', hasConsole:true, orgs:[{name:'Cty CP VinHome', role:'admin'}], status:'act'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openEndUserModal('edit', {code:'USR_00001', name:'Nguyễn Văn A', email:'a.nguyen@vinhome.vn', phone:'0912 345 678', hasConsole:true, orgs:[{name:'Cty CP VinHome', role:'admin'}], status:'act'})" title="Sửa thông tin &amp; Phân quyền">✏️</span>
+                    <span class="icoact" onclick="demoConfirm('Tạm khoá tài khoản Nguyễn Văn A?', 'Đã khoá tài khoản người dùng.')" title="Tạm khoá">🔒</span>
+                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Nguyễn Văn A?', 'Đã xoá mềm tài khoản.')" title="Xoá mềm">🗑️</span>
                   </span>
                 </td>
               </tr>
+              <!-- User 2: Console Multi-Org Member (FPT Quản lý + VinHome Thành viên) -->
               <tr>
-                <td><input type="checkbox" class="uConRowChk"></td>
-                <td><code class="code ok">CON_00002</code></td>
-                <td><b>Trần Thị B</b></td>
-                <td style="font-family:var(--mono);font-size:12px">b.tran@vng.com.vn</td>
-                <td><span class="chip s">Console B2B</span></td>
-                <td>VNG Corporation</td>
-                <td><span class="chip">Thành viên</span></td>
+                <td><input type="checkbox" class="uDefRowChk"></td>
+                <td><code class="code ok">USR_00002</code></td>
+                <td><b>Trần Văn Nam</b></td>
+                <td style="font-family:var(--mono);font-size:12px">nam.tran@fpt.com</td>
+                <td>
+                  <div style="display:flex;flex-direction:column;gap:3px">
+                    <span class="chip" style="background:var(--purple-soft);color:var(--purple);font-weight:700;font-size:11px">🏢 FPT Software (👑 Quản lý)</span>
+                    <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:600;font-size:11px">🏢 Cty CP VinHome (💻 Thành viên)</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:600">⚡ Console (2 Tổ chức) + 🗺️ Map Viewer</span>
+                </td>
+                <td><span class="chip s">Doanh nghiệp mời</span></td>
                 <td><span class="st act">🟢 Hoạt động</span></td>
                 <td style="font-family:var(--mono);font-size:12px">02/08/2026</td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openConsoleUserModal('view', {code:'CON_00002', name:'Trần Thị B', email:'b.tran@vng.com.vn', type:'Console B2B', cust:'VNG Corporation', role:'Thành viên', status:'act'})" title="Xem chi tiết">👁️</span>
-                    <span class="icoact" onclick="openConsoleUserModal('edit', {code:'CON_00002', name:'Trần Thị B', email:'b.tran@vng.com.vn', type:'Console B2B', cust:'VNG Corporation', role:'Thành viên', status:'act'})" title="Sửa">✏️</span>
-                    <span class="icoact" onclick="demoConfirm('Tạm khoá tài khoản Trần Thị B?', 'Đã khoá tài khoản.')" title="Tạm khoá">🔒</span>
-                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Trần Thị B?', 'Đã xoá mềm.')" title="Xoá mềm">🗑️</span>
+                    <span class="icoact" onclick="openEndUserModal('view', {code:'USR_00002', name:'Trần Văn Nam', email:'nam.tran@fpt.com', phone:'0988 123 456', hasConsole:true, orgs:[{name:'FPT Software', role:'admin'}, {name:'Cty CP VinHome', role:'member'}], status:'act'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openEndUserModal('edit', {code:'USR_00002', name:'Trần Văn Nam', email:'nam.tran@fpt.com', phone:'0988 123 456', hasConsole:true, orgs:[{name:'FPT Software', role:'admin'}, {name:'Cty CP VinHome', role:'member'}], status:'act'})" title="Sửa thông tin &amp; Phân quyền">✏️</span>
+                    <span class="icoact" onclick="demoConfirm('Tạm khoá tài khoản Trần Văn Nam?', 'Đã khoá tài khoản.')" title="Tạm khoá">🔒</span>
+                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Trần Văn Nam?', 'Đã xoá mềm.')" title="Xoá mềm">🗑️</span>
                   </span>
                 </td>
               </tr>
+              <!-- User 3: Chỉ dùng Map Viewer cá nhân -->
               <tr>
-                <td><input type="checkbox" class="uConRowChk"></td>
-                <td><code class="code ok">CON_00003</code></td>
-                <td><b>Phan Thị Cẩm</b></td>
-                <td style="font-family:var(--mono);font-size:12px">cam.phan@fpt.com.vn</td>
-                <td><span class="chip s">Console B2B</span></td>
-                <td>FPT Software</td>
-                <td><span class="chip g">Admin tổ chức</span></td>
-                <td><span class="st susp">🟡 Tạm khoá</span></td>
-                <td style="font-family:var(--mono);font-size:12px">20/06/2026</td>
-                <td style="text-align:center">
-                  <span class="actbar">
-                    <span class="icoact" onclick="openConsoleUserModal('view', {code:'CON_00003', name:'Phan Thị Cẩm', email:'cam.phan@fpt.com.vn', type:'Console B2B', cust:'FPT Software', role:'Admin tổ chức', status:'susp'})" title="Xem chi tiết">👁️</span>
-                    <span class="icoact" onclick="openConsoleUserModal('edit', {code:'CON_00003', name:'Phan Thị Cẩm', email:'cam.phan@fpt.com.vn', type:'Console B2B', cust:'FPT Software', role:'Admin tổ chức', status:'susp'})" title="Sửa">✏️</span>
-                    <span class="icoact" onclick="demoConfirm('Mở lại tài khoản Phan Thị Cẩm?', 'Đã mở lại tài khoản.')" title="Mở lại">🔓</span>
-                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Phan Thị Cẩm?', 'Đã xoá mềm.')" title="Xoá mềm">🗑️</span>
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="tbl-foot">Hiển thị <b>3</b> tài khoản Người dùng Console</div>
-        </div>
-      </div>
-
-      <!-- TAB 3: NGƯỜI DÙNG MAP VIEWER -->
-      <div class="users-subview" id="usertab-viewer" style="display:none">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-          <div class="zlabel" style="margin:0">Danh sách Người dùng Map Viewer công khai</div>
-          <div class="spacer" style="flex:1"></div>
-          <button class="btn" onclick="openViewerUserModal('create')">＋ Tạo hộ Map Viewer</button>
-        </div>
-        <div class="filters">
-          <div class="sel" style="min-width:160px"><span class="lbl">Nguồn</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-          <div class="sel" style="min-width:140px"><span class="lbl">Trạng thái</span><span class="v">Tất cả</span><span class="cx">▾</span></div>
-          <div class="sel" style="min-width:260px"><span class="lbl">🔍</span><span class="v" style="font-weight:400;color:var(--ink-faint);margin-left:0">Tìm theo mã, tên, email…</span></div>
-          <div class="rld" title="Xóa lọc">⟳</div>
-        </div>
-        <div class="tbl-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:30px"><input type="checkbox" id="uVieSelAll" onchange="toggleAllCheckboxes(this, 'uVieRowChk')"></th>
-                <th>Mã người dùng</th><th>Họ tên</th><th>Email</th><th>Nguồn</th><th>Trạng thái</th><th>Ngày tạo</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox" class="uVieRowChk"></td>
-                <td><code class="code ok">VIE_00001</code></td>
+                <td><input type="checkbox" class="uDefRowChk"></td>
+                <td><code class="code ok">USR_00003</code></td>
                 <td><b>Phạm Thị Mai</b></td>
                 <td style="font-family:var(--mono);font-size:12px">mai.pham88@gmail.com</td>
-                <td><span class="chip g">Tự đăng ký</span></td>
+                <td><span class="chip" style="background:var(--line);color:var(--ink-soft)">Cá nhân (B2C)</span></td>
+                <td>
+                  <span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:600">🗺️ Map Viewer (Mặc định)</span>
+                </td>
+                <td><span class="chip g">Tự đăng ký MapViewer</span></td>
                 <td><span class="st act">🟢 Hoạt động</span></td>
                 <td style="font-family:var(--mono);font-size:12px">12/07/2026</td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openViewerUserModal('view', {code:'VIE_00001', name:'Phạm Thị Mai', email:'mai.pham88@gmail.com', source:'Tự đăng ký', status:'act'})" title="Xem chi tiết">👁️</span>
-                    <span class="icoact" onclick="openViewerUserModal('edit', {code:'VIE_00001', name:'Phạm Thị Mai', email:'mai.pham88@gmail.com', source:'Tự đăng ký', status:'act'})" title="Sửa">✏️</span>
+                    <span class="icoact" onclick="openEndUserModal('view', {code:'USR_00003', name:'Phạm Thị Mai', email:'mai.pham88@gmail.com', phone:'0903 456 789', hasConsole:false, orgs:[], status:'act'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openEndUserModal('edit', {code:'USR_00003', name:'Phạm Thị Mai', email:'mai.pham88@gmail.com', phone:'0903 456 789', hasConsole:false, orgs:[], status:'act'})" title="Sửa thông tin &amp; Phân quyền">✏️</span>
                     <span class="icoact" onclick="demoConfirm('Tạm khoá tài khoản Map Viewer này?', 'Đã khoá tài khoản.')" title="Tạm khoá">🔒</span>
                     <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Map Viewer này?', 'Đã xoá mềm.')" title="Xoá mềm">🗑️</span>
                   </span>
                 </td>
               </tr>
+              <!-- User 4: FPT Console Quản lý tổ chức -->
               <tr>
-                <td><input type="checkbox" class="uVieRowChk"></td>
-                <td><code class="code ok">VIE_00002</code></td>
+                <td><input type="checkbox" class="uDefRowChk"></td>
+                <td><code class="code ok">USR_00004</code></td>
+                <td><b>Phan Thị Cẩm</b></td>
+                <td style="font-family:var(--mono);font-size:12px">cam.phan@fpt.com.vn</td>
+                <td>
+                  <span class="chip" style="background:var(--purple-soft);color:var(--purple);font-weight:700">🏢 FPT Software (👑 Quản lý)</span>
+                </td>
+                <td>
+                  <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:600">⚡ Console + 🗺️ Map Viewer</span>
+                </td>
+                <td><span class="chip s">Đăng ký Console</span></td>
+                <td><span class="st susp">🟡 Tạm khoá</span></td>
+                <td style="font-family:var(--mono);font-size:12px">20/06/2026</td>
+                <td style="text-align:center">
+                  <span class="actbar">
+                    <span class="icoact" onclick="openEndUserModal('view', {code:'USR_00004', name:'Phan Thị Cẩm', email:'cam.phan@fpt.com.vn', phone:'0915 678 901', hasConsole:true, orgs:[{name:'FPT Software', role:'admin'}], status:'susp'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openEndUserModal('edit', {code:'USR_00004', name:'Phan Thị Cẩm', email:'cam.phan@fpt.com.vn', phone:'0915 678 901', hasConsole:true, orgs:[{name:'FPT Software', role:'admin'}], status:'susp'})" title="Sửa thông tin &amp; Phân quyền">✏️</span>
+                    <span class="icoact" onclick="demoConfirm('Mở lại tài khoản Phan Thị Cẩm?', 'Đã mở lại tài khoản.')" title="Mở lại">🔓</span>
+                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Phan Thị Cẩm?', 'Đã xoá mềm.')" title="Xoá mềm">🗑️</span>
+                  </span>
+                </td>
+              </tr>
+              <!-- User 5: Map Viewer do Admin tạo hộ -->
+              <tr>
+                <td><input type="checkbox" class="uDefRowChk"></td>
+                <td><code class="code ok">USR_00005</code></td>
                 <td><b>Đỗ Thu Hà</b></td>
                 <td style="font-family:var(--mono);font-size:12px">support-test01@gtel.vn</td>
+                <td><span class="chip" style="background:var(--line);color:var(--ink-soft)">Cá nhân (B2C)</span></td>
+                <td>
+                  <span class="chip" style="background:var(--teal-soft);color:var(--teal);font-weight:600">🗺️ Map Viewer (Mặc định)</span>
+                </td>
                 <td><span class="chip">Admin tạo hộ</span></td>
                 <td><span class="st act">🟢 Hoạt động</span></td>
                 <td style="font-family:var(--mono);font-size:12px">01/08/2026</td>
                 <td style="text-align:center">
                   <span class="actbar">
-                    <span class="icoact" onclick="openViewerUserModal('view', {code:'VIE_00002', name:'Đỗ Thu Hà', email:'support-test01@gtel.vn', source:'Admin tạo hộ', status:'act'})" title="Xem chi tiết">👁️</span>
-                    <span class="icoact" onclick="openViewerUserModal('edit', {code:'VIE_00002', name:'Đỗ Thu Hà', email:'support-test01@gtel.vn', source:'Admin tạo hộ', status:'act'})" title="Sửa">✏️</span>
+                    <span class="icoact" onclick="openEndUserModal('view', {code:'USR_00005', name:'Đỗ Thu Hà', email:'support-test01@gtel.vn', phone:'0977 890 123', hasConsole:false, orgs:[], status:'act'})" title="Xem chi tiết">👁️</span>
+                    <span class="icoact" onclick="openEndUserModal('edit', {code:'USR_00005', name:'Đỗ Thu Hà', email:'support-test01@gtel.vn', phone:'0977 890 123', hasConsole:false, orgs:[], status:'act'})" title="Sửa thông tin &amp; Phân quyền">✏️</span>
                     <span class="icoact" onclick="demoConfirm('Tạm khoá tài khoản Đỗ Thu Hà?', 'Đã khoá.')" title="Tạm khoá">🔒</span>
                     <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Đỗ Thu Hà?', 'Đã xoá mềm.')" title="Xoá mềm">🗑️</span>
                   </span>
                 </td>
               </tr>
-              <tr>
-                <td><input type="checkbox" class="uVieRowChk"></td>
-                <td><code class="code ok">VIE_00003</code></td>
-                <td><b>Lê Văn Hùng</b></td>
-                <td style="font-family:var(--mono);font-size:12px">hung.le@outlook.com</td>
-                <td><span class="chip g">Tự đăng ký</span></td>
-                <td><span class="st susp">🟡 Tạm khoá</span></td>
-                <td style="font-family:var(--mono);font-size:12px">20/06/2026</td>
-                <td style="text-align:center">
-                  <span class="actbar">
-                    <span class="icoact" onclick="openViewerUserModal('view', {code:'VIE_00003', name:'Lê Văn Hùng', email:'hung.le@outlook.com', source:'Tự đăng ký', status:'susp'})" title="Xem chi tiết">👁️</span>
-                    <span class="icoact" onclick="openViewerUserModal('edit', {code:'VIE_00003', name:'Lê Văn Hùng', email:'hung.le@outlook.com', source:'Tự đăng ký', status:'susp'})" title="Sửa">✏️</span>
-                    <span class="icoact" onclick="demoConfirm('Mở lại tài khoản Lê Văn Hùng?', 'Đã mở lại tài khoản.')" title="Mở lại">🔓</span>
-                    <span class="icoact" style="color:var(--red)" onclick="demoConfirm('Xoá mềm tài khoản Lê Văn Hùng?', 'Đã xoá mềm.')" title="Xoá mềm">🗑️</span>
-                  </span>
-                </td>
-              </tr>
             </tbody>
           </table>
-          <div class="tbl-foot">Hiển thị <b>3</b> trong 184,206 tài khoản Map Viewer</div>
+          <div class="tbl-foot">Hiển thị <b>5</b> trong 1,248 tài khoản Người dùng hệ thống</div>
         </div>
       </div>
     </div>
@@ -3618,81 +3611,91 @@
   </div>
 </div>
 
-<!-- MODAL NGƯỜI DÙNG CONSOLE -->
-<div class="overlay" id="ovConsoleUser">
-  <div class="modal sm">
+<!-- MODAL TẠO / SỬA NGƯỜI DÙNG HỆ THỐNG (END-USER) -->
+<!-- MODAL TẠO / SỬA NGƯỜI DÙNG HỆ THỐNG (ALL-IN-ONE UNIFIED MODAL) -->
+<div class="overlay" id="ovEndUser">
+  <div class="modal md" style="max-width:620px">
     <div class="modal-head">
-      <h2 id="ovConsoleUserTitle">Tạo Người dùng Console</h2><button class="mclose" onclick="cls('ovConsoleUser')">✕</button>
+      <h2 id="ovEndUserTitle">Tạo Người dùng Hệ thống</h2><button class="mclose" onclick="cls('ovEndUser')">✕</button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="gap:14px">
+      <!-- Khối 1: Thông tin cơ bản -->
+      <div class="zlabel" style="margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px">1. Thông tin Định danh cơ bản</div>
       <div class="row2">
         <div class="fld"><label>Mã người dùng</label>
-          <div class="inp" id="conUserCode" style="background:var(--panel-2);color:var(--ink-soft);cursor:not-allowed">CON_00004</div>
+          <div class="inp" id="endUserCode" style="background:var(--panel-2);color:var(--ink-soft);cursor:not-allowed">USR_00006</div>
         </div>
-        <div class="fld"><label>Trạng thái</label>
-          <div id="conUserStatusBadge" style="margin-top:4px"><span class="st act">🟢 Hoạt động</span></div>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="fld"><label>Họ tên <span style="color:var(--red)">*</span></label>
-          <input class="inp" id="conUserName" placeholder="VD: Trần Văn B" />
-        </div>
-        <div class="fld"><label>Email <span style="color:var(--red)">*</span></label>
-          <input class="inp" id="conUserEmail" placeholder="ten@doanhnghiep.vn" />
-        </div>
-      </div>
-      <div class="row2">
-        <div class="fld"><label>Thuộc khách hàng <span style="color:var(--red)">*</span></label>
-          <select class="inp" id="conUserCust">
-            <option>Cty CP VinHome</option>
-            <option>VNG Corporation</option>
-            <option>FPT Software</option>
-          </select>
-        </div>
-        <div class="fld"><label>Vai trò trong Khách hàng</label>
-          <select class="inp" id="conUserRole">
-            <option>Admin tổ chức</option>
-            <option selected>Thành viên</option>
+        <div class="fld"><label>Trạng thái hoạt động</label>
+          <select class="inp" id="endUserStatusSelect">
+            <option value="act">🟢 Đang hoạt động</option>
+            <option value="susp">🟡 Tạm khoá</option>
           </select>
         </div>
       </div>
-      <div class="mfoot" id="conUserFoot">
-        <button class="btn ghost" onclick="cls('ovConsoleUser')">Hủy</button>
-        <button class="btn" id="conUserSaveBtn" onclick="saveConsoleUser()">Lưu Người dùng</button>
+      <div class="row2">
+        <div class="fld"><label>Họ và tên <span style="color:var(--red)">*</span></label>
+          <input class="inp" id="endUserName" placeholder="VD: Nguyễn Văn A" />
+        </div>
+        <div class="fld"><label>Email đăng nhập (SSO) <span style="color:var(--red)">*</span></label>
+          <input class="inp" id="endUserEmail" placeholder="nguyenvana@doanhnghiep.vn" />
+          <span class="vh">Duy nhất toàn hệ sinh thái Bản đồ GTEL</span>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
+      <div class="row2">
+        <div class="fld"><label>Số điện thoại</label>
+          <input class="inp" id="endUserPhone" placeholder="VD: 0912 345 678" />
+        </div>
+        <div class="fld"><label>Nguồn tạo</label>
+          <div class="inp" id="endUserSource" style="background:var(--panel-2);color:var(--ink-soft);cursor:not-allowed">Admin tạo hộ</div>
+        </div>
+      </div>
+      
+      <!-- Thông báo Map Viewer mặc định -->
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--teal);background:var(--teal-soft);padding:8px 12px;border-radius:7px;font-weight:600">
+        <span>🗺️</span> <span><b>Ứng dụng Map Viewer:</b> Mọi tài khoản mặc định luôn có quyền tra cứu và xem bản đồ.</span>
+      </div>
 
-<!-- MODAL NGƯỜI DÙNG MAP VIEWER -->
-<div class="overlay" id="ovViewerUser">
-  <div class="modal sm">
-    <div class="modal-head">
-      <h2 id="ovViewerUserTitle">Tạo hộ Map Viewer</h2><button class="mclose" onclick="cls('ovViewerUser')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="row2">
-        <div class="fld"><label>Mã người dùng</label>
-          <div class="inp" id="vieUserCode" style="background:var(--panel-2);color:var(--ink-soft);cursor:not-allowed">VIE_00004</div>
-        </div>
-        <div class="fld"><label>Trạng thái</label>
-          <div id="vieUserStatusBadge" style="margin-top:4px"><span class="st act">🟢 Hoạt động</span></div>
+      <!-- Khối 2: Phân quyền Cổng Console -->
+      <div class="zlabel" style="margin:8px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px">2. Phân quyền Cổng Console (Quản lý Dự án &amp; API Key)</div>
+      <div style="border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel-2,#f8fafc);display:flex;flex-direction:column;gap:10px">
+        <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:700;font-size:13px">
+          <span style="display:flex;align-items:center;gap:8px">
+            <input type="checkbox" id="endUserHasConsole" onchange="toggleEndUserConsoleSection()" style="cursor:pointer;width:16px;height:16px" checked />
+            <span>⚡ Cấp quyền truy cập Cổng Console (Dành cho Doanh nghiệp / Dev)</span>
+          </span>
+          <span class="chip" style="background:var(--brand-soft);color:var(--brand);font-weight:700">B2B / Dev</span>
+        </label>
+
+        <div id="endUserConsoleSection" style="padding-left:24px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:12px;color:var(--ink-soft);font-weight:600">Tổ chức &amp; Vai trò được gán (Hỗ trợ Đa Tổ chức N - N):</div>
+          
+          <!-- Danh sách tổ chức đã gán -->
+          <div id="endUserOrgList" style="display:flex;flex-direction:column;gap:6px">
+            <!-- Dynamic rows rendered by JS -->
+          </div>
+
+          <!-- Dòng thêm tổ chức -->
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px;background:#fff;border:1px dashed var(--line);padding:6px 10px;border-radius:8px">
+            <select class="inp" id="endUserAddOrgSelect" style="flex:1;font-size:12px;padding:5px 8px">
+              <option value="">-- Chọn Tổ chức để gán quyền --</option>
+              <option value="Cty CP VinHome">Cty CP VinHome</option>
+              <option value="FPT Software">FPT Software</option>
+              <option value="VNG Corporation">VNG Corporation</option>
+              <option value="Đối tác Ahamove">Đối tác Ahamove</option>
+              <option value="Tập đoàn Viettel">Tập đoàn Viettel</option>
+            </select>
+            <select class="inp" id="endUserAddRoleSelect" style="width:165px;font-size:12px;padding:5px 8px">
+              <option value="admin">👑 Quản lý Tổ chức</option>
+              <option value="member" selected>💻 Thành viên / Dev</option>
+            </select>
+            <button class="btn ghost" style="padding:5px 12px;font-size:12px" onclick="addOrgToEndUserRow()">＋ Thêm</button>
+          </div>
         </div>
       </div>
-      <div class="row2">
-        <div class="fld"><label>Họ tên</label>
-          <input class="inp" id="vieUserName" placeholder="VD: Lê Thị C" />
-        </div>
-        <div class="fld"><label>Email <span style="color:var(--red)">*</span></label>
-          <input class="inp" id="vieUserEmail" placeholder="user@gmail.com" />
-        </div>
-      </div>
-      <div class="fld"><label>Nguồn</label>
-        <div class="inp" id="vieUserSource" style="background:var(--panel-2);color:var(--ink-soft);cursor:not-allowed">Admin tạo hộ</div>
-      </div>
-      <div class="mfoot" id="vieUserFoot">
-        <button class="btn ghost" onclick="cls('ovViewerUser')">Hủy</button>
-        <button class="btn" id="vieUserSaveBtn" onclick="saveViewerUser()">Lưu Tài khoản</button>
+
+      <div class="mfoot" id="endUserFoot" style="margin-top:6px">
+        <button class="btn ghost" onclick="cls('ovEndUser')">Hủy</button>
+        <button class="btn" id="endUserSaveBtn" onclick="saveEndUser()">💾 Lưu Người dùng</button>
       </div>
     </div>
   </div>
@@ -4252,7 +4255,7 @@
     var ov = document.getElementById('ovCustomer');
     ov.setAttribute('data-mode', mode);
     var edit = mode !== 'create';
-    document.getElementById('ovCustomerTitle').innerHTML = (edit ? 'Sửa' : 'Tạo') + ' Khách hàng <span style="font-size:11px;font-weight:400;color:var(--ink-faint)">(Admin override)</span>';
+    document.getElementById('ovCustomerTitle').innerHTML = (edit ? 'Sửa' : 'Tạo') + ' Tổ chức <span style="font-size:11px;font-weight:400;color:var(--ink-faint)">(Admin override)</span>';
     document.getElementById('custName').value = edit ? CUST_DEMO.name : '';
     document.getElementById('custTax').value = edit ? CUST_DEMO.tax : '';
     document.getElementById('custRep').value = edit ? CUST_DEMO.rep : '';
@@ -4977,8 +4980,18 @@
             tr.innerHTML = '<td style="padding:8px 12px"><span class="ep-row"><span class="code ' + methodClass + '">' + method + '</span><span class="ep-path">' + path + '</span></span></td>' +
               '<td style="padding:8px 12px"><b>' + featName + '</b></td>' +
               '<td style="padding:8px 12px;color:var(--ink-faint)">' + desc + '</td>' +
-              '<td style="padding:8px 12px"><span class="st act">🟢 Hoạt động</span></td>' +
-              
+              '<td style="padding:8px 12px"><span class="st act">🟢 Hoạt động</span></td>';
+            drawerTbody.insertBefore(tr, drawerTbody.firstChild);
+          }
+        }
+
+        // 2. Add to all-features catalog table
+        var featTbody = document.querySelector('#featTable tbody');
+        if (featTbody) {
+          var tr2 = document.createElement('tr');
+          tr2.setAttribute('data-service', parentCode);
+          tr2.setAttribute('data-status', 'active');
+          tr2.innerHTML = '<td><b>' + featName + '</b></td>' +
             '<td><span class="chip">' + parentCode + '</span></td>' +
             '<td><span class="ep-row"><span class="code ' + methodClass + '">' + method + '</span><span class="ep-path">' + path + '</span></span></td>' +
             '<td style="font-size:12px;color:var(--ink-faint)">' + desc + '</td>' +
@@ -5089,8 +5102,9 @@
   function switchUserTab(tab) {
     document.querySelectorAll('#usersSubtabs span').forEach(function(s) { s.classList.remove('on'); });
     document.querySelectorAll('.users-subview').forEach(function(v) { v.style.display = 'none'; v.classList.remove('on'); });
-    var btn = document.getElementById('tabbtn-usr-' + tab);
-    var view = document.getElementById('usertab-' + tab);
+    var targetTab = (tab === 'console' || tab === 'viewer') ? 'default' : tab;
+    var btn = document.getElementById('tabbtn-usr-' + targetTab);
+    var view = document.getElementById('usertab-' + targetTab);
     if (btn) btn.classList.add('on');
     if (view) { view.style.display = ''; view.classList.add('on'); }
   }
@@ -5158,77 +5172,125 @@
     alert('Đã lưu Người dùng Admin thành công (gán ' + selGroups.length + ' nhóm quyền). Ghi Audit Log.');
   }
 
-  // Console User Modal Handler
-  function openConsoleUserModal(mode, data) {
-    var title = document.getElementById('ovConsoleUserTitle');
-    var foot = document.getElementById('conUserFoot');
+  // ===== END-USER (NGƯỜI DÙNG HỆ THỐNG) ALL-IN-ONE MODAL HANDLER =====
+  var currentEndUserOrgs = [];
+
+  function openEndUserModal(mode, data) {
     var isView = (mode === 'view');
     var isEdit = (mode === 'edit');
-    title.textContent = isView ? '👁️ Chi tiết Người dùng Console' : (isEdit ? '✏️ Sửa Người dùng Console' : '＋ Tạo Người dùng Console mới');
+    var isCreate = (!mode || mode === 'create');
+
+    var titleEl = document.getElementById('ovEndUserTitle');
+    if (titleEl) {
+      titleEl.textContent = isView ? '👁️ Chi tiết Người dùng Hệ thống' : (isEdit ? '✏️ Sửa Người dùng & Phân quyền Console' : '＋ Tạo Người dùng Hệ thống Mới');
+    }
+
+    document.getElementById('endUserCode').textContent = data ? data.code : 'USR_' + String(Math.floor(Math.random()*90000) + 10000);
+    document.getElementById('endUserName').value = data ? (data.name || '') : '';
+    document.getElementById('endUserEmail').value = data ? (data.email || '') : '';
+    document.getElementById('endUserPhone').value = data ? (data.phone || '') : '';
+    document.getElementById('endUserSource').textContent = data ? (data.source || 'Admin tạo hộ') : 'Admin tạo hộ';
     
-    document.getElementById('conUserCode').textContent = data ? data.code : 'CON_' + Math.floor(10000 + Math.random() * 90000);
-    document.getElementById('conUserName').value = data ? data.name : '';
-    document.getElementById('conUserEmail').value = data ? data.email : '';
-    document.getElementById('conUserCust').value = data ? data.cust : 'Cty CP VinHome';
-    document.getElementById('conUserRole').value = data ? data.role : 'Thành viên';
-    
-    var stBadge = document.getElementById('conUserStatusBadge');
-    var isAct = !data || data.status === 'act';
-    stBadge.innerHTML = isAct ? '<span class="st act">🟢 Hoạt động</span>' : '<span class="st susp">🟡 Tạm khoá</span>';
-    
-    ['conUserName', 'conUserEmail', 'conUserCust', 'conUserRole'].forEach(function(id) {
-      document.getElementById(id).disabled = isView;
+    var stSelect = document.getElementById('endUserStatusSelect');
+    if (stSelect) stSelect.value = (data && data.status) ? data.status : 'act';
+
+    var chkConsole = document.getElementById('endUserHasConsole');
+    if (chkConsole) chkConsole.checked = (data ? (data.hasConsole !== false) : true);
+
+    // Initialize Organizations
+    if (data && Array.isArray(data.orgs)) {
+      currentEndUserOrgs = JSON.parse(JSON.stringify(data.orgs));
+    } else if (data && data.cust && data.cust !== 'none') {
+      currentEndUserOrgs = [{ name: data.cust, role: data.consoleRole || 'admin' }];
+    } else if (isCreate) {
+      currentEndUserOrgs = [{ name: 'Cty CP VinHome', role: 'admin' }];
+    } else {
+      currentEndUserOrgs = [];
+    }
+
+    renderEndUserOrgList(isView);
+    toggleEndUserConsoleSection();
+
+    // Disable/Enable fields
+    ['endUserName', 'endUserEmail', 'endUserPhone', 'endUserStatusSelect', 'endUserHasConsole'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.disabled = isView;
     });
     if (isEdit) {
-      document.getElementById('conUserEmail').disabled = true;
-      document.getElementById('conUserCust').disabled = true;
+      document.getElementById('endUserEmail').disabled = true; // Email SSO không sửa khi edit
     }
-    foot.innerHTML = isView ? '<button class="btn ghost" onclick="cls(\'ovConsoleUser\')">Đóng</button>'
-                            : '<button class="btn ghost" onclick="cls(\'ovConsoleUser\')">Hủy</button><button class="btn" onclick="saveConsoleUser()">Lưu Người dùng</button>';
-    openModal('ovConsoleUser');
+
+    var foot = document.getElementById('endUserFoot');
+    if (foot) {
+      foot.innerHTML = isView 
+        ? '<button class="btn ghost" onclick="cls(\'ovEndUser\')">Đóng</button>'
+        : '<button class="btn ghost" onclick="cls(\'ovEndUser\')">Hủy</button><button class="btn" onclick="saveEndUser()">💾 Lưu Người dùng</button>';
+    }
+
+    openModal('ovEndUser');
   }
 
-  function saveConsoleUser() {
-    var name = document.getElementById('conUserName').value.trim();
-    var email = document.getElementById('conUserEmail').value.trim();
+  function toggleEndUserConsoleSection() {
+    var chk = document.getElementById('endUserHasConsole');
+    var isChk = chk ? chk.checked : true;
+    var sec = document.getElementById('endUserConsoleSection');
+    if (sec) sec.style.display = isChk ? 'flex' : 'none';
+  }
+
+  function renderEndUserOrgList(isView) {
+    var listEl = document.getElementById('endUserOrgList');
+    if (!listEl) return;
+    if (currentEndUserOrgs.length === 0) {
+      listEl.innerHTML = '<div style="font-size:12px;color:var(--ink-faint);font-style:italic">Chưa gán Tổ chức nào (Người dùng chỉ dùng Map Viewer Cá nhân)</div>';
+      return;
+    }
+    var html = '';
+    currentEndUserOrgs.forEach(function(org, idx) {
+      html += '<div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:6px 10px;border-radius:6px">'
+        + '<span style="font-size:14px">🏢</span>'
+        + '<span style="font-weight:600;font-size:12.5px;flex:1">' + org.name + '</span>'
+        + '<select class="inp" style="width:170px;padding:4px 8px;font-size:12px"' + (isView ? ' disabled' : '') + ' onchange="currentEndUserOrgs[' + idx + '].role = this.value">'
+        + '<option value="admin"' + (org.role === 'admin' ? ' selected' : '') + '>👑 Quản lý Tổ chức</option>'
+        + '<option value="member"' + (org.role === 'member' ? ' selected' : '') + '>💻 Thành viên / Dev</option>'
+        + '</select>';
+      if (!isView) {
+        html += '<span class="icoact" style="color:var(--red);cursor:pointer" title="Gỡ khỏi tổ chức này" onclick="removeOrgFromEndUser(' + idx + ')">✕</span>';
+      }
+      html += '</div>';
+    });
+    listEl.innerHTML = html;
+  }
+
+  function addOrgToEndUserRow() {
+    var orgSelect = document.getElementById('endUserAddOrgSelect');
+    var roleSelect = document.getElementById('endUserAddRoleSelect');
+    var orgName = orgSelect.value;
+    var role = roleSelect.value;
+    if (!orgName) { alert('Vui lòng chọn Tổ chức cần gán!'); return; }
+    var exists = currentEndUserOrgs.some(function(o) { return o.name === orgName; });
+    if (exists) { alert('Tổ chức này đã có trong danh sách!'); return; }
+    currentEndUserOrgs.push({ name: orgName, role: role });
+    renderEndUserOrgList(false);
+    orgSelect.value = '';
+  }
+
+  function removeOrgFromEndUser(idx) {
+    currentEndUserOrgs.splice(idx, 1);
+    renderEndUserOrgList(false);
+  }
+
+  function saveEndUser() {
+    var name = document.getElementById('endUserName').value.trim();
+    var email = document.getElementById('endUserEmail').value.trim();
     if (!name || !email) { alert('Vui lòng nhập đầy đủ Họ tên và Email.'); return; }
-    cls('ovConsoleUser');
-    alert('Đã lưu Người dùng Console thành công.');
-  }
-
-  // Viewer User Modal Handler
-  function openViewerUserModal(mode, data) {
-    var title = document.getElementById('ovViewerUserTitle');
-    var foot = document.getElementById('vieUserFoot');
-    var isView = (mode === 'view');
-    var isEdit = (mode === 'edit');
-    title.textContent = isView ? '👁️ Chi tiết Người dùng Map Viewer' : (isEdit ? '✏️ Sửa Người dùng Map Viewer' : '＋ Tạo hộ tài khoản Map Viewer');
+    var hasConsole = document.getElementById('endUserHasConsole').checked;
     
-    document.getElementById('vieUserCode').textContent = data ? data.code : 'VIE_' + Math.floor(10000 + Math.random() * 90000);
-    document.getElementById('vieUserName').value = data ? data.name : '';
-    document.getElementById('vieUserEmail').value = data ? data.email : '';
-    document.getElementById('vieUserSource').textContent = data ? data.source : 'Admin tạo hộ';
-    
-    var stBadge = document.getElementById('vieUserStatusBadge');
-    var isAct = !data || data.status === 'act';
-    stBadge.innerHTML = isAct ? '<span class="st act">🟢 Hoạt động</span>' : '<span class="st susp">🟡 Tạm khoá</span>';
-    
-    ['vieUserName', 'vieUserEmail'].forEach(function(id) {
-      document.getElementById(id).disabled = isView;
-    });
-    if (isEdit) {
-      document.getElementById('vieUserEmail').disabled = true;
-    }
-    foot.innerHTML = isView ? '<button class="btn ghost" onclick="cls(\'ovViewerUser\')">Đóng</button>'
-                            : '<button class="btn ghost" onclick="cls(\'ovViewerUser\')">Hủy</button><button class="btn" onclick="saveViewerUser()">Lưu Tài khoản</button>';
-    openModal('ovViewerUser');
-  }
-
-  function saveViewerUser() {
-    var email = document.getElementById('vieUserEmail').value.trim();
-    if (!email) { alert('Vui lòng nhập Email.'); return; }
-    cls('ovViewerUser');
-    alert('Đã tạo/sửa tài khoản Map Viewer thành công.');
+    cls('ovEndUser');
+    var msg = '💾 Đã lưu thông tin Người dùng hệ thống thành công!\n';
+    msg += '• Họ tên: ' + name + ' (' + email + ')\n';
+    msg += '• Map Viewer: Luôn bật (Mặc định cho mọi tài khoản)\n';
+    msg += '• Cổng Console: ' + (hasConsole ? ('Đã bật (' + currentEndUserOrgs.length + ' Tổ chức)') : 'Không cấp quyền');
+    alert(msg);
   }
 
   // RBAC Group, Perm, Role Modals
@@ -5572,7 +5634,7 @@
     stats: 'Thống kê sử dụng API Key',
     dashboard: 'Dashboard Analytics',
     profile: 'Hồ sơ của tôi',
-    customers: 'Quản lý Khách hàng',
+    customers: 'Quản lý Tổ chức (Organizations)',
     users: 'Quản lý Người dùng',
     'user-detail': 'Chi tiết tài khoản',
     'viewer-users': 'Người dùng Map Viewer',
@@ -6154,77 +6216,123 @@
     alert('Đã lưu Người dùng Admin thành công (gán ' + selGroups.length + ' nhóm quyền). Ghi Audit Log.');
   }
 
-  // Console User Modal Handler
-  function openConsoleUserModal(mode, data) {
-    var title = document.getElementById('ovConsoleUserTitle');
-    var foot = document.getElementById('conUserFoot');
+  // ===== END-USER (NGƯỜI DÙNG HỆ THỐNG) ALL-IN-ONE MODAL HANDLER =====
+  function openEndUserModal(mode, data) {
     var isView = (mode === 'view');
     var isEdit = (mode === 'edit');
-    title.textContent = isView ? '👁️ Chi tiết Người dùng Console' : (isEdit ? '✏️ Sửa Người dùng Console' : '＋ Tạo Người dùng Console mới');
+    var isCreate = (!mode || mode === 'create');
+
+    var titleEl = document.getElementById('ovEndUserTitle');
+    if (titleEl) {
+      titleEl.textContent = isView ? '👁️ Chi tiết Người dùng Hệ thống' : (isEdit ? '✏️ Sửa Người dùng & Phân quyền Console' : '＋ Tạo Người dùng Hệ thống Mới');
+    }
+
+    document.getElementById('endUserCode').textContent = data ? data.code : 'USR_' + String(Math.floor(Math.random()*90000) + 10000);
+    document.getElementById('endUserName').value = data ? (data.name || '') : '';
+    document.getElementById('endUserEmail').value = data ? (data.email || '') : '';
+    document.getElementById('endUserPhone').value = data ? (data.phone || '') : '';
+    document.getElementById('endUserSource').textContent = data ? (data.source || 'Admin tạo hộ') : 'Admin tạo hộ';
     
-    document.getElementById('conUserCode').textContent = data ? data.code : 'CON_' + Math.floor(10000 + Math.random() * 90000);
-    document.getElementById('conUserName').value = data ? data.name : '';
-    document.getElementById('conUserEmail').value = data ? data.email : '';
-    document.getElementById('conUserCust').value = data ? data.cust : 'Cty CP VinHome';
-    document.getElementById('conUserRole').value = data ? data.role : 'Thành viên';
-    
-    var stBadge = document.getElementById('conUserStatusBadge');
-    var isAct = !data || data.status === 'act';
-    stBadge.innerHTML = isAct ? '<span class="st act">🟢 Hoạt động</span>' : '<span class="st susp">🟡 Tạm khoá</span>';
-    
-    ['conUserName', 'conUserEmail', 'conUserCust', 'conUserRole'].forEach(function(id) {
-      document.getElementById(id).disabled = isView;
+    var stSelect = document.getElementById('endUserStatusSelect');
+    if (stSelect) stSelect.value = (data && data.status) ? data.status : 'act';
+
+    var chkConsole = document.getElementById('endUserHasConsole');
+    if (chkConsole) chkConsole.checked = (data ? (data.hasConsole !== false) : true);
+
+    // Initialize Organizations
+    if (data && Array.isArray(data.orgs)) {
+      currentEndUserOrgs = JSON.parse(JSON.stringify(data.orgs));
+    } else if (data && data.cust && data.cust !== 'none') {
+      currentEndUserOrgs = [{ name: data.cust, role: data.consoleRole || 'admin' }];
+    } else if (isCreate) {
+      currentEndUserOrgs = [{ name: 'Cty CP VinHome', role: 'admin' }];
+    } else {
+      currentEndUserOrgs = [];
+    }
+
+    renderEndUserOrgList(isView);
+    toggleEndUserConsoleSection();
+
+    // Disable/Enable fields
+    ['endUserName', 'endUserEmail', 'endUserPhone', 'endUserStatusSelect', 'endUserHasConsole'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.disabled = isView;
     });
     if (isEdit) {
-      document.getElementById('conUserEmail').disabled = true;
-      document.getElementById('conUserCust').disabled = true;
+      document.getElementById('endUserEmail').disabled = true; // Email SSO không sửa khi edit
     }
-    foot.innerHTML = isView ? '<button class="btn ghost" onclick="cls(\'ovConsoleUser\')">Đóng</button>'
-                            : '<button class="btn ghost" onclick="cls(\'ovConsoleUser\')">Hủy</button><button class="btn" onclick="saveConsoleUser()">Lưu Người dùng</button>';
-    openModal('ovConsoleUser');
+
+    var foot = document.getElementById('endUserFoot');
+    if (foot) {
+      foot.innerHTML = isView 
+        ? '<button class="btn ghost" onclick="cls(\'ovEndUser\')">Đóng</button>'
+        : '<button class="btn ghost" onclick="cls(\'ovEndUser\')">Hủy</button><button class="btn" onclick="saveEndUser()">💾 Lưu Người dùng</button>';
+    }
+
+    openModal('ovEndUser');
   }
 
-  function saveConsoleUser() {
-    var name = document.getElementById('conUserName').value.trim();
-    var email = document.getElementById('conUserEmail').value.trim();
+  function toggleEndUserConsoleSection() {
+    var chk = document.getElementById('endUserHasConsole');
+    var isChk = chk ? chk.checked : true;
+    var sec = document.getElementById('endUserConsoleSection');
+    if (sec) sec.style.display = isChk ? 'flex' : 'none';
+  }
+
+  function renderEndUserOrgList(isView) {
+    var listEl = document.getElementById('endUserOrgList');
+    if (!listEl) return;
+    if (currentEndUserOrgs.length === 0) {
+      listEl.innerHTML = '<div style="font-size:12px;color:var(--ink-faint);font-style:italic">Chưa gán Tổ chức nào (Người dùng chỉ dùng Map Viewer Cá nhân)</div>';
+      return;
+    }
+    var html = '';
+    currentEndUserOrgs.forEach(function(org, idx) {
+      html += '<div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:6px 10px;border-radius:6px">'
+        + '<span style="font-size:14px">🏢</span>'
+        + '<span style="font-weight:600;font-size:12.5px;flex:1">' + org.name + '</span>'
+        + '<select class="inp" style="width:170px;padding:4px 8px;font-size:12px"' + (isView ? ' disabled' : '') + ' onchange="currentEndUserOrgs[' + idx + '].role = this.value">'
+        + '<option value="admin"' + (org.role === 'admin' ? ' selected' : '') + '>👑 Quản lý Tổ chức</option>'
+        + '<option value="member"' + (org.role === 'member' ? ' selected' : '') + '>💻 Thành viên / Dev</option>'
+        + '</select>';
+      if (!isView) {
+        html += '<span class="icoact" style="color:var(--red);cursor:pointer" title="Gỡ khỏi tổ chức này" onclick="removeOrgFromEndUser(' + idx + ')">✕</span>';
+      }
+      html += '</div>';
+    });
+    listEl.innerHTML = html;
+  }
+
+  function addOrgToEndUserRow() {
+    var orgSelect = document.getElementById('endUserAddOrgSelect');
+    var roleSelect = document.getElementById('endUserAddRoleSelect');
+    var orgName = orgSelect.value;
+    var role = roleSelect.value;
+    if (!orgName) { alert('Vui lòng chọn Tổ chức cần gán!'); return; }
+    var exists = currentEndUserOrgs.some(function(o) { return o.name === orgName; });
+    if (exists) { alert('Tổ chức này đã có trong danh sách!'); return; }
+    currentEndUserOrgs.push({ name: orgName, role: role });
+    renderEndUserOrgList(false);
+    orgSelect.value = '';
+  }
+
+  function removeOrgFromEndUser(idx) {
+    currentEndUserOrgs.splice(idx, 1);
+    renderEndUserOrgList(false);
+  }
+
+  function saveEndUser() {
+    var name = document.getElementById('endUserName').value.trim();
+    var email = document.getElementById('endUserEmail').value.trim();
     if (!name || !email) { alert('Vui lòng nhập đầy đủ Họ tên và Email.'); return; }
-    cls('ovConsoleUser');
-    alert('Đã lưu Người dùng Console thành công.');
-  }
-
-  // Viewer User Modal Handler
-  function openViewerUserModal(mode, data) {
-    var title = document.getElementById('ovViewerUserTitle');
-    var foot = document.getElementById('vieUserFoot');
-    var isView = (mode === 'view');
-    var isEdit = (mode === 'edit');
-    title.textContent = isView ? '👁️ Chi tiết Người dùng Map Viewer' : (isEdit ? '✏️ Sửa Người dùng Map Viewer' : '＋ Tạo hộ tài khoản Map Viewer');
+    var hasConsole = document.getElementById('endUserHasConsole').checked;
     
-    document.getElementById('vieUserCode').textContent = data ? data.code : 'VIE_' + Math.floor(10000 + Math.random() * 90000);
-    document.getElementById('vieUserName').value = data ? data.name : '';
-    document.getElementById('vieUserEmail').value = data ? data.email : '';
-    document.getElementById('vieUserSource').textContent = data ? data.source : 'Admin tạo hộ';
-    
-    var stBadge = document.getElementById('vieUserStatusBadge');
-    var isAct = !data || data.status === 'act';
-    stBadge.innerHTML = isAct ? '<span class="st act">🟢 Hoạt động</span>' : '<span class="st susp">🟡 Tạm khoá</span>';
-    
-    ['vieUserName', 'vieUserEmail'].forEach(function(id) {
-      document.getElementById(id).disabled = isView;
-    });
-    if (isEdit) {
-      document.getElementById('vieUserEmail').disabled = true;
-    }
-    foot.innerHTML = isView ? '<button class="btn ghost" onclick="cls(\'ovViewerUser\')">Đóng</button>'
-                            : '<button class="btn ghost" onclick="cls(\'ovViewerUser\')">Hủy</button><button class="btn" onclick="saveViewerUser()">Lưu Tài khoản</button>';
-    openModal('ovViewerUser');
-  }
-
-  function saveViewerUser() {
-    var email = document.getElementById('vieUserEmail').value.trim();
-    if (!email) { alert('Vui lòng nhập Email.'); return; }
-    cls('ovViewerUser');
-    alert('Đã tạo/sửa tài khoản Map Viewer thành công.');
+    cls('ovEndUser');
+    var msg = '💾 Đã lưu thông tin Người dùng hệ thống thành công!\n';
+    msg += '• Họ tên: ' + name + ' (' + email + ')\n';
+    msg += '• Map Viewer: Luôn bật (Mặc định cho mọi tài khoản)\n';
+    msg += '• Cổng Console: ' + (hasConsole ? ('Đã bật (' + currentEndUserOrgs.length + ' Tổ chức)') : 'Không cấp quyền');
+    alert(msg);
   }
 
   // RBAC Group, Perm, Role Modals
